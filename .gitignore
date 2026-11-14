@@ -33,3 +33,5 @@ android/app/build/
 android/.idea/
 *.iml
 
+.github/
+
