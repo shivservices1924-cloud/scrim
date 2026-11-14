@@ -346,7 +346,7 @@ export default function Home() {
               className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
-                src="/poster-br-solo.jpg"
+                src="/poster-br-solo.svg"
                 alt="BR Solo Tournament"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
