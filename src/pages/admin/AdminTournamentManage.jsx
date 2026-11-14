@@ -163,6 +163,7 @@ export default function AdminTournamentManage() {
       if (!res.ok) throw new Error(data.error || 'Failed to settle match');
       setMsg('Match results settled! Player account money, kill rewards, and stats updated successfully in backend.');
       setTimeout(() => setMsg(''), 5000);
+      window.dispatchEvent(new Event('rushx_tournament_update'));
       fetchDetails();
     } catch (err) {
       setError(err.message);
@@ -234,7 +235,7 @@ export default function AdminTournamentManage() {
           </button>
         </div>
 
-        <div className="bg-[#080d1e] p-3 rounded-xl border border-blue-900/40 text-xs text-blue-200 flex items-center gap-2">
+        <div className="bg-[#070212] p-3 rounded-xl border border-purple-900/40 text-xs text-purple-200 flex items-center gap-2">
           <Lock className="w-4 h-4 text-amber-400 shrink-0" />
           <span>
             <b>Privacy Guarantee:</b> These credentials will <u>ONLY</u> be visible to players who have successfully registered and paid the entry fee for this tournament.
@@ -252,7 +253,7 @@ export default function AdminTournamentManage() {
                 value={roomId}
                 onChange={(e) => setRoomId(e.target.value)}
                 placeholder="e.g. 8492019"
-                className="w-full bg-[#080d1e] border border-blue-900 focus:border-emerald-500 rounded-xl px-3 py-2 text-sm text-emerald-400 font-mono font-bold focus:outline-none"
+                className="w-full bg-[#070212] border border-purple-900 focus:border-emerald-500 rounded-xl px-3 py-2 text-sm text-emerald-400 font-mono font-bold focus:outline-none"
               />
             </div>
 
@@ -265,7 +266,7 @@ export default function AdminTournamentManage() {
                 value={roomPassword}
                 onChange={(e) => setRoomPassword(e.target.value)}
                 placeholder="e.g. 1234 or rushx"
-                className="w-full bg-[#080d1e] border border-blue-900 focus:border-emerald-500 rounded-xl px-3 py-2 text-sm text-amber-300 font-mono font-bold focus:outline-none"
+                className="w-full bg-[#070212] border border-purple-900 focus:border-emerald-500 rounded-xl px-3 py-2 text-sm text-amber-300 font-mono font-bold focus:outline-none"
               />
             </div>
 
@@ -276,7 +277,7 @@ export default function AdminTournamentManage() {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white"
+                className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white"
               >
                 <option value="UPCOMING">UPCOMING (Registration Open)</option>
                 <option value="ONGOING">ONGOING (Match Live / Room Active)</option>
@@ -297,19 +298,19 @@ export default function AdminTournamentManage() {
       </div>
 
       {/* Part 2: Player Kills & Winner Settlement */}
-      <div className="bg-[#0b1326] border border-blue-900/60 rounded-2xl p-5 shadow-xl space-y-4">
+      <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-5 shadow-xl space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-white font-heading font-bold text-base">
             <Crosshair className="w-5 h-5 text-amber-400" />
             <span>Player Kills & Winner Money Settlement</span>
           </div>
 
-          <span className="text-xs bg-blue-950/60 border border-blue-800/40 px-3 py-1 rounded-full text-blue-300 font-bold">
+          <span className="text-xs bg-purple-950/60 border border-purple-800/40 px-3 py-1 rounded-full text-purple-300 font-bold">
             {joinedPlayers.length} Registered Players
           </span>
         </div>
 
-        <div className="bg-[#080d1e] p-3 rounded-xl border border-blue-900/40 text-xs text-slate-300 flex items-center justify-between">
+        <div className="bg-[#070212] p-3 rounded-xl border border-purple-900/40 text-xs text-slate-300 flex items-center justify-between">
           <div>
             <span>Format: <b>{tournament.gameType} {tournament.matchType}</b></span>
             &nbsp;•&nbsp;
@@ -327,7 +328,7 @@ export default function AdminTournamentManage() {
         </div>
 
         {joinedPlayers.length === 0 ? (
-          <div className="p-6 text-center text-xs text-slate-400 bg-[#080d1e] rounded-xl">
+          <div className="p-6 text-center text-xs text-slate-400 bg-[#10051e] border border-purple-900/40 rounded-xl">
             No players have registered for this tournament yet.
           </div>
         ) : (
@@ -335,21 +336,24 @@ export default function AdminTournamentManage() {
             <div className="space-y-2">
               {joinedPlayers.map((player) => {
                 const kills = playerKills[player.id] ?? 0;
-                const estimatedEarnings = tournament.gameType === 'BR'
-                  ? kills * (Number(tournament.perKill) || 0)
-                  : (csWinnerId === player.id ? (Number(tournament.winPrize) || Number(tournament.prizePool)) : 0);
+                const perKillRate = Number(tournament.perKill) || 0;
+                const winPrize = Number(tournament.winPrize) || Number(tournament.prizePool) || 0;
+                const isSelectedWinner = csWinnerId === player.id;
+                const killEarning = kills * perKillRate;
+                const winEarning = isSelectedWinner ? winPrize : 0;
+                const totalEstimatedEarnings = killEarning + winEarning;
 
                 return (
                   <div
                     key={player.id}
-                    className="bg-[#080d1e] border border-blue-900/50 p-3 rounded-xl flex items-center justify-between gap-4"
+                    className="bg-[#10051e] border border-purple-900/50 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow"
                   >
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-heading font-bold text-white text-sm">
                           {player.username}
                         </span>
-                        <span className="text-xs text-blue-400 font-mono">
+                        <span className="text-xs text-purple-300 font-mono">
                           (IGN: {player.ffIgn})
                         </span>
                       </div>
@@ -358,9 +362,10 @@ export default function AdminTournamentManage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      {tournament.gameType === 'BR' ? (
-                        <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {/* Kills Input (Available whenever perKill > 0 or BR mode) */}
+                      {(perKillRate > 0 || tournament.gameType === 'BR') && (
+                        <div className="flex items-center gap-1.5 bg-[#180930] px-2.5 py-1.5 rounded-xl border border-purple-900/50">
                           <span className="text-xs text-slate-400 font-semibold">Kills:</span>
                           <input
                             type="number"
@@ -370,26 +375,43 @@ export default function AdminTournamentManage() {
                             onChange={(e) =>
                               setPlayerKills({ ...playerKills, [player.id]: Number(e.target.value) })
                             }
-                            className="w-16 bg-[#0c142b] border border-blue-800 rounded-lg px-2 py-1 text-center font-heading font-black text-white text-sm focus:border-amber-400"
+                            className="w-14 bg-[#0d041c] border border-purple-800 rounded-lg px-2 py-1 text-center font-heading font-black text-white text-sm focus:border-amber-400 focus:outline-none"
                           />
-                          <span className="text-xs font-bold text-emerald-400 w-20 text-right">
-                            = ₹{estimatedEarnings}
-                          </span>
+                          {perKillRate > 0 && (
+                            <span className="text-xs font-bold text-amber-400">
+                              (₹{killEarning})
+                            </span>
+                          )}
                         </div>
-                      ) : (
-                        <label className="flex items-center gap-2 cursor-pointer bg-[#0c142b] px-3 py-1.5 rounded-xl border border-blue-900 hover:border-cyan-400">
+                      )}
+
+                      {/* Winner / Booyah Radio Option */}
+                      {(winPrize > 0 || tournament.gameType !== 'BR') && (
+                        <label className={`flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-xl border transition-all ${
+                          isSelectedWinner
+                            ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+                            : 'bg-[#180930] border-purple-900/60 text-slate-300 hover:border-purple-500'
+                        }`}>
                           <input
                             type="radio"
-                            name="csWinner"
-                            checked={csWinnerId === player.id}
+                            name="matchWinner"
+                            checked={isSelectedWinner}
                             onChange={() => setCsWinnerId(player.id)}
-                            className="text-cyan-500 focus:ring-0"
+                            className="text-amber-500 focus:ring-0"
                           />
-                          <span className="text-xs font-bold text-slate-200">
-                            Mark Winner (₹{tournament.winPrize || tournament.prizePool})
+                          <span className="text-xs font-bold">
+                            {tournament.gameType === 'BR' ? 'Booyah Winner' : 'Winner'} (+₹{winPrize})
                           </span>
                         </label>
                       )}
+
+                      {/* Total Payout Badge */}
+                      <div className="bg-emerald-950/60 border border-emerald-500/40 px-3 py-1 rounded-xl text-right">
+                        <span className="text-[10px] text-slate-400 block uppercase font-semibold">Payout</span>
+                        <span className="font-heading font-black text-sm text-emerald-400">
+                          ₹{totalEstimatedEarnings}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
@@ -397,7 +419,7 @@ export default function AdminTournamentManage() {
             </div>
 
             <div className="bg-amber-950/30 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-200">
-              ⚡ Clicking <b>"Distribute Rewards & Settle Match"</b> will automatically calculate kill prizes and win pools, deposit them straight into players' <b>Win Balances</b> (which they can withdraw), increment their total kills & earnings stats, and mark this tournament as <b>COMPLETED</b>.
+              ⚡ Clicking <b>"Distribute Rewards & Update Player Wallets"</b> will instantly calculate kill rewards & winner prize pools, credit them straight into players' <b>Win Balances</b> (which they can withdraw), record official credit transactions, update their profile stats, and mark this tournament as <b>COMPLETED</b>.
             </div>
 
             <button

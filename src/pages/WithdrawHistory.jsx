@@ -44,13 +44,13 @@ export default function WithdrawHistory() {
   };
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/wallet')}
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -70,7 +70,7 @@ export default function WithdrawHistory() {
 
       <div className="p-4 space-y-4">
         {/* Quick Nav / Action */}
-        <div className="flex items-center justify-between bg-[#0b142b] p-3 rounded-2xl border border-blue-900/40">
+        <div className="flex items-center justify-between bg-[#10051e] p-3 rounded-2xl border border-purple-900/40">
           <div>
             <p className="text-xs text-slate-400">Total Requests</p>
             <p className="font-heading font-extrabold text-white text-lg">
@@ -92,7 +92,7 @@ export default function WithdrawHistory() {
             Loading withdrawal history...
           </div>
         ) : withdrawals.length === 0 ? (
-          <div className="py-12 text-center bg-[#0b1329] rounded-2xl border border-blue-900/40 p-6 space-y-3">
+          <div className="py-12 text-center bg-[#10051e] rounded-2xl border border-purple-900/40 p-6 space-y-3">
             <Clock className="w-8 h-8 text-slate-500 mx-auto" />
             <p className="text-sm font-semibold text-slate-300">No withdrawal requests yet</p>
             <p className="text-xs text-slate-400">
@@ -115,7 +115,7 @@ export default function WithdrawHistory() {
               return (
                 <div
                   key={w.id}
-                  className="bg-[#0b142b] border border-blue-900/50 rounded-2xl p-4 space-y-3 shadow-md hover:border-blue-700/60 transition-colors"
+                  className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 space-y-3 shadow-md hover:border-purple-600/60 transition-colors"
                 >
                   {/* Top: Amount & Status Badge */}
                   <div className="flex items-center justify-between">
@@ -149,7 +149,7 @@ export default function WithdrawHistory() {
                   </div>
 
                   {/* Transfer Details (UPI / Bank) */}
-                  <div className="bg-[#070c18] p-2.5 rounded-xl border border-blue-900/40 flex items-center justify-between text-xs">
+                  <div className="bg-[#0a0216] p-2.5 rounded-xl border border-purple-900/40 flex items-center justify-between text-xs">
                     <div>
                       <span className="text-[10px] text-slate-400 uppercase font-semibold block">
                         Transfer Target ({w.method || 'UPI'})
@@ -174,7 +174,7 @@ export default function WithdrawHistory() {
                   </div>
 
                   {/* Timestamps & Notes */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-blue-900/30">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-purple-900/30">
                     <span>Requested: {new Date(w.createdAt).toLocaleString()}</span>
                     {w.adminNote && (
                       <span className="text-amber-300 font-medium truncate max-w-[150px]">

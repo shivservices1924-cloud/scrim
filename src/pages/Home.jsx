@@ -149,7 +149,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
+  const loadUpcoming = () => {
     fetch('/api/tournaments?status=UPCOMING')
       .then(res => res.json())
       .then(data => {
@@ -157,6 +157,22 @@ export default function Home() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadUpcoming();
+    // Fast polling every 6 seconds so newly added tournaments show up instantly!
+    const pollInterval = setInterval(loadUpcoming, 6000);
+    const onFocus = () => loadUpcoming();
+
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
+
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
+    };
   }, []);
 
   const now = Date.now();
@@ -172,7 +188,7 @@ export default function Home() {
   const lwHsCount = activeUpcoming.filter(t => t.category === 'LW_HEADSHOT').length;
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       <SEO
         title="Play Free Fire Tournaments & Win Cash"
         description="Join India's most trusted Free Fire esports tournaments. Compete in BR, Clash Squad, and Headshot matches with instant UPI payouts."
@@ -229,7 +245,7 @@ export default function Home() {
                       e.stopPropagation();
                     }}
                     aria-label={s.btnText}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-heading font-bold text-xs px-4 py-2 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer z-20"
+                    className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-heading font-bold text-xs px-4 py-2 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer z-20"
                   >
                     <span>{s.btnText}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -295,7 +311,7 @@ export default function Home() {
                 if (!user) return navigate('/login');
                 navigate('/my-matches?tab=ongoing');
               }}
-              className="bg-[#0c142b] hover:bg-[#111c3d] border border-blue-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
+              className="bg-[#10051e] hover:bg-[#180930] border border-purple-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
             >
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                 <RefreshCw className="w-6 h-6 animate-[spin_4s_linear_infinite]" />
@@ -309,7 +325,7 @@ export default function Home() {
                 if (!user) return navigate('/login');
                 navigate('/my-matches?tab=upcoming');
               }}
-              className="bg-[#0c142b] hover:bg-[#111c3d] border border-blue-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
+              className="bg-[#10051e] hover:bg-[#180930] border border-purple-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
             >
               <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
                 <Calendar className="w-6 h-6" />
@@ -323,7 +339,7 @@ export default function Home() {
                 if (!user) return navigate('/login');
                 navigate('/my-matches?tab=completed');
               }}
-              className="bg-[#0c142b] hover:bg-[#111c3d] border border-blue-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
+              className="bg-[#10051e] hover:bg-[#180930] border border-purple-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
             >
               <div className="w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
                 <CheckCircle2 className="w-6 h-6" />
@@ -348,6 +364,10 @@ export default function Home() {
               <img
                 src="/poster-br-solo.svg"
                 alt="BR Solo Tournament"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/poster-br-solo.jpg';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
@@ -402,6 +422,10 @@ export default function Home() {
               <img
                 src="/poster-br-duo.svg"
                 alt="BR Duo Tournament"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/poster-br-duo.jpg';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
@@ -455,6 +479,10 @@ export default function Home() {
               <img
                 src="/poster-cs.svg"
                 alt="CS Headshot Tournament"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/poster-cs.jpg';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
@@ -508,6 +536,10 @@ export default function Home() {
               <img
                 src="/poster-lone-wolf.svg"
                 alt="Lone Wolf 1v1 Tournament"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/poster-lone-wolf.jpg';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
@@ -555,19 +587,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Security & Registered Player Notice */}
-        <div className="bg-[#0b1329] border border-blue-900/60 rounded-2xl p-4 flex items-center justify-between">
-          <div>
-            <h4 className="font-heading font-bold text-white text-sm">🔒 Room Credentials Protection</h4>
-            <p className="text-xs text-slate-400 mt-0.5">Custom Room ID & Password are only accessible to registered match players.</p>
-          </div>
-          <button
-            onClick={() => navigate('/rules')}
-            className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl"
-          >
-            Rules
-          </button>
-        </div>
       </div>
     </div>
   );

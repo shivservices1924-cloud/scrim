@@ -93,13 +93,13 @@ export default function Deposit() {
   };
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       {/* Top Header */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/wallet')}
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -133,7 +133,7 @@ export default function Deposit() {
         </div>
 
         {/* User's Uploaded PhonePe QR Code Container */}
-        <div className="bg-[#0b142b] border border-purple-500/50 rounded-2xl p-4 text-center space-y-3 shadow-xl relative overflow-hidden">
+        <div className="bg-[#10051e] border border-purple-500/50 rounded-2xl p-4 text-center space-y-3 shadow-xl relative overflow-hidden">
           <div className="flex items-center justify-center gap-2 text-purple-300 font-bold text-xs">
             <Smartphone className="w-4 h-4 text-purple-400" />
             <span className="uppercase tracking-wider">PhonePe Official Payment QR</span>
@@ -158,7 +158,7 @@ export default function Deposit() {
           </div>
 
           {/* UPI ID Bar */}
-          <div className="bg-[#070d1e] border border-blue-900/60 rounded-xl p-2.5 flex items-center justify-between">
+          <div className="bg-[#0a0216] border border-purple-900/60 rounded-xl p-2.5 flex items-center justify-between">
             <div className="text-left overflow-hidden">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">Official UPI ID:</span>
               <p className="font-heading font-bold text-amber-400 text-sm truncate">
@@ -167,7 +167,7 @@ export default function Deposit() {
             </div>
             <button
               onClick={copyUpi}
-              className="flex items-center gap-1 text-xs bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-transform active:scale-95 shrink-0"
+              className="flex items-center gap-1 text-xs bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white px-3 py-1.5 rounded-lg transition-transform active:scale-95 shrink-0 shadow"
             >
               {copiedUpi ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copiedUpi ? 'Copied' : 'Copy'}
@@ -190,7 +190,7 @@ export default function Deposit() {
         )}
 
         {/* Deposit Verification Form */}
-        <form onSubmit={handleSubmit} className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 space-y-4">
           <h3 className="font-heading font-extrabold text-sm text-white uppercase tracking-wider">
             Step 2: Enter Payment Details
           </h3>
@@ -208,8 +208,8 @@ export default function Deposit() {
                   onClick={() => setAmount(amt)}
                   className={`py-1.5 rounded-xl text-xs font-heading font-bold border transition-all ${
                     amount === amt
-                      ? 'bg-blue-600 border-blue-400 text-white shadow-md'
-                      : 'bg-[#080d1e] border-blue-900/60 text-slate-300 hover:border-blue-700'
+                      ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 border-purple-400 text-white shadow-md'
+                      : 'bg-[#0a0216] border-purple-900/60 text-slate-300 hover:border-purple-600'
                   }`}
                 >
                   ₹{amt}
@@ -223,7 +223,7 @@ export default function Deposit() {
               required
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full bg-[#080d1e] border border-blue-900 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
+              className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
               placeholder="Enter amount (50 - 500)"
             />
           </div>
@@ -239,7 +239,7 @@ export default function Deposit() {
               value={utrNumber}
               onChange={(e) => setUtrNumber(e.target.value)}
               placeholder="e.g. 431092881923"
-              className="w-full bg-[#080d1e] border border-blue-900 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600 font-mono"
+              className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600 font-mono"
             />
             <p className="text-[10px] text-slate-500 mt-1">
               Check PhonePe payment screen for the 12-digit UTR / Ref Number.
@@ -255,7 +255,7 @@ export default function Deposit() {
               type="file"
               accept="image/*"
               onChange={(e) => setScreenshot(e.target.files[0] || null)}
-              className="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600/30 file:text-blue-300 hover:file:bg-blue-600/50 cursor-pointer"
+              className="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600/30 file:text-purple-300 hover:file:bg-purple-600/50 cursor-pointer"
             />
           </div>
 

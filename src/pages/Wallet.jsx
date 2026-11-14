@@ -26,6 +26,7 @@ export default function Wallet() {
       if (res.ok) {
         const data = await res.json();
         setWalletData(data);
+        refreshUser();
       }
     } catch (e) {
       console.error(e);
@@ -43,19 +44,19 @@ export default function Wallet() {
   }, [token]);
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       <SEO
         title="Esports Wallet & Cash Payouts"
         description="Deposit funds, view your winnings balance, and withdraw instant cash to UPI on RushX Esports."
         path="/wallet"
       />
       {/* Top Header matching Screenshot 3 */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             aria-label="Go back"
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -76,11 +77,11 @@ export default function Wallet() {
 
       <div className="p-4 space-y-6">
         {/* Balance Display Card (Screenshot 3) */}
-        <div className="text-center py-6 px-4 bg-gradient-to-b from-[#0e1936] to-[#0a1126] border border-blue-900/60 rounded-3xl shadow-xl relative overflow-hidden">
+        <div className="text-center py-6 px-4 bg-gradient-to-b from-[#1f0a3d] to-[#120524] border border-purple-900/60 rounded-3xl shadow-xl relative overflow-hidden">
           {/* Subtle glow background */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-20 bg-blue-600/20 blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-20 bg-purple-600/30 blur-3xl pointer-events-none"></div>
 
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
+          <p className="text-xs font-semibold text-purple-300 uppercase tracking-widest">
             Total Account Balance
           </p>
 
@@ -91,7 +92,7 @@ export default function Wallet() {
           </div>
 
           {/* Purple separator pill like in screenshot 3 */}
-          <div className="w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mx-auto my-3"></div>
+          <div className="w-20 h-1 bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full mx-auto my-3"></div>
 
           {/* Sub-row: Deposit Balance & Win Balance */}
           <div className="flex items-center justify-center gap-4 text-xs mt-3">
@@ -134,14 +135,14 @@ export default function Wallet() {
           <div className="grid grid-cols-2 gap-2 pt-1">
             <button
               onClick={() => navigate('/wallet/deposit-history')}
-              className="py-2.5 px-3 rounded-xl bg-[#0e1b3d] hover:bg-[#142654] border border-blue-500/30 text-emerald-400 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+              className="py-2.5 px-3 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-emerald-400 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Deposit History</span>
             </button>
             <button
               onClick={() => navigate('/wallet/withdraw-history')}
-              className="py-2.5 px-3 rounded-xl bg-[#0e1b3d] hover:bg-[#142654] border border-blue-500/30 text-rose-400 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+              className="py-2.5 px-3 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-rose-400 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
             >
               <ArrowDownToLine className="w-3.5 h-3.5" />
               <span>Withdraw History</span>
@@ -160,7 +161,7 @@ export default function Wallet() {
               Loading transactions...
             </div>
           ) : walletData.transactions.length === 0 ? (
-            <div className="py-8 text-center bg-[#0b1329] rounded-2xl border border-blue-900/40 p-4">
+            <div className="py-8 text-center bg-[#10051e] rounded-2xl border border-purple-900/40 p-4">
               <p className="text-xs text-slate-400">No transactions recorded yet.</p>
             </div>
           ) : (
@@ -170,7 +171,7 @@ export default function Wallet() {
                 return (
                   <div
                     key={tx.id}
-                    className="bg-[#0b142b] border border-blue-900/50 rounded-2xl p-3.5 space-y-2 shadow-md hover:border-blue-700/60 transition-colors"
+                    className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-3.5 space-y-2 shadow-md hover:border-purple-600/60 transition-colors"
                   >
                     {/* Top Row: Type badge, Txn ID, Amount, Wallet Type, Date/Time, New Balance */}
                     <div className="flex items-center justify-between text-xs">
@@ -212,12 +213,12 @@ export default function Wallet() {
                       <span>{tx.date}</span>
                     </div>
 
-                    <div className="text-right text-[11px] text-blue-300 font-semibold">
+                    <div className="text-right text-[11px] text-purple-300 font-semibold">
                       New bal: {tx.newBalance}
                     </div>
 
                     {/* Bottom Row: Detailed Description */}
-                    <p className="text-xs text-slate-300 bg-[#070d1e] p-2 rounded-xl border border-blue-900/40 leading-snug font-medium">
+                    <p className="text-xs text-slate-300 bg-[#0a0216] p-2 rounded-xl border border-purple-900/40 leading-snug font-medium">
                       {tx.description}
                     </p>
                   </div>

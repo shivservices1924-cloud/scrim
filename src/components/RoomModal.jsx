@@ -51,7 +51,7 @@ export default function RoomModal({ tournament, isOpen, onClose }) {
               {/* Room ID */}
               <div>
                 <span className="text-[11px] font-semibold text-slate-400 uppercase">Room ID:</span>
-                <div className="flex items-center justify-between mt-1 bg-[#080d1e] p-2.5 rounded-lg border border-emerald-500/30">
+                <div className="flex items-center justify-between mt-1 bg-[#070212] p-2.5 rounded-lg border border-emerald-500/30">
                   <span className="font-heading font-extrabold text-xl text-emerald-400 tracking-wider">
                     {tournament.roomId}
                   </span>
@@ -68,7 +68,7 @@ export default function RoomModal({ tournament, isOpen, onClose }) {
               {/* Room Password */}
               <div>
                 <span className="text-[11px] font-semibold text-slate-400 uppercase">Room Password:</span>
-                <div className="flex items-center justify-between mt-1 bg-[#080d1e] p-2.5 rounded-lg border border-emerald-500/30">
+                <div className="flex items-center justify-between mt-1 bg-[#070212] p-2.5 rounded-lg border border-emerald-500/30">
                   <span className="font-heading font-extrabold text-xl text-amber-300 tracking-wider">
                     {tournament.roomPassword}
                   </span>
@@ -84,7 +84,7 @@ export default function RoomModal({ tournament, isOpen, onClose }) {
             </div>
 
             {/* How to Join Instructions */}
-            <div className="bg-[#080d1e] p-3 rounded-xl border border-blue-900/40 space-y-2 text-xs">
+            <div className="bg-[#070212] p-3 rounded-xl border border-purple-900/40 space-y-2 text-xs">
               <span className="font-bold text-amber-400 uppercase flex items-center gap-1">
                 <Play className="w-3.5 h-3.5" /> How to Enter Custom Room:
               </span>

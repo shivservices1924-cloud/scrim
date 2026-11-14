@@ -326,7 +326,7 @@ function createPosterSVG({
 const brDuoSvg = createPosterSVG({
   categoryTitle: 'BR',
   categorySub: 'DUO',
-  subtitle: 'TEAM UP & CLAIM YOUR VICTORY',
+  subtitle: 'TEAM UP &amp; CLAIM YOUR VICTORY',
   prizeText: 'WIN ₹160-₹720',
   rules: [
     { title: 'No Vehicle In Final Zone', desc: '(Only Foot Movement Allowed)' },
@@ -347,7 +347,7 @@ const csSvg = createPosterSVG({
   prizeText: 'WIN ₹80-₹360',
   rules: [
     { title: 'Headshot Only Mode', desc: '(Body Shot Kills Disqualified)' },
-    { title: 'No Grenades or Launchers', desc: '(Guns & Desert Eagle Only)' },
+    { title: 'No Grenades or Launchers', desc: '(Guns &amp; Desert Eagle Only)' },
     { title: 'Strict CS Bermuda Map', desc: '(Custom Room Competitive)' }
   ],
   mapText: 'Bermuda CS',

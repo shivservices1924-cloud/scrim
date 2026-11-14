@@ -53,19 +53,19 @@ export default function Refer() {
   };
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       <SEO
         title="Refer & Earn Real Cash"
         description="Invite friends to RushX Esports tournaments. Earn instant wallet bonus when your friends join their first match."
         path="/refer"
       />
       {/* Top Header matching Screenshot 4 */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             aria-label="Go back"
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -166,7 +166,7 @@ export default function Refer() {
         </div>
 
         {/* Bonus Terms Card */}
-        <div className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 text-xs text-slate-300 space-y-1.5">
+        <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 text-xs text-slate-300 space-y-1.5">
           <span className="font-bold text-amber-400 uppercase">Referral Terms:</span>
           <p>• Both you and your friend must have valid Free Fire player UIDs.</p>
           <p>• Bonus is credited automatically upon your referred friend joining their first paid tournament match.</p>

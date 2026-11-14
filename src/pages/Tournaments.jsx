@@ -27,17 +27,37 @@ export default function Tournaments() {
   const [toastMessage, setToastMessage] = useState('');
   const [nowTs, setNowTs] = useState(Date.now());
 
-  // Real-time ticker to auto-expire tournaments the minute match time passes
+  // Real-time auto-refresh & ticker for instant smooth updates without waiting
   useEffect(() => {
     const interval = setInterval(() => {
       setNowTs(Date.now());
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+      fetchTournaments(true);
+    }, 4000);
 
-  const fetchTournaments = async () => {
+    const onFocus = () => {
+      setNowTs(Date.now());
+      fetchTournaments(true);
+    };
+
+    const onCustomUpdate = () => {
+      fetchTournaments(true);
+    };
+
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
+    window.addEventListener('rushx_tournament_update', onCustomUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
+      window.removeEventListener('rushx_tournament_update', onCustomUpdate);
+    };
+  }, [currentTab, currentCategory, currentGameType]);
+
+  const fetchTournaments = async (isBackground = false) => {
     try {
-      setLoading(true);
+      if (!isBackground) setLoading(true);
       let url = `/api/tournaments?status=${currentTab}`;
       if (currentCategory) url += `&category=${currentCategory}`;
       if (currentGameType) url += `&gameType=${currentGameType}`;
@@ -51,21 +71,7 @@ export default function Tournaments() {
       setTournaments(list);
 
       const joinedFromData = list.filter(t => t.isJoined).map(t => t.id);
-
-      if (token) {
-        const myRes = await fetch('/api/my-matches', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (myRes.ok) {
-          const myMatches = await myRes.json();
-          const allJoined = Array.from(new Set([...joinedFromData, ...myMatches.map(m => m.id)]));
-          setUserJoinedIds(allJoined);
-        } else {
-          setUserJoinedIds(joinedFromData);
-        }
-      } else {
-        setUserJoinedIds(joinedFromData);
-      }
+      setUserJoinedIds(joinedFromData);
     } catch (e) {
       console.error(e);
     } finally {
@@ -106,19 +112,19 @@ export default function Tournaments() {
     : 'BR Full Map Contests (Bermuda)';
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       <SEO
         title="Tournaments & Matches"
         description="Browse upcoming and live Free Fire tournaments. Join Solo, Duo, Clash Squad, and Headshot matches on Bermuda map."
         path="/tournaments"
       />
       {/* Top Header */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
             aria-label="Back to home"
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -140,7 +146,7 @@ export default function Tournaments() {
       </div>
 
       {/* Category Filter Chips */}
-      <div className="bg-[#080d1e] border-b border-blue-900/40 px-3 py-2 overflow-x-auto flex items-center gap-2 no-scrollbar">
+      <div className="bg-[#0a0216] border-b border-purple-900/40 px-3 py-2 overflow-x-auto flex items-center gap-2 no-scrollbar">
         {[
           { id: '', label: 'All Bermuda' },
           { id: 'BR_FULL_MAP', label: 'BR Full Map' },
@@ -156,7 +162,7 @@ export default function Tournaments() {
               className={`px-3 py-1 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all ${
                 isSelected
                   ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-[#0f172a] text-slate-400 border border-blue-900/50 hover:text-white'
+                  : 'bg-[#10051e] text-slate-400 border border-purple-900/50 hover:text-white'
               }`}
             >
               {cat.label}
@@ -166,7 +172,7 @@ export default function Tournaments() {
       </div>
 
       {/* Tabs: Ongoing | Upcoming | Resulted */}
-      <div className="bg-[#0b142b] border-b border-blue-900/50 px-4 pt-2">
+      <div className="bg-[#0d041c] border-b border-purple-900/50 px-4 pt-2">
         <div className="flex items-center justify-around border-b border-slate-800">
           {[
             { id: 'ONGOING', label: 'Ongoing' },
@@ -206,7 +212,7 @@ export default function Tournaments() {
       <div className="p-4 space-y-4">
         {loading ? (
           <div className="py-16 text-center space-y-3">
-            <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
+            <RefreshCw className="w-8 h-8 text-purple-400 animate-spin mx-auto" />
             <p className="text-xs text-slate-400">Loading contests...</p>
           </div>
         ) : (() => {
@@ -228,7 +234,7 @@ export default function Tournaments() {
 
           if (displayed.length === 0) {
             return (
-              <div className="py-16 text-center space-y-3 bg-[#0b1329] border border-blue-900/40 rounded-2xl p-6">
+              <div className="py-16 text-center space-y-3 bg-[#10051e] border border-purple-900/40 rounded-2xl p-6">
                 <AlertCircle className="w-10 h-10 text-slate-500 mx-auto" />
                 <h3 className="font-heading font-bold text-base text-white">
                   {currentTab === 'UPCOMING'
@@ -243,7 +249,7 @@ export default function Tournaments() {
                 {currentTab !== 'UPCOMING' && (
                   <button
                     onClick={() => handleTabChange('UPCOMING')}
-                    className="mt-2 py-2 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-heading font-bold text-xs shadow-md transition-all"
+                    className="mt-2 py-2 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:brightness-110 text-white font-heading font-bold text-xs shadow-md transition-all"
                   >
                     Browse Upcoming Matches
                   </button>

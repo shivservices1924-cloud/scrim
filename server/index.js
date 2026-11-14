@@ -363,6 +363,7 @@ app.post('/api/auth/register', async (req, res) => {
       ff_ign: cleanFfIgn,
       ffUid: cleanFfUid,
       ff_uid: cleanFfUid,
+      avatar: `/avatars/avatar-${Math.floor(Math.random() * 6) + 1}.svg`,
       depositBalance: 0,
       winBalance: 0,
       totalEarning: 0,
@@ -692,9 +693,9 @@ app.put('/api/auth/profile', authenticateToken, (req, res) => {
 
 // Get All Tournaments
 // STRICT SECURITY RULE: Room ID & Password only returned to JOINED players or Admin!
-app.get('/api/tournaments', (req, res) => {
+app.get('/api/tournaments', async (req, res) => {
   const { status, category, gameType } = req.query;
-  let list = db.getTournaments();
+  let list = await db.syncTournamentsFromSupabase();
   const now = Date.now();
 
   const currentUser = getOptionalUser(req);
@@ -742,7 +743,8 @@ app.get('/api/tournaments', (req, res) => {
 });
 
 // Get Single Tournament Details (Strict Registered-Player-Only Room Credentials!)
-app.get('/api/tournaments/:id', (req, res) => {
+app.get('/api/tournaments/:id', async (req, res) => {
+  await db.syncTournamentsFromSupabase();
   const tournament = db.getTournamentById(req.params.id);
   if (!tournament) {
     return res.status(404).json({ error: 'Tournament not found.' });
@@ -1265,7 +1267,7 @@ app.post('/api/admin/tournaments', requireAdmin, async (req, res) => {
       roomId: '',
       roomPassword: '',
       rules: rules ? rules.trim() : 'MAP: BERMUDA ONLY! IDP TIME 10 MINS BEFORE MATCH!',
-      banner: banner || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
+      banner: banner || '/poster-br-solo.svg',
       createdAt: new Date().toISOString()
     };
 
@@ -1356,103 +1358,75 @@ app.post('/api/admin/tournaments/:id/settle', requireAdmin, async (req, res) => 
       if (matchJp) csWinnerId = matchJp.id;
     }
 
-    // Process BR Kills (Kills * perKill -> Win Balance)
-    if (tournament.gameType === 'BR' && killsList.length > 0) {
-      for (const pk of killsList) {
-        const kills = Number(pk.kills) || 0;
-        const prizeAmount = kills * Number(tournament.perKill);
+    // Unified Settlement: Process Kills & Event Winner Rewards for all registered players
+    const winPrize = Number(tournament.winPrize) || Number(tournament.prizePool) || 0;
+    const perKillRate = Number(tournament.perKill) || 0;
 
-        const joinedPlayer = joinedPlayers.find(j => j.id === pk.joinedPlayerId || j.userId === pk.userId);
-        if (joinedPlayer) {
-          await db.updateJoinedPlayer(joinedPlayer.id, {
-            kills,
-            winAmount: prizeAmount
-          });
+    for (const jp of joinedPlayers) {
+      const pkObj = killsList.find(k => k.joinedPlayerId === jp.id || k.userId === jp.userId || k.id === jp.id);
+      const kills = pkObj ? (Number(pkObj.kills) || 0) : (Number(jp.kills) || 0);
+      const isWinner = Boolean(csWinnerId && jp.id === csWinnerId);
+      
+      const killReward = perKillRate > 0 ? (kills * perKillRate) : 0;
+      const winnerReward = isWinner ? winPrize : 0;
+      const totalReward = killReward + winnerReward;
 
-          const user = db.getUserById(joinedPlayer.userId);
-          if (user) {
-            const currentWin = Number(user.winBalance) || 0;
-            const newWin = currentWin + prizeAmount;
-            const updatedKills = (Number(user.totalKills) || 0) + kills;
-            const updatedEarnings = (Number(user.totalEarning) || 0) + prizeAmount;
-            const updatedMatches = (Number(user.matchesPlayed) || 0) + 1;
+      await db.updateJoinedPlayer(jp.id, {
+        kills,
+        winAmount: totalReward,
+        isWinner
+      });
 
-            await db.updateUser(user.id, {
-              winBalance: newWin,
-              totalKills: updatedKills,
-              totalEarning: updatedEarnings,
-              matchesPlayed: updatedMatches
-            });
+      const user = db.getUserById(jp.userId);
+      if (user) {
+        const currentWin = Number(user.winBalance) || 0;
+        const newWin = currentWin + totalReward;
+        const updatedEarnings = (Number(user.totalEarning) || 0) + totalReward;
+        const updatedMatches = (Number(user.matchesPlayed) || 0) + 1;
+        const updatedKills = (Number(user.totalKills) || 0) + kills;
 
-            if (prizeAmount > 0) {
-              await db.createTransaction({
-                id: 'tx_' + Date.now() + Math.random().toString(36).substring(2, 5),
-                userId: user.id,
-                type: 'credit',
-                walletType: 'win',
-                amount: prizeAmount,
-                newBalance: (Number(user.depositBalance) || 0) + newWin,
-                date: dateFormatted,
-                txId: Math.floor(1000000 + Math.random() * 9000000).toString(),
-                description: `Kill Reward (${kills} kills @ ₹${tournament.perKill}/kill) in ${tournament.title} ${tournament.matchId}`,
-                createdAt: now.toISOString()
-              });
-            }
-          }
-        }
-      }
-    }
-
-    // Process CS / Lone Wolf Winner
-    if ((tournament.gameType === 'CS' || tournament.category.includes('CS') || tournament.category.includes('LW')) && csWinnerId) {
-      const winPrize = Number(tournament.winPrize) || Number(tournament.prizePool);
-
-      for (const jp of joinedPlayers) {
-        const isWinner = jp.id === csWinnerId;
-        const awardedAmount = isWinner ? winPrize : 0;
-        const pkObj = killsList.find(k => k.joinedPlayerId === jp.id || k.userId === jp.userId);
-        const killsCount = pkObj ? (Number(pkObj.kills) || 0) : 0;
-
-        await db.updateJoinedPlayer(jp.id, {
-          kills: killsCount,
-          winAmount: awardedAmount
+        await db.updateUser(user.id, {
+          winBalance: newWin,
+          totalKills: updatedKills,
+          totalEarning: updatedEarnings,
+          matchesPlayed: updatedMatches
         });
 
-        const user = db.getUserById(jp.userId);
-        if (user) {
-          const currentWin = Number(user.winBalance) || 0;
-          const newWin = currentWin + awardedAmount;
-          const updatedEarnings = (Number(user.totalEarning) || 0) + awardedAmount;
-          const updatedMatches = (Number(user.matchesPlayed) || 0) + 1;
-          const updatedKills = (Number(user.totalKills) || 0) + killsCount;
-
-          await db.updateUser(user.id, {
-            winBalance: newWin,
-            totalKills: updatedKills,
-            totalEarning: updatedEarnings,
-            matchesPlayed: updatedMatches
+        if (killReward > 0) {
+          await db.createTransaction({
+            id: 'tx_' + Date.now() + Math.random().toString(36).substring(2, 5),
+            userId: user.id,
+            type: 'credit',
+            walletType: 'win',
+            amount: killReward,
+            newBalance: (Number(user.depositBalance) || 0) + currentWin + killReward,
+            date: dateFormatted,
+            txId: Math.floor(1000000 + Math.random() * 9000000).toString(),
+            description: `Kill Reward (${kills} kills @ ₹${perKillRate}/kill) in ${tournament.title} ${tournament.matchId}`,
+            createdAt: now.toISOString()
           });
+        }
 
-          if (isWinner && awardedAmount > 0) {
-            await db.createTransaction({
-              id: 'tx_' + Date.now() + Math.random().toString(36).substring(2, 5),
-              userId: user.id,
-              type: 'credit',
-              walletType: 'win',
-              amount: awardedAmount,
-              newBalance: (Number(user.depositBalance) || 0) + newWin,
-              date: dateFormatted,
-              txId: Math.floor(1000000 + Math.random() * 9000000).toString(),
-              description: `Winner Prize in ${tournament.title} ${tournament.matchId}`,
-              createdAt: now.toISOString()
-            });
-          }
+        if (winnerReward > 0) {
+          await db.createTransaction({
+            id: 'tx_' + Date.now() + Math.random().toString(36).substring(2, 5),
+            userId: user.id,
+            type: 'credit',
+            walletType: 'win',
+            amount: winnerReward,
+            newBalance: (Number(user.depositBalance) || 0) + newWin,
+            date: dateFormatted,
+            txId: Math.floor(1000000 + Math.random() * 9000000).toString(),
+            description: `Winner Prize in ${tournament.title} ${tournament.matchId}`,
+            createdAt: now.toISOString()
+          });
         }
       }
     }
 
     // Mark tournament completed
     await db.updateTournament(tournamentId, { status: 'COMPLETED' });
+    db.saveLocal();
 
     return res.json({ message: 'Match settled! Account money and player stats updated successfully in backend.' });
   } catch (error) {

@@ -119,8 +119,8 @@ export default function AdminWithdrawals() {
             onClick={() => setFilter(st)}
             className={`px-3.5 py-1.5 rounded-xl font-heading text-xs font-bold transition-all ${
               filter === st
-                ? 'bg-blue-600 text-white shadow'
-                : 'bg-[#0b1326] border border-blue-900/50 text-slate-400 hover:text-white'
+                ? 'bg-purple-600 text-white shadow'
+                : 'bg-[#10051e] border border-purple-900/50 text-slate-400 hover:text-white'
             }`}
           >
             {st} ({withdrawals.filter(w => st === 'ALL' || w.status === st).length})
@@ -129,7 +129,7 @@ export default function AdminWithdrawals() {
       </div>
 
       {/* Table & Mobile Cards */}
-      <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="p-8 text-center text-xs text-slate-400">Loading requests...</div>
         ) : filtered.length === 0 ? (
@@ -137,11 +137,11 @@ export default function AdminWithdrawals() {
         ) : (
           <>
             {/* Mobile Cards (< md) */}
-            <div className="md:hidden divide-y divide-blue-900/30">
+            <div className="md:hidden divide-y divide-purple-900/30">
               {filtered.map((w) => {
                 const payTarget = w.upiId || w.accountDetails;
                 return (
-                  <div key={w.id} className="p-4 space-y-3 bg-[#0b1326]">
+                  <div key={w.id} className="p-4 space-y-3 bg-[#10051e]">
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-heading font-black text-white text-base">{w.username}</p>
@@ -168,7 +168,7 @@ export default function AdminWithdrawals() {
                     </div>
 
                     {/* Copyable UPI Target */}
-                    <div className="bg-[#070c18] p-2.5 rounded-xl border border-blue-900/60 flex items-center justify-between">
+                    <div className="bg-[#0a0216] p-2.5 rounded-xl border border-purple-900/60 flex items-center justify-between">
                       <div className="min-w-0 pr-2">
                         <span className="text-[10px] text-slate-400 block font-semibold uppercase">Payout UPI / Bank:</span>
                         <span className="font-mono text-cyan-300 font-bold text-xs truncate block">
@@ -177,7 +177,7 @@ export default function AdminWithdrawals() {
                       </div>
                       <button
                         onClick={() => copyToClipboard(payTarget, w.id)}
-                        className="bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shrink-0 active:scale-95"
+                        className="bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shrink-0 active:scale-95"
                       >
                         {copiedId === w.id ? (
                           <>
@@ -218,7 +218,7 @@ export default function AdminWithdrawals() {
                         </button>
                       </div>
                     ) : (
-                      <p className="text-[11px] text-slate-400 bg-[#070c18] p-2 rounded-lg border border-blue-900/30">
+                      <p className="text-[11px] text-slate-400 bg-[#0a0216] p-2 rounded-lg border border-purple-900/30">
                         Note: {w.adminNote || 'Processed'}
                       </p>
                     )}
@@ -231,7 +231,7 @@ export default function AdminWithdrawals() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-[#070c18] border-b border-blue-900/40 text-slate-400 uppercase font-semibold">
+                  <tr className="bg-[#0a0216] border-b border-purple-900/40 text-slate-400 uppercase font-semibold">
                     <th className="p-3.5">User</th>
                     <th className="p-3.5">Withdraw Amount</th>
                     <th className="p-3.5">Payment Details (UPI / Bank)</th>
@@ -240,11 +240,11 @@ export default function AdminWithdrawals() {
                     <th className="p-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-blue-900/30">
+                <tbody className="divide-y divide-purple-900/30">
                   {filtered.map((w) => {
                     const payTarget = w.upiId || w.accountDetails;
                     return (
-                      <tr key={w.id} className="hover:bg-[#0e1933] transition-colors">
+                      <tr key={w.id} className="hover:bg-[#180930] transition-colors">
                         <td className="p-3.5 font-bold text-white">
                           {w.username}
                         </td>
@@ -255,7 +255,7 @@ export default function AdminWithdrawals() {
                         </td>
                         <td className="p-3.5">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-cyan-300 font-semibold bg-[#070c18] px-2 py-1 rounded border border-blue-900">
+                            <span className="font-mono text-cyan-300 font-semibold bg-[#0a0216] px-2 py-1 rounded border border-purple-900">
                               {payTarget}
                             </span>
                             <button

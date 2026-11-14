@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trophy, Medal, Award, Flame, Crosshair, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
+import { getPlayerAvatar } from '../utils/avatar';
 
 export default function Leaderboard() {
   const navigate = useNavigate();
@@ -90,9 +91,10 @@ export default function Leaderboard() {
                 <div className="grid grid-cols-3 gap-2 items-end">
                   {/* Rank 2 */}
                   <div className="bg-[#10051e] border border-slate-700/60 rounded-2xl p-2.5 text-center flex flex-col items-center shadow-md">
-                    <div className="w-9 h-9 rounded-full bg-slate-400/20 text-slate-300 flex items-center justify-center font-heading font-black text-sm border-2 border-slate-400 mb-1">
-                      2
-                    </div>
+                    <div className="relative mb-1">
+    <img src={getPlayerAvatar(leaders[1])} alt="Rank 2" className="w-12 h-12 rounded-full border-2 border-slate-400 object-cover p-0.5 bg-black" />
+    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-400 text-slate-900 font-heading font-black text-xs flex items-center justify-center border border-black">2</span>
+  </div>
                     <p className="font-heading font-bold text-xs text-white truncate max-w-full">
                       {leaders[1].username}
                     </p>
@@ -104,9 +106,13 @@ export default function Leaderboard() {
 
                   {/* Rank 1 (Champion) */}
                   <div className="bg-gradient-to-b from-[#240a4b] to-[#14062a] border-2 border-amber-400/80 rounded-2xl p-3 text-center flex flex-col items-center shadow-xl shadow-purple-950/60 -translate-y-2 relative">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 flex items-center justify-center font-heading font-black text-base shadow-lg mb-1 ring-4 ring-amber-400/30">
-                      <Crown className="w-6 h-6 text-amber-950 fill-current" />
-                    </div>
+                    <div className="relative mb-1.5">
+    <img src={getPlayerAvatar(leaders[0])} alt="Champion" className="w-16 h-16 rounded-full border-2 border-amber-400 object-cover p-0.5 bg-black ring-4 ring-amber-400/40" />
+    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shadow">
+      <Crown className="w-4 h-4 text-amber-950 fill-current" />
+    </div>
+    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-amber-400 text-amber-950 font-heading font-black text-xs flex items-center justify-center border border-black">1</span>
+  </div>
                     <span className="bg-amber-400 text-amber-950 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">
                       #1 RANK
                     </span>
@@ -121,9 +127,10 @@ export default function Leaderboard() {
 
                   {/* Rank 3 */}
                   <div className="bg-[#10051e] border border-amber-800/60 rounded-2xl p-2.5 text-center flex flex-col items-center shadow-md">
-                    <div className="w-9 h-9 rounded-full bg-amber-700/20 text-amber-500 flex items-center justify-center font-heading font-black text-sm border-2 border-amber-700 mb-1">
-                      3
-                    </div>
+                    <div className="relative mb-1">
+    <img src={getPlayerAvatar(leaders[2])} alt="Rank 3" className="w-12 h-12 rounded-full border-2 border-amber-700 object-cover p-0.5 bg-black" />
+    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-amber-700 text-white font-heading font-black text-xs flex items-center justify-center border border-black">3</span>
+  </div>
                     <p className="font-heading font-bold text-xs text-white truncate max-w-full">
                       {leaders[2].username}
                     </p>
@@ -136,9 +143,12 @@ export default function Leaderboard() {
               ) : (
                 /* Single / Two Players Podium */
                 <div className="bg-gradient-to-b from-[#240a4b] to-[#14062a] border-2 border-amber-400/80 rounded-3xl p-5 text-center flex flex-col items-center shadow-xl shadow-purple-950/60 relative">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 flex items-center justify-center font-heading font-black text-xl shadow-lg mb-2 ring-4 ring-amber-400/30">
-                    <Crown className="w-7 h-7 text-amber-950 fill-current" />
-                  </div>
+                  <div className="relative mb-2">
+    <img src={getPlayerAvatar(leaders[0])} alt="Champion" className="w-18 h-18 rounded-full border-2 border-amber-400 object-cover p-0.5 bg-black ring-4 ring-amber-400/40" />
+    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shadow">
+      <Crown className="w-4 h-4 text-amber-950 fill-current" />
+    </div>
+  </div>
                   <span className="bg-amber-400 text-amber-950 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
                     CURRENT LEADERBOARD CHAMPION
                   </span>
@@ -170,7 +180,7 @@ export default function Leaderboard() {
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center font-heading font-extrabold text-xs ${
+                      className={`w-6 h-6 rounded-full flex items-center justify-center font-heading font-extrabold text-xs shrink-0 ${
                         idx === 0
                           ? 'bg-amber-400 text-amber-950 font-black'
                           : idx === 1
@@ -182,6 +192,8 @@ export default function Leaderboard() {
                     >
                       {idx + 1}
                     </div>
+
+                    <img src={getPlayerAvatar(player)} alt="Avatar" className="w-9 h-9 rounded-full border border-purple-500/50 object-cover shrink-0" />
 
                     <div>
                       <h3 className="font-heading font-bold text-sm text-white">

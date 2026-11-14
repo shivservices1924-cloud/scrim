@@ -55,10 +55,10 @@ export default function VersionGate({ children }) {
 
   if (blocked && !isAdminOrDownload) {
     return (
-      <div className="fixed inset-0 z-[99999] bg-[#040711] text-white flex items-center justify-center p-6 select-none">
+      <div className="fixed inset-0 z-[99999] bg-[#070212] text-white flex items-center justify-center p-6 select-none">
         <div className="max-w-md w-full text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-500 via-orange-500 to-red-600 p-1 mx-auto shadow-2xl shadow-red-600/30">
-            <div className="w-full h-full bg-[#080d1e] rounded-[22px] flex items-center justify-center">
+            <div className="w-full h-full bg-[#10051e] rounded-[22px] flex items-center justify-center">
               <ShieldAlert className="w-10 h-10 text-amber-400 animate-pulse" />
             </div>
           </div>

@@ -22,19 +22,19 @@ export default function RulesNotice() {
   const [openSection, setOpenSection] = useState('all');
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       <SEO
         title="Tournament Rules & Fair Play Policy"
         description="Official Free Fire esports rules, anti-cheat policy, room credential timings, and payout guidelines for RushX Esports."
         path="/rules"
       />
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/40 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             aria-label="Go back"
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -42,7 +42,7 @@ export default function RulesNotice() {
             <h1 className="font-heading font-extrabold text-white text-lg tracking-wide leading-tight">
               Rules & Fair Play
             </h1>
-            <p className="text-[11px] text-emerald-400 font-bold">Official Tournament Code of Conduct</p>
+            <p className="text-[11px] text-amber-400 font-bold">Official Tournament Code of Conduct</p>
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@ export default function RulesNotice() {
         </div>
 
         {/* Section 1: Map & Banned Guns / Items */}
-        <div className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 space-y-3">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 space-y-3">
           <div className="flex items-center gap-2 text-amber-400 font-heading font-bold text-sm">
             <Ban className="w-4 h-4 text-red-400" />
             <span>Map & Banned Items (Strictly Enforced)</span>
@@ -73,16 +73,16 @@ export default function RulesNotice() {
           </p>
 
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-[#070d1e] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
+            <div className="bg-[#180930] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
               <span>🚫</span> <span>Double Vector</span>
             </div>
-            <div className="bg-[#070d1e] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
+            <div className="bg-[#180930] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
               <span>🚫</span> <span>M79 Launcher</span>
             </div>
-            <div className="bg-[#070d1e] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
+            <div className="bg-[#180930] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
               <span>🚫</span> <span>Ryden Character</span>
             </div>
-            <div className="bg-[#070d1e] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
+            <div className="bg-[#180930] p-2.5 rounded-xl border border-red-500/30 text-red-300 font-bold flex items-center gap-1.5">
               <span>🚫</span> <span>Grenade Spam (CS)</span>
             </div>
           </div>
@@ -92,9 +92,9 @@ export default function RulesNotice() {
         </div>
 
         {/* Section 2: Room ID & Joining Guidelines */}
-        <div className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center gap-2 text-cyan-400 font-heading font-bold text-sm">
-            <Clock className="w-4 h-4 text-cyan-400" />
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 space-y-3">
+          <div className="flex items-center gap-2 text-purple-300 font-heading font-bold text-sm">
+            <Clock className="w-4 h-4 text-purple-400" />
             <span>Custom Room Credentials & Timing</span>
           </div>
 
@@ -107,13 +107,13 @@ export default function RulesNotice() {
         </div>
 
         {/* Section 3: Screen Recording Mandate */}
-        <div className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 space-y-3">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 space-y-3">
           <div className="flex items-center gap-2 text-emerald-400 font-heading font-bold text-sm">
             <Video className="w-4 h-4 text-emerald-400" />
             <span>Mandatory Screen Recording</span>
           </div>
 
-          <div className="bg-[#080d1e] p-3 rounded-xl border border-emerald-500/30 text-xs text-slate-200 space-y-1.5">
+          <div className="bg-[#180930] p-3 rounded-xl border border-emerald-500/30 text-xs text-slate-200 space-y-1.5">
             <p className="font-bold text-emerald-300">
               🎥 All players are required to screen-record their full match from room joining to match finish.
             </p>
@@ -124,7 +124,7 @@ export default function RulesNotice() {
         </div>
 
         {/* Section 4: Eligibility & Account Security */}
-        <div className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 space-y-3 text-xs text-slate-300">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 space-y-3 text-xs text-slate-300">
           <div className="flex items-center gap-2 text-purple-400 font-heading font-bold text-sm">
             <Swords className="w-4 h-4 text-purple-400" />
             <span>Player Eligibility & Fair Play</span>
@@ -139,7 +139,7 @@ export default function RulesNotice() {
         </div>
 
         {/* Section 5: Wallet, Deposits & Withdrawals */}
-        <div className="bg-[#0b142b] border border-blue-900/60 rounded-2xl p-4 space-y-3 text-xs text-slate-300">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 space-y-3 text-xs text-slate-300">
           <div className="flex items-center gap-2 text-amber-400 font-heading font-bold text-sm">
             <Wallet className="w-4 h-4 text-amber-400" />
             <span>Wallet, Deposits & Payouts</span>
@@ -157,7 +157,7 @@ export default function RulesNotice() {
         <div className="text-center pt-2">
           <button
             onClick={() => navigate('/contact')}
-            className="inline-flex items-center gap-2 text-xs text-blue-400 hover:text-blue-300 font-bold"
+            className="inline-flex items-center gap-2 text-xs text-purple-400 hover:text-purple-300 font-bold"
           >
             <HelpCircle className="w-4 h-4" />
             <span>Have questions or need to report a rule violation? Contact Support</span>

@@ -22,20 +22,32 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
   };
 
   return (
-    <div className="bg-[#0b1329] border border-blue-900/60 rounded-2xl overflow-hidden shadow-xl hover:border-blue-700/80 transition-all duration-200">
+    <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/80 transition-all duration-200">
       {/* Banner & Title Header (Clickable to Contest Details) */}
       <div
         onClick={goToDetails}
-        className="relative h-44 w-full bg-gradient-to-t from-[#0b1329] via-slate-900/60 to-transparent overflow-hidden cursor-pointer group"
+        className="relative h-44 w-full bg-gradient-to-t from-[#10051e] via-slate-900/60 to-transparent overflow-hidden cursor-pointer group"
       >
         <img
-          src={tournament.banner}
+          src={tournament.banner || (
+            tournament.category === 'CS_HEADSHOT' ? '/poster-cs.svg' :
+            tournament.matchType === 'DUO' ? '/poster-br-duo.svg' :
+            tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.svg' :
+            '/poster-br-solo.svg'
+          )}
           alt={tournament.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = tournament.category === 'CS_HEADSHOT' ? '/poster-cs.jpg' :
+                                  tournament.matchType === 'DUO' ? '/poster-br-duo.jpg' :
+                                  tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.jpg' :
+                                  '/poster-br-solo.jpg';
+          }}
           className="w-full h-full object-cover object-center filter brightness-75 scale-105 group-hover:scale-110 transition-transform duration-300"
         />
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1329] via-[#0b1329]/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#10051e] via-[#10051e]/40 to-transparent"></div>
 
         {/* Status Tag */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5">
@@ -64,7 +76,7 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
         </div>
 
         {/* Rules Summary Box Overlay */}
-        <div className="absolute bottom-2 left-2 right-2 bg-black/85 backdrop-blur-md rounded-lg p-2 border border-blue-500/30 text-[10px] text-slate-200 leading-tight">
+        <div className="absolute bottom-2 left-2 right-2 bg-black/85 backdrop-blur-md rounded-lg p-2 border border-purple-500/30 text-[10px] text-slate-200 leading-tight">
           <div className="flex items-center gap-1 text-amber-400 font-bold mb-0.5">
             <ShieldAlert className="w-3 h-3" />
             <span className="uppercase tracking-wider">MAP: BERMUDA • TOURNAMENT RULES:</span>
@@ -85,14 +97,14 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
           >
             {tournament.title}
           </h3>
-          <div className="flex items-center justify-between text-xs text-blue-300 mt-1">
+          <div className="flex items-center justify-between text-xs text-purple-300 mt-1">
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-blue-400" />
+              <Clock className="w-3.5 h-3.5 text-purple-400" />
               <span className="font-medium">Time : {tournament.matchTime}</span>
             </div>
             <button
               onClick={goToDetails}
-              className="text-cyan-400 hover:text-cyan-300 font-semibold text-[11px] flex items-center gap-0.5"
+              className="text-cyan-400 hover:text-purple-300 font-semibold text-[11px] flex items-center gap-0.5"
             >
               <span>Details</span>
               <ExternalLink className="w-3 h-3" />
@@ -112,7 +124,7 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
         )}
 
         {/* 3x2 Details Grid */}
-        <div className="grid grid-cols-3 gap-2 bg-[#080d1d] p-3 rounded-xl border border-blue-900/40 text-center">
+        <div className="grid grid-cols-3 gap-2 bg-[#0a0216] p-3 rounded-xl border border-purple-900/40 text-center">
           {/* Row 1, Col 1: Prize Pool */}
           <div className="flex flex-col items-center">
             <span className="text-[10px] text-slate-400 font-semibold uppercase">PRIZE POOL</span>
@@ -122,7 +134,7 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
           </div>
 
           {/* Row 1, Col 2: Per Kill / Win Prize */}
-          <div className="flex flex-col items-center border-x border-blue-900/40">
+          <div className="flex flex-col items-center border-x border-purple-900/40">
             <span className="text-[10px] text-slate-400 font-semibold uppercase">
               {tournament.perKill > 0 ? 'PER KILL' : 'WIN PRIZE'}
             </span>
@@ -142,7 +154,7 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
           </div>
 
           {/* Row 2, Col 1: Type */}
-          <div className="flex flex-col items-center pt-2 border-t border-blue-900/40">
+          <div className="flex flex-col items-center pt-2 border-t border-purple-900/40">
             <span className="text-[10px] text-slate-400 font-semibold uppercase">TYPE</span>
             <span className="font-heading font-bold text-xs text-white uppercase mt-0.5 truncate max-w-[85px]">
               {tournament.category ? tournament.category.replace('_', ' ') : tournament.gameType}
@@ -150,7 +162,7 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
           </div>
 
           {/* Row 2, Col 2: Entry Per Player */}
-          <div className="flex flex-col items-center pt-2 border-t border-x border-blue-900/40">
+          <div className="flex flex-col items-center pt-2 border-t border-x border-purple-900/40">
             <span className="text-[10px] text-slate-400 font-semibold uppercase">ENTRY/PLAYER</span>
             <span className="font-heading font-bold text-xs text-white mt-0.5">
               ₹{tournament.entryFee}
@@ -158,35 +170,13 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
           </div>
 
           {/* Row 2, Col 3: Map (BERMUDA ONLY) */}
-          <div className="flex flex-col items-center pt-2 border-t border-blue-900/40">
+          <div className="flex flex-col items-center pt-2 border-t border-purple-900/40">
             <span className="text-[10px] text-slate-400 font-semibold uppercase">MAP</span>
             <span className="font-heading font-bold text-xs text-emerald-400 uppercase truncate max-w-[80px] mt-0.5">
               {mapName}
             </span>
           </div>
         </div>
-
-        {/* Security & Room Credentials Status Box - ONLY for joined players */}
-        {hasJoined && (
-          <div className="bg-emerald-950/40 border border-emerald-500/50 rounded-xl p-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Unlock className="w-4 h-4 text-emerald-400" />
-              <div>
-                <p className="text-xs font-bold text-emerald-300">Room Credentials Unlocked</p>
-                <p className="text-[10px] text-slate-300">
-                  {tournament.roomId ? `ID: ${tournament.roomId}` : 'Ready 10-15m before match'}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => onViewRoom(tournament)}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-transform active:scale-95 flex items-center gap-1 shadow"
-            >
-              <KeyRound className="w-3.5 h-3.5" />
-              <span>View ID & Pass</span>
-            </button>
-          </div>
-        )}
 
         {/* Progress Bar & Join Button Section */}
         <div className="space-y-2 pt-1">
@@ -211,7 +201,7 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
           {hasJoined ? (
             <button
               onClick={() => onViewRoom(tournament)}
-              className="w-full py-2.5 rounded-xl bg-[#14234b] hover:bg-[#1a2f64] border border-blue-500/40 text-blue-300 font-heading font-bold text-sm tracking-wider flex items-center justify-center gap-2 transition-all"
+              className="w-full py-2.5 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/40 text-purple-300 font-heading font-bold text-sm tracking-wider flex items-center justify-center gap-2 transition-all"
             >
               <Award className="w-4 h-4 text-amber-400" />
               YOU HAVE REGISTERED • VIEW ROOM ID

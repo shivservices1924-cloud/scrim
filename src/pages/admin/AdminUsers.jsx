@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { getPlayerAvatar } from '../../utils/avatar';
 import { Users, Search, Edit3, DollarSign, X, CheckCircle, RefreshCw, ShieldAlert, ShieldCheck, Ban } from 'lucide-react';
 
 export default function AdminUsers() {
@@ -162,12 +163,12 @@ export default function AdminUsers() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by username, email, phone, FF IGN or UID..."
-          className="w-full bg-[#0b1326] border border-blue-900/60 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
+          className="w-full bg-[#10051e] border border-purple-900/60 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-purple-400"
         />
       </div>
 
       {/* Table & Mobile Cards */}
-      <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="p-8 text-center text-xs text-slate-400">Loading players...</div>
         ) : filtered.length === 0 ? (
@@ -175,40 +176,43 @@ export default function AdminUsers() {
         ) : (
           <>
             {/* Mobile Cards (< md) */}
-            <div className="md:hidden divide-y divide-blue-900/30">
+            <div className="md:hidden divide-y divide-purple-900/30">
               {filtered.map((u) => (
-                <div key={u.id} className="p-4 space-y-3 bg-[#0b1326]">
+                <div key={u.id} className="p-4 space-y-3 bg-[#10051e]">
                   <div className="flex items-start justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-heading font-black text-white text-base">{u.username}</span>
-                        {u.role === 'admin' ? (
-                          <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-[9px] font-black px-1.5 py-0.5 rounded">
-                            ADMIN
-                          </span>
-                        ) : u.isBanned ? (
-                          <span className="bg-red-600/30 text-red-400 border border-red-500/50 text-[9px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                            <Ban className="w-2.5 h-2.5" /> BANNED
-                          </span>
-                        ) : (
-                          <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-1.5 py-0.5 rounded">
-                            ACTIVE
-                          </span>
+                    <div className="flex items-center gap-2.5">
+                      <img src={getPlayerAvatar(u)} alt="Avatar" className="w-9 h-9 rounded-full border border-purple-500/40 p-0.5 bg-black object-cover shrink-0" />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-heading font-black text-white text-base">{u.username}</span>
+                          {u.role === 'admin' ? (
+                            <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-[9px] font-black px-1.5 py-0.5 rounded">
+                              ADMIN
+                            </span>
+                          ) : u.isBanned ? (
+                            <span className="bg-red-600/30 text-red-400 border border-red-500/50 text-[9px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                              <Ban className="w-2.5 h-2.5" /> BANNED
+                            </span>
+                          ) : (
+                            <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                              ACTIVE
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          {u.phone} • {u.email}
+                        </p>
+                        {u.isBanned && u.banReason && (
+                          <p className="text-[10px] text-red-400 italic mt-0.5">
+                            Ban Reason: {u.banReason}
+                          </p>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        {u.phone} • {u.email}
-                      </p>
-                      {u.isBanned && u.banReason && (
-                        <p className="text-[10px] text-red-400 italic mt-0.5">
-                          Ban Reason: {u.banReason}
-                        </p>
-                      )}
                     </div>
                   </div>
 
                   {/* Free Fire details & Balances */}
-                  <div className="grid grid-cols-2 gap-2 bg-[#070c18] p-2.5 rounded-xl border border-blue-900/40 text-xs">
+                  <div className="grid grid-cols-2 gap-2 bg-[#0a0216] p-2.5 rounded-xl border border-purple-900/40 text-xs">
                     <div>
                       <span className="text-[10px] text-slate-400 block font-semibold">FREE FIRE:</span>
                       <span className="text-cyan-300 font-bold block truncate">{u.ffIgn || 'No IGN'}</span>
@@ -272,7 +276,7 @@ export default function AdminUsers() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-[#070c18] border-b border-blue-900/40 text-slate-400 uppercase font-semibold">
+                  <tr className="bg-[#0a0216] border-b border-purple-900/40 text-slate-400 uppercase font-semibold">
                     <th className="p-3.5">Player User</th>
                     <th className="p-3.5">Contact (Phone/Email)</th>
                     <th className="p-3.5">Free Fire (IGN / UID)</th>
@@ -282,32 +286,37 @@ export default function AdminUsers() {
                     <th className="p-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-blue-900/30">
+                <tbody className="divide-y divide-purple-900/30">
                   {filtered.map((u) => (
-                    <tr key={u.id} className="hover:bg-[#0e1933] transition-colors">
+                    <tr key={u.id} className="hover:bg-[#180930] transition-colors">
                       <td className="p-3.5">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-white text-sm">{u.username}</span>
-                          {u.role === 'admin' ? (
-                            <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-[9px] font-black px-1.5 py-0.5 rounded">
-                              ADMIN
-                            </span>
-                          ) : u.isBanned ? (
-                            <span className="bg-red-600/30 text-red-400 border border-red-500/50 text-[9px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                              <Ban className="w-2.5 h-2.5" /> BANNED
-                            </span>
-                          ) : (
-                            <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-1.5 py-0.5 rounded">
-                              ACTIVE
-                            </span>
-                          )}
+                        <div className="flex items-center gap-2.5">
+                          <img src={getPlayerAvatar(u)} alt="Avatar" className="w-8 h-8 rounded-full border border-purple-500/40 p-0.5 bg-black object-cover shrink-0" />
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-white text-sm">{u.username}</span>
+                              {u.role === 'admin' ? (
+                                <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-[9px] font-black px-1.5 py-0.5 rounded">
+                                  ADMIN
+                                </span>
+                              ) : u.isBanned ? (
+                                <span className="bg-red-600/30 text-red-400 border border-red-500/50 text-[9px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                  <Ban className="w-2.5 h-2.5" /> BANNED
+                                </span>
+                              ) : (
+                                <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                  ACTIVE
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-[11px] text-slate-500">{u.fullName}</span>
+                            {u.isBanned && u.banReason && (
+                              <p className="text-[10px] text-red-400/90 italic mt-0.5">
+                                Reason: {u.banReason}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <span className="text-[11px] text-slate-500">{u.fullName}</span>
-                        {u.isBanned && u.banReason && (
-                          <p className="text-[10px] text-red-400/90 italic mt-0.5">
-                            Reason: {u.banReason}
-                          </p>
-                        )}
                       </td>
                       <td className="p-3.5 text-slate-300">
                         <div>{u.phone}</div>
@@ -388,7 +397,7 @@ export default function AdminUsers() {
       {/* Adjust Balance Modal */}
       {adjustingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#0b1326] border border-blue-800 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative">
+          <div className="bg-[#10051e] border border-purple-800 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative">
             <button
               onClick={() => setAdjustingUser(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white"
@@ -413,7 +422,7 @@ export default function AdminUsers() {
                   value={depAdj}
                   onChange={(e) => setDepAdj(e.target.value)}
                   placeholder="e.g. +50 or -25"
-                  className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-sm text-white"
+                  className="w-full bg-[#0a0216] border border-purple-900 rounded-xl px-3 py-2 text-sm text-white"
                 />
                 <span className="text-[10px] text-slate-500">Current: ₹{adjustingUser.depositBalance}</span>
               </div>
@@ -427,7 +436,7 @@ export default function AdminUsers() {
                   value={winAdj}
                   onChange={(e) => setWinAdj(e.target.value)}
                   placeholder="e.g. +100 or -50"
-                  className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-sm text-white"
+                  className="w-full bg-[#0a0216] border border-purple-900 rounded-xl px-3 py-2 text-sm text-white"
                 />
                 <span className="text-[10px] text-slate-500">Current: ₹{adjustingUser.winBalance}</span>
               </div>
@@ -442,7 +451,7 @@ export default function AdminUsers() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="e.g. Compensation, tournament prize adjust"
-                  className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-sm text-white"
+                  className="w-full bg-[#0a0216] border border-purple-900 rounded-xl px-3 py-2 text-sm text-white"
                 />
               </div>
 
@@ -461,7 +470,7 @@ export default function AdminUsers() {
       {/* Ban Player Modal */}
       {banModalUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#0b1326] border border-red-600/80 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative">
+          <div className="bg-[#10051e] border border-red-600/80 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative">
             <button
               onClick={() => setBanModalUser(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white"
@@ -488,7 +497,7 @@ export default function AdminUsers() {
                   value={banReason}
                   onChange={(e) => setBanReason(e.target.value)}
                   placeholder="e.g. Using aimbot/wallhack script in Room #839210 or teaming"
-                  className="w-full bg-[#080d1e] border border-red-500/40 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-500"
+                  className="w-full bg-[#0a0216] border border-red-500/40 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-500"
                 />
               </div>
 

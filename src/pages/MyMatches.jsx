@@ -49,13 +49,13 @@ export default function MyMatches() {
   };
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#080d1a] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#0a1124]/95 backdrop-blur-md border-b border-blue-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
-            className="w-9 h-9 rounded-full bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 flex items-center justify-center text-blue-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -66,7 +66,7 @@ export default function MyMatches() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-[#0b142b] border-b border-blue-900/50 px-4 pt-2">
+      <div className="bg-[#10051e] border-b border-purple-900/50 px-4 pt-2">
         <div className="flex items-center justify-around border-b border-slate-800">
           {[
             { id: 'ONGOING', label: 'Ongoing' },
@@ -98,7 +98,7 @@ export default function MyMatches() {
             Loading your matches...
           </div>
         ) : filteredMatches.length === 0 ? (
-          <div className="py-16 text-center space-y-3 bg-[#0b1329] border border-blue-900/40 rounded-2xl p-6">
+          <div className="py-16 text-center space-y-3 bg-[#10051e] border border-purple-900/40 rounded-2xl p-6">
             <AlertCircle className="w-10 h-10 text-slate-500 mx-auto" />
             <h3 className="font-heading font-bold text-base text-white">
               No {currentTab.toLowerCase()} matches found
@@ -117,10 +117,10 @@ export default function MyMatches() {
           filteredMatches.map((m) => (
             <div
               key={m.id}
-              className="bg-[#0b1329] border border-blue-900/60 rounded-2xl p-4 space-y-3 shadow-lg"
+              className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 space-y-3 shadow-lg"
             >
               <div className="flex items-center justify-between">
-                <span className="bg-blue-600/30 text-blue-400 border border-blue-500/30 text-[10px] font-heading font-extrabold px-2 py-0.5 rounded uppercase">
+                <span className="bg-purple-600/30 text-purple-400 border border-purple-500/30 text-[10px] font-heading font-extrabold px-2 py-0.5 rounded uppercase">
                   {m.gameType} {m.matchType} • {m.map}
                 </span>
                 <span className="text-xs text-slate-400 font-mono">{m.matchId}</span>
@@ -130,13 +130,13 @@ export default function MyMatches() {
                 {m.title}
               </h3>
 
-              <div className="flex items-center gap-2 text-xs text-blue-300">
-                <Clock className="w-3.5 h-3.5 text-blue-400" />
+              <div className="flex items-center gap-2 text-xs text-purple-300">
+                <Clock className="w-3.5 h-3.5 text-purple-400" />
                 <span>{m.matchTime}</span>
               </div>
 
               {/* Joined Credentials Box */}
-              <div className="bg-[#070d1e] p-2.5 rounded-xl border border-blue-900/40 text-xs space-y-1 text-slate-300">
+              <div className="bg-[#0a0216] p-2.5 rounded-xl border border-purple-900/40 text-xs space-y-1 text-slate-300">
                 <div>
                   <span className="text-slate-400">Registered FF IGN: </span>
                   <span className="font-bold text-white">{m.joinedRecord?.ffIgn}</span> (UID: {m.joinedRecord?.ffUid})
@@ -166,7 +166,7 @@ export default function MyMatches() {
                   </div>
                   <button
                     onClick={() => navigate(`/contest/${m.id}`)}
-                    className="w-full py-2 rounded-xl bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 text-cyan-300 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    className="w-full py-2 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-purple-300 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <span>View Match Result Details</span>
                   </button>
@@ -175,7 +175,7 @@ export default function MyMatches() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => navigate(`/contest/${m.id}`)}
-                    className="py-2.5 rounded-xl bg-[#122044] hover:bg-[#182b5c] border border-blue-500/30 text-cyan-300 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    className="py-2.5 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-purple-300 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <span>Contest Page</span>
                   </button>

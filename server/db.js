@@ -99,6 +99,7 @@ const toUserSnake = (u) => {
   const ffUid = u.ff_uid || u.ffUid || '';
   const referralCode = u.referral_code || u.referralCode || null;
   const referredBy = u.referred_by || u.referredBy || null;
+  const avatar = u.avatar || u.profilePic || u.profile_pic || null;
 
   return {
     id: String(u.id),
@@ -109,6 +110,7 @@ const toUserSnake = (u) => {
     password_hash: passwordHash,
     ff_ign: ffIgn,
     ff_uid: ffUid,
+    avatar: avatar,
     deposit_balance: Number(u.depositBalance ?? u.deposit_balance ?? 0),
     win_balance: Number(u.winBalance ?? u.win_balance ?? 0),
     total_earning: Number(u.totalEarning ?? u.total_earning ?? 0),
@@ -137,6 +139,14 @@ const toUserCamel = (u) => {
   const isBanned = u.role === 'banned' || Boolean(u.is_banned) || Boolean(u.isBanned);
   const role = u.role === 'admin' ? 'admin' : (isBanned ? 'banned' : (u.role || 'user'));
 
+  let avatar = u.avatar || u.profilePic || u.profile_pic;
+  if (!avatar) {
+    let sum = 0;
+    const str = String(u.id || u.username || 'rushx');
+    for (let i = 0; i < str.length; i++) sum = (sum * 31 + str.charCodeAt(i)) >>> 0;
+    avatar = `/avatars/avatar-${(sum % 6) + 1}.svg`;
+  }
+
   return {
     id: String(u.id),
     username: u.username,
@@ -150,6 +160,8 @@ const toUserCamel = (u) => {
     ff_ign: ffIgn,
     ffUid,
     ff_uid: ffUid,
+    avatar,
+    profilePic: avatar,
     depositBalance: depBal,
     deposit_balance: depBal,
     winBalance: winBal,
@@ -705,6 +717,32 @@ class Database {
   }
 
   // Tournaments
+  async syncTournamentsFromSupabase() {
+    const now = Date.now();
+    // Cache for 3 seconds to prevent excessive roundtrips, but stay ultra-fresh
+    if (this._lastTourneySync && now - this._lastTourneySync < 3000) {
+      this.checkAndTransitionTournamentStatuses();
+      return this.data.tournaments;
+    }
+    this._lastTourneySync = now;
+
+    try {
+      const syncTask = supabase.from('tournaments').select('*').order('created_at', { ascending: false });
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Sync timeout')), 3000));
+      const { data: remoteTourneys, error } = await Promise.race([syncTask, timeoutTask]);
+
+      if (!error && Array.isArray(remoteTourneys) && remoteTourneys.length > 0) {
+        this.data.tournaments = remoteTourneys.map(toTournamentCamel);
+        this.saveLocal();
+      }
+    } catch (err) {
+      // Fallback seamlessly to in-memory cached tournaments
+    }
+
+    this.checkAndTransitionTournamentStatuses();
+    return this.data.tournaments;
+  }
+
   getTournaments() {
     this.checkAndTransitionTournamentStatuses();
     return this.data.tournaments;
@@ -718,16 +756,19 @@ class Database {
     this.data.tournaments.unshift(tData);
     this.saveLocal();
 
+    // Await cloud insert with 3.5s timeout for serverless persistence
     try {
       const snake = toTournamentSnake(tData);
-      const { error } = await supabase.from('tournaments').insert(snake);
+      const insertTask = supabase.from('tournaments').insert(snake);
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Insert timeout')), 3500));
+      const { error } = await Promise.race([insertTask, timeoutTask]);
       if (error) {
         console.error('Supabase tournament insert error:', error.message);
       } else {
         console.log('✅ Tournament successfully saved in Supabase cloud:', tData.title);
       }
     } catch (e) {
-      console.error('Supabase tournament insert exception:', e.message);
+      console.warn('Supabase tournament insert notice:', e.message);
     }
     return tData;
   }
@@ -740,14 +781,16 @@ class Database {
 
       try {
         const fullSnake = toTournamentSnake(this.data.tournaments[idx]);
-        const { error } = await supabase.from('tournaments').update(fullSnake).eq('id', id);
+        const updateTask = supabase.from('tournaments').update(fullSnake).eq('id', id);
+        const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Update timeout')), 3500));
+        const { error } = await Promise.race([updateTask, timeoutTask]);
         if (error) {
           console.error('Supabase tournament update error:', error.message);
         } else {
           console.log('✅ Tournament updated in Supabase cloud:', id);
         }
       } catch (e) {
-        console.error('Supabase tournament update exception:', e.message);
+        console.warn('Supabase tournament update notice:', e.message);
       }
       return this.data.tournaments[idx];
     }

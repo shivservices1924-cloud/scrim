@@ -147,19 +147,19 @@ export default function AdminDashboard() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Users */}
-        <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl p-4 shadow-lg">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 shadow-lg">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold uppercase">Total Players</span>
-            <Users className="w-5 h-5 text-blue-400" />
+            <Users className="w-5 h-5 text-purple-400" />
           </div>
           <p className="font-heading font-black text-3xl text-white mt-2">
             {stats.totalUsers}
           </p>
-          <span className="text-[10px] text-blue-400 font-medium">Registered Accounts</span>
+          <span className="text-[10px] text-purple-400 font-medium">Registered Accounts</span>
         </div>
 
         {/* Active Tournaments */}
-        <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl p-4 shadow-lg">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-4 shadow-lg">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold uppercase">Live/Upcoming Matches</span>
             <Swords className="w-5 h-5 text-amber-400" />
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
         {/* Pending Deposits */}
         <div
           onClick={() => navigate('/control-room-777/deposits')}
-          className="bg-[#0b1326] border border-emerald-500/40 rounded-2xl p-4 shadow-lg cursor-pointer hover:border-emerald-400 transition-all"
+          className="bg-[#10051e] border border-emerald-500/40 rounded-2xl p-4 shadow-lg cursor-pointer hover:border-emerald-400 transition-all"
         >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold uppercase">Pending Deposits</span>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
         {/* Pending Withdrawals */}
         <div
           onClick={() => navigate('/control-room-777/withdrawals')}
-          className="bg-[#0b1326] border border-red-500/40 rounded-2xl p-4 shadow-lg cursor-pointer hover:border-red-400 transition-all"
+          className="bg-[#10051e] border border-red-500/40 rounded-2xl p-4 shadow-lg cursor-pointer hover:border-red-400 transition-all"
         >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold uppercase">Pending Payouts</span>
@@ -206,8 +206,8 @@ export default function AdminDashboard() {
       </div>
 
       {/* NEW: Financial Donut Accounting & Cash Flow Tracker */}
-      <div className="bg-[#0b1326] border border-blue-900/60 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-blue-900/40">
+      <div className="bg-[#10051e] border border-purple-900/60 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-purple-900/40">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
               <PieChart className="w-5 h-5" />
@@ -226,7 +226,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Time Range Filter Tabs (1 Din, 2 Din, 7 Din, 1 Mahina, All Time) */}
-          <div className="flex items-center gap-1.5 bg-[#070c18] p-1 rounded-2xl border border-blue-900/60 overflow-x-auto self-start sm:self-auto">
+          <div className="flex items-center gap-1.5 bg-[#0a0216] p-1 rounded-2xl border border-purple-900/60 overflow-x-auto self-start sm:self-auto">
             {[
               { id: 'today', label: '1 Din (Aaj)' },
               { id: '2days', label: '2 Din' },
@@ -252,7 +252,7 @@ export default function AdminDashboard() {
         {/* Circular Donut Visual & Metric Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Circular Donut SVG Chart (4 Columns on Desktop) */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-[#080d1e] rounded-2xl border border-blue-900/50 shadow-inner">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-[#070212] rounded-2xl border border-purple-900/50 shadow-inner">
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
                 {/* Background Ring */}
@@ -312,7 +312,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Donut Legend */}
-            <div className="flex items-center justify-center gap-4 text-xs font-semibold pt-3 border-t border-blue-900/30 w-full mt-2">
+            <div className="flex items-center justify-center gap-4 text-xs font-semibold pt-3 border-t border-purple-900/30 w-full mt-2">
               <div className="flex items-center gap-1.5 text-emerald-400">
                 <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block shadow-sm shadow-emerald-500/50"></span>
                 <span>Paisa Aaya (In)</span>
@@ -327,7 +327,7 @@ export default function AdminDashboard() {
           {/* 3 Detailed Breakdown Cards (7 Columns on Desktop) */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Card 1: Money In */}
-            <div className="bg-[#080d1e] border border-emerald-500/40 rounded-2xl p-4 space-y-2 shadow-lg">
+            <div className="bg-[#070212] border border-emerald-500/40 rounded-2xl p-4 space-y-2 shadow-lg">
               <div className="flex items-center justify-between text-emerald-400">
                 <span className="text-[11px] font-heading font-extrabold uppercase tracking-wider">Paisa Laga (In)</span>
                 <TrendingUp className="w-4 h-4" />
@@ -335,7 +335,7 @@ export default function AdminDashboard() {
               <p className="font-heading font-black text-2xl text-emerald-400">
                 ₹{financial.totalMoneyIn}
               </p>
-              <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-blue-900/40">
+              <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-purple-900/40">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Match Entry Fees:</span>
                   <span className="font-bold text-white">₹{financial.entryFeesCollected}</span>
@@ -352,7 +352,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Card 2: Money Out */}
-            <div className="bg-[#080d1e] border border-rose-500/40 rounded-2xl p-4 space-y-2 shadow-lg">
+            <div className="bg-[#070212] border border-rose-500/40 rounded-2xl p-4 space-y-2 shadow-lg">
               <div className="flex items-center justify-between text-rose-400">
                 <span className="text-[11px] font-heading font-extrabold uppercase tracking-wider">Distribute Hua (Out)</span>
                 <ArrowDownToLine className="w-4 h-4" />
@@ -360,7 +360,7 @@ export default function AdminDashboard() {
               <p className="font-heading font-black text-2xl text-rose-400">
                 ₹{financial.totalMoneyOut}
               </p>
-              <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-blue-900/40">
+              <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-purple-900/40">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Kills & Win Prizes:</span>
                   <span className="font-bold text-white">₹{financial.prizesDistributed}</span>
@@ -377,7 +377,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Card 3: Net Profit / Retention */}
-            <div className="bg-[#080d1e] border border-amber-500/50 rounded-2xl p-4 space-y-2 shadow-lg">
+            <div className="bg-[#070212] border border-amber-500/50 rounded-2xl p-4 space-y-2 shadow-lg">
               <div className="flex items-center justify-between text-amber-400">
                 <span className="text-[11px] font-heading font-extrabold uppercase tracking-wider">Bacha Hua (Net)</span>
                 <Sparkles className="w-4 h-4" />
@@ -387,7 +387,7 @@ export default function AdminDashboard() {
               }`}>
                 ₹{financial.netProfit}
               </p>
-              <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-blue-900/40">
+              <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-purple-900/40">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Match Retention:</span>
                   <span className="font-bold text-amber-300">₹{financial.tournamentProfit}</span>
@@ -411,7 +411,7 @@ export default function AdminDashboard() {
       {/* Two Column Section: Pending Requests */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending Deposits Preview */}
-        <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl p-5 shadow-lg space-y-4">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-5 shadow-lg space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-bold text-base text-white flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-emerald-400" />
@@ -419,7 +419,7 @@ export default function AdminDashboard() {
             </h2>
             <button
               onClick={() => navigate('/control-room-777/deposits')}
-              className="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold"
+              className="text-xs text-purple-400 hover:underline flex items-center gap-1 font-semibold"
             >
               <span>View All</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -427,7 +427,7 @@ export default function AdminDashboard() {
           </div>
 
           {stats.pendingDeposits.length === 0 ? (
-            <div className="py-8 text-center text-xs text-slate-400 bg-[#080d1e] rounded-xl border border-blue-900/30">
+            <div className="py-8 text-center text-xs text-slate-400 bg-[#070212] rounded-xl border border-purple-900/30">
               No pending deposits to verify right now.
             </div>
           ) : (
@@ -435,7 +435,7 @@ export default function AdminDashboard() {
               {stats.pendingDeposits.map((dep) => (
                 <div
                   key={dep.id}
-                  className="bg-[#080d1e] border border-blue-900/40 p-3 rounded-xl flex items-center justify-between text-xs"
+                  className="bg-[#070212] border border-purple-900/40 p-3 rounded-xl flex items-center justify-between text-xs"
                 >
                   <div>
                     <p className="font-bold text-white">{dep.username}</p>
@@ -447,7 +447,7 @@ export default function AdminDashboard() {
                     </span>
                     <button
                       onClick={() => navigate('/control-room-777/deposits')}
-                      className="block text-[10px] text-blue-400 hover:underline mt-0.5"
+                      className="block text-[10px] text-purple-400 hover:underline mt-0.5"
                     >
                       Review →
                     </button>
@@ -459,7 +459,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pending Withdrawals Preview */}
-        <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl p-5 shadow-lg space-y-4">
+        <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-5 shadow-lg space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-bold text-base text-white flex items-center gap-2">
               <ArrowDownToLine className="w-4 h-4 text-red-400" />
@@ -467,7 +467,7 @@ export default function AdminDashboard() {
             </h2>
             <button
               onClick={() => navigate('/control-room-777/withdrawals')}
-              className="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold"
+              className="text-xs text-purple-400 hover:underline flex items-center gap-1 font-semibold"
             >
               <span>View All</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -475,7 +475,7 @@ export default function AdminDashboard() {
           </div>
 
           {stats.pendingWithdrawals.length === 0 ? (
-            <div className="py-8 text-center text-xs text-slate-400 bg-[#080d1e] rounded-xl border border-blue-900/30">
+            <div className="py-8 text-center text-xs text-slate-400 bg-[#070212] rounded-xl border border-purple-900/30">
               No pending withdrawals right now.
             </div>
           ) : (
@@ -483,7 +483,7 @@ export default function AdminDashboard() {
               {stats.pendingWithdrawals.map((w) => (
                 <div
                   key={w.id}
-                  className="bg-[#080d1e] border border-blue-900/40 p-3 rounded-xl flex items-center justify-between text-xs"
+                  className="bg-[#070212] border border-purple-900/40 p-3 rounded-xl flex items-center justify-between text-xs"
                 >
                   <div>
                     <p className="font-bold text-white">{w.username}</p>
@@ -497,9 +497,9 @@ export default function AdminDashboard() {
                     </span>
                     <button
                       onClick={() => navigate('/control-room-777/withdrawals')}
-                      className="block text-[10px] text-blue-400 hover:underline mt-0.5"
+                      className="block text-[10px] text-purple-400 hover:underline mt-0.5"
                     >
-                      Pay Now →
+                      Process →
                     </button>
                   </div>
                 </div>

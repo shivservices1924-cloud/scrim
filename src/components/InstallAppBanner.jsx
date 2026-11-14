@@ -89,7 +89,7 @@ export default function InstallAppBanner() {
   return (
     <>
       {/* Top Banner on Mobile */}
-      <div className="bg-gradient-to-r from-blue-950 via-[#0b1633] to-indigo-950 border-b border-blue-600/40 px-3.5 py-2.5 shadow-lg relative z-30">
+      <div className="bg-gradient-to-r from-[#10051e] via-[#180930] to-[#10051e] border-b border-purple-500/40 px-3.5 py-2.5 shadow-lg relative z-30">
         <div className="max-w-md mx-auto flex items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-full bg-white border border-amber-400 p-0.5 shadow shrink-0 overflow-hidden flex items-center justify-center">
@@ -113,14 +113,14 @@ export default function InstallAppBanner() {
           <div className="flex items-center gap-1.5 shrink-0">
             <a
               href="/download"
-              className="py-1 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[10px] font-heading font-bold flex items-center gap-1"
+              className="py-1 px-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900 text-slate-200 border border-purple-800/60 text-[10px] font-heading font-bold flex items-center gap-1"
             >
               <Download className="w-2.5 h-2.5" />
               <span>APK</span>
             </a>
             <button
               onClick={handleInstallClick}
-              className="py-1 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white font-heading font-bold text-[11px] tracking-wider shadow-md shadow-blue-600/30 transition-all flex items-center gap-1"
+              className="py-1 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 active:scale-95 text-white font-heading font-bold text-[11px] tracking-wider shadow-md shadow-purple-900/50 transition-all flex items-center gap-1"
             >
               <Smartphone className="w-3 h-3" />
               <span>ADD</span>
@@ -139,8 +139,8 @@ export default function InstallAppBanner() {
       {/* Visual Instructions Modal for iOS / Browser Users */}
       {showInstructions && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[99999] flex items-end sm:items-center justify-center p-4">
-          <div className="bg-[#0b142b] border border-blue-900/80 rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl animate-in fade-in slide-in-from-bottom duration-200">
-            <div className="flex items-center justify-between pb-2 border-b border-blue-900/50">
+          <div className="bg-[#10051e] border border-purple-900/80 rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl animate-in fade-in slide-in-from-bottom duration-200">
+            <div className="flex items-center justify-between pb-2 border-b border-purple-900/50">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
                   <Smartphone className="w-4 h-4" />
@@ -163,8 +163,8 @@ export default function InstallAppBanner() {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="bg-[#080d1e] border border-blue-900/60 rounded-2xl p-3 flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-blue-600/20 text-blue-400 font-heading font-black flex items-center justify-center shrink-0 text-xs">
+              <div className="bg-[#070212] border border-purple-900/60 rounded-2xl p-3 flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-purple-600/20 text-purple-400 font-heading font-black flex items-center justify-center shrink-0 text-xs">
                   1
                 </div>
                 <div>
@@ -178,7 +178,7 @@ export default function InstallAppBanner() {
                 </div>
               </div>
 
-              <div className="bg-[#080d1e] border border-blue-900/60 rounded-2xl p-3 flex items-start gap-3">
+              <div className="bg-[#070212] border border-purple-900/60 rounded-2xl p-3 flex items-start gap-3">
                 <div className="w-6 h-6 rounded-full bg-amber-600/20 text-amber-400 font-heading font-black flex items-center justify-center shrink-0 text-xs">
                   2
                 </div>
@@ -193,7 +193,7 @@ export default function InstallAppBanner() {
                 </div>
               </div>
 
-              <div className="bg-[#080d1e] border border-blue-900/60 rounded-2xl p-3 flex items-start gap-3">
+              <div className="bg-[#070212] border border-purple-900/60 rounded-2xl p-3 flex items-start gap-3">
                 <div className="w-6 h-6 rounded-full bg-emerald-600/20 text-emerald-400 font-heading font-black flex items-center justify-center shrink-0 text-xs">
                   3
                 </div>

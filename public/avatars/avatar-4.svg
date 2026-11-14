@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b0728" />
+      <stop offset="100%" stop-color="#14020e" />
+    </linearGradient>
+    <linearGradient id="flame" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="50%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#facc15" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="100" fill="url(#g4)" stroke="#f43f5e" stroke-width="4" />
+  <!-- Phoenix Wing Feathers -->
+  <path d="M 30 110 Q 50 60 100 50 Q 150 60 170 110 Q 140 90 100 85 Q 60 90 30 110 Z" fill="url(#flame)" />
+  <!-- Hawk/Eagle Helmet -->
+  <path d="M 60 90 L 100 65 L 140 90 L 130 135 L 100 160 L 70 135 Z" fill="#1e0917" stroke="#f43f5e" stroke-width="2" />
+  <!-- Beak Visor -->
+  <polygon points="85,115 115,115 100,150" fill="#facc15" />
+  <!-- Blazing Eyes -->
+  <polygon points="75,100 90,105 80,110" fill="#fef08a" />
+  <polygon points="125,100 110,105 120,110" fill="#fef08a" />
+</svg>

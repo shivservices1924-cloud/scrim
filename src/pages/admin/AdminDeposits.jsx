@@ -111,8 +111,8 @@ export default function AdminDeposits() {
             onClick={() => setFilter(st)}
             className={`px-3.5 py-1.5 rounded-xl font-heading text-xs font-bold transition-all ${
               filter === st
-                ? 'bg-blue-600 text-white shadow'
-                : 'bg-[#0b1326] border border-blue-900/50 text-slate-400 hover:text-white'
+                ? 'bg-purple-600 text-white shadow'
+                : 'bg-[#10051e] border border-purple-900/50 text-slate-400 hover:text-white'
             }`}
           >
             {st} ({deposits.filter(d => st === 'ALL' || d.status === st).length})
@@ -121,7 +121,7 @@ export default function AdminDeposits() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl overflow-hidden shadow-xl">
         {loading ? (
           <div className="p-8 text-center text-xs text-slate-400">Loading requests...</div>
         ) : filtered.length === 0 ? (
@@ -129,9 +129,9 @@ export default function AdminDeposits() {
         ) : (
           <>
             {/* Mobile Cards View (< md) */}
-            <div className="md:hidden divide-y divide-blue-900/30">
+            <div className="md:hidden divide-y divide-purple-900/30">
               {filtered.map((d) => (
-                <div key={d.id} className="p-4 space-y-3 bg-[#0b1326]">
+                <div key={d.id} className="p-4 space-y-3 bg-[#10051e]">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-heading font-black text-white text-base">{d.username}</p>
@@ -157,14 +157,14 @@ export default function AdminDeposits() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-blue-900/30">
+                  <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-purple-900/30">
                     <span className="text-[11px]">
                       {new Date(d.createdAt).toLocaleString()}
                     </span>
                     {d.screenshotUrl ? (
                       <button
                         onClick={() => setSelectedProof(d.screenshotUrl)}
-                        className="flex items-center gap-1 text-xs text-blue-400 bg-blue-950/60 border border-blue-800/60 px-2.5 py-1 rounded-lg font-semibold active:scale-95"
+                        className="flex items-center gap-1 text-xs text-purple-400 bg-purple-950/60 border border-purple-800/60 px-2.5 py-1 rounded-lg font-semibold active:scale-95"
                       >
                         <ImageIcon className="w-3.5 h-3.5" />
                         <span>View Screenshot</span>
@@ -194,7 +194,7 @@ export default function AdminDeposits() {
                       </button>
                     </div>
                   ) : (
-                    <p className="text-[11px] text-slate-400 bg-[#070c18] p-2 rounded-lg border border-blue-900/30">
+                    <p className="text-[11px] text-slate-400 bg-[#0a0216] p-2 rounded-lg border border-purple-900/30">
                       Note: {d.adminNote || 'Processed'}
                     </p>
                   )}
@@ -206,7 +206,7 @@ export default function AdminDeposits() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-[#070c18] border-b border-blue-900/40 text-slate-400 uppercase font-semibold">
+                  <tr className="bg-[#0a0216] border-b border-purple-900/40 text-slate-400 uppercase font-semibold">
                     <th className="p-3.5">User</th>
                     <th className="p-3.5">Amount</th>
                     <th className="p-3.5">12-Digit UTR Number</th>
@@ -216,9 +216,9 @@ export default function AdminDeposits() {
                     <th className="p-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-blue-900/30">
+                <tbody className="divide-y divide-purple-900/30">
                   {filtered.map((d) => (
-                    <tr key={d.id} className="hover:bg-[#0e1933] transition-colors">
+                    <tr key={d.id} className="hover:bg-[#180930] transition-colors">
                       <td className="p-3.5 font-bold text-white">
                         {d.username}
                       </td>

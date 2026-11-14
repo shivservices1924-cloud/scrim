@@ -42,7 +42,7 @@ export default function AdminTournaments() {
     winPrize: 0,
     totalSpots: 48,
     rules: 'MAP: BERMUDA ONLY! BAN GUN: DOUBLE VECTOR, M79! BAN CHARACTER: RYDEN! MIN LEVEL 40! IDP TIME: 5 MIN BEFORE MATCH! RECORDING MANDATORY.',
-    banner: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80'
+    banner: '/poster-br-solo.svg'
   });
 
   const fetchTournaments = async () => {
@@ -83,7 +83,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! BAN GUN: DOUBLE VECTOR, M79! BAN CHARACTER: RYDEN! MIN LEVEL 40! IDP TIME: 5 MIN BEFORE MATCH!',
-          banner: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-br-solo.svg'
         });
         break;
 
@@ -101,7 +101,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! DUO MATCH. ENTRY ₹25 PER PLAYER. ₹18 PER KILL. BAN DOUBLE VECTOR, M79, RYDEN.',
-          banner: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-br-duo.svg'
         });
         break;
 
@@ -119,7 +119,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! HIGH STAKES SOLO! ₹36 PER KILL! BAN DOUBLE VECTOR & M79. MIN LEVEL 40. SCREEN RECORDING MUST.',
-          banner: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-br-solo.svg'
         });
         break;
 
@@ -137,7 +137,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! HIGH STAKES DUO! ENTRY ₹50/PLAYER. ₹36 PER KILL. BAN DOUBLE VECTOR & M79.',
-          banner: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-br-duo.svg'
         });
         break;
 
@@ -155,7 +155,7 @@ export default function AdminTournaments() {
           winPrize: 80,
           totalSpots: 2,
           rules: 'ONLY HEADSHOT ALLOWED! MAP: BERMUDA CS. WOODPECKER / DESERT EAGLE ONLY HEADSHOTS. BODY KILL DISQUALIFICATION! WINNER WINS ₹80.',
-          banner: 'https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-cs.svg'
         });
         break;
 
@@ -173,7 +173,7 @@ export default function AdminTournaments() {
           winPrize: 360,
           totalSpots: 4,
           rules: 'HEADSHOT ONLY DUO! MAP: BERMUDA CS. ENTRY ₹100/PLAYER. WINNING TEAM TAKES ₹360 CASH.',
-          banner: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-cs.svg'
         });
         break;
 
@@ -191,7 +191,7 @@ export default function AdminTournaments() {
           winPrize: 80,
           totalSpots: 2,
           rules: 'LONE WOLF HEADSHOT 1V1! MAP: BERMUDA. ONLY HEADSHOT DAMAGE ALLOWED. WINNER GETS ₹80.',
-          banner: 'https://images.unsplash.com/photo-1612287233207-640a2327a361?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-lone-wolf.svg'
         });
         break;
 
@@ -209,7 +209,7 @@ export default function AdminTournaments() {
           winPrize: 360,
           totalSpots: 4,
           rules: 'LONE WOLF 2V2 HEADSHOT TOURNAMENT! ENTRY ₹100/PLAYER. WINNER TEAM GETS ₹360! SCREEN RECORDING MANDATORY.',
-          banner: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80'
+          banner: '/poster-lone-wolf.svg'
         });
         break;
 
@@ -237,6 +237,7 @@ export default function AdminTournaments() {
       setMsg('Tournament created successfully!');
       setTimeout(() => setMsg(''), 3000);
       setModalOpen(false);
+      window.dispatchEvent(new Event('rushx_tournament_update'));
       fetchTournaments();
     } catch (err) {
       alert(err.message);
@@ -253,6 +254,7 @@ export default function AdminTournaments() {
       if (res.ok) {
         setMsg('Tournament deleted.');
         setTimeout(() => setMsg(''), 3000);
+        window.dispatchEvent(new Event('rushx_tournament_update'));
         fetchTournaments();
       }
     } catch (e) {
@@ -338,8 +340,8 @@ export default function AdminTournaments() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 rounded-xl text-xs font-heading font-bold whitespace-nowrap transition-all ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                : 'bg-[#0b1326] text-slate-400 border border-blue-900/50 hover:text-white hover:border-blue-700'
+                ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
+                : 'bg-[#10051e] text-slate-400 border border-purple-900/50 hover:text-white hover:border-purple-700'
             }`}
           >
             {tab.label}
@@ -348,8 +350,8 @@ export default function AdminTournaments() {
       </div>
 
       {/* Tournaments Table / Grid */}
-      <div className="bg-[#0b1326] border border-blue-900/50 rounded-2xl overflow-hidden shadow-xl">
-        <div className="p-4 border-b border-blue-900/40 flex items-center justify-between">
+      <div className="bg-[#10051e] border border-purple-900/50 rounded-2xl overflow-hidden shadow-xl">
+        <div className="p-4 border-b border-purple-900/40 flex items-center justify-between">
           <h2 className="font-heading font-bold text-sm text-white">
             {activeTab === 'ALL' ? 'All Matches' : activeTab} ({filteredTournaments.length}) • Map: BERMUDA
           </h2>
@@ -363,14 +365,14 @@ export default function AdminTournaments() {
         ) : filteredTournaments.length === 0 ? (
           <div className="p-8 text-center text-xs text-slate-400">No tournaments found in this section.</div>
         ) : (
-          <div className="divide-y divide-blue-900/30">
+          <div className="divide-y divide-purple-900/30">
             {filteredTournaments.map((t) => (
               <div
                 key={t.id}
-                className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#0e1933] transition-colors"
+                className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#180930] transition-colors"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-16 h-16 rounded-xl bg-slate-900 overflow-hidden shrink-0 border border-blue-900/50">
+                  <div className="w-16 h-16 rounded-xl bg-slate-900 overflow-hidden shrink-0 border border-purple-900/50">
                     <img src={t.banner} alt={t.title} className="w-full h-full object-cover" />
                   </div>
 
@@ -458,7 +460,7 @@ export default function AdminTournaments() {
       {/* Notice Update Modal */}
       {noticeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#0b1326] border border-amber-500/60 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+          <div className="bg-[#10051e] border border-amber-500/60 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button
               onClick={() => setNoticeModal(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full hover:bg-slate-800"
@@ -483,7 +485,7 @@ export default function AdminTournaments() {
                   value={noticeText}
                   onChange={(e) => setNoticeText(e.target.value)}
                   placeholder="e.g. Room ID will be shared in 5 minutes! Latecomers will not be waited for."
-                  className="w-full bg-[#080d1e] border border-blue-900 focus:border-amber-500 rounded-xl p-3 text-xs text-white focus:outline-none"
+                  className="w-full bg-[#070212] border border-purple-900 focus:border-amber-500 rounded-xl p-3 text-xs text-white focus:outline-none"
                 />
               </div>
 
@@ -511,7 +513,7 @@ export default function AdminTournaments() {
       {/* Create Tournament Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#0b1326] border border-blue-800/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+          <div className="bg-[#10051e] border border-purple-800/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
             <button
               onClick={() => setModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full hover:bg-slate-800"
@@ -527,7 +529,7 @@ export default function AdminTournaments() {
             </p>
 
             {/* Quick Presets Buttons */}
-            <div className="bg-[#080d1e] p-3 rounded-xl border border-blue-900/50 mb-5 space-y-2">
+            <div className="bg-[#070212] p-3 rounded-xl border border-purple-900/50 mb-5 space-y-2">
               <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5" /> 1-Click Required Presets (Bermuda):
               </span>
@@ -536,23 +538,23 @@ export default function AdminTournaments() {
                 <button
                   type="button"
                   onClick={() => applyPreset('BR_SOLO_25')}
-                  className="p-2 rounded-lg bg-[#0e1936] hover:bg-[#162757] border border-blue-900 text-left"
+                  className="p-2 rounded-lg bg-[#180930] hover:bg-[#250d4b] border border-purple-900 text-left"
                 >
-                  <p className="font-bold text-blue-300">BR Solo ₹25</p>
+                  <p className="font-bold text-purple-300">BR Solo ₹25</p>
                   <p className="text-[10px] text-slate-400">₹20 / Kill</p>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPreset('BR_DUO_25')}
-                  className="p-2 rounded-lg bg-[#0e1936] hover:bg-[#162757] border border-blue-900 text-left"
+                  className="p-2 rounded-lg bg-[#180930] hover:bg-[#250d4b] border border-purple-900 text-left"
                 >
-                  <p className="font-bold text-blue-300">BR Duo ₹25</p>
+                  <p className="font-bold text-purple-300">BR Duo ₹25</p>
                   <p className="text-[10px] text-slate-400">₹20 / Kill</p>
                 </button>
                 <button
                   type="button"
                   onClick={() => applyPreset('BR_SOLO_50')}
-                  className="p-2 rounded-lg bg-[#0e1936] hover:bg-[#162757] border border-blue-900 text-left"
+                  className="p-2 rounded-lg bg-[#180930] hover:bg-[#250d4b] border border-purple-900 text-left"
                 >
                   <p className="font-bold text-amber-300">BR Solo ₹50</p>
                   <p className="text-[10px] text-slate-400">₹40 / Kill</p>
@@ -560,7 +562,7 @@ export default function AdminTournaments() {
                 <button
                   type="button"
                   onClick={() => applyPreset('BR_DUO_50')}
-                  className="p-2 rounded-lg bg-[#0e1936] hover:bg-[#162757] border border-blue-900 text-left"
+                  className="p-2 rounded-lg bg-[#180930] hover:bg-[#250d4b] border border-purple-900 text-left"
                 >
                   <p className="font-bold text-amber-300">BR Duo ₹50</p>
                   <p className="text-[10px] text-slate-400">₹40 / Kill</p>
@@ -615,7 +617,7 @@ export default function AdminTournaments() {
                   required
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full bg-[#080d1e] border border-blue-900 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
+                  className="w-full bg-[#070212] border border-purple-900 focus:border-purple-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
                 />
               </div>
 
@@ -625,7 +627,7 @@ export default function AdminTournaments() {
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-2.5 py-2 text-xs text-white"
+                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
                   >
                     <option value="BR_FULL_MAP">BR Full Map</option>
                     <option value="CS_HEADSHOT">CS Headshot</option>
@@ -639,7 +641,7 @@ export default function AdminTournaments() {
                   <select
                     value={form.matchType}
                     onChange={(e) => setForm({ ...form, matchType: e.target.value })}
-                    className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-2.5 py-2 text-xs text-white"
+                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
                   >
                     <option value="SOLO">Solo (1 Player)</option>
                     <option value="DUO">Duo (2 Players)</option>
@@ -652,7 +654,7 @@ export default function AdminTournaments() {
                     type="text"
                     disabled
                     value="BERMUDA"
-                    className="w-full bg-[#070c18] border border-emerald-900 rounded-xl px-2.5 py-2 text-xs text-emerald-400 font-bold cursor-not-allowed"
+                    className="w-full bg-[#0a0216] border border-purple-900/60 rounded-xl px-2.5 py-2 text-xs text-emerald-400 font-bold cursor-not-allowed"
                   />
                 </div>
 
@@ -663,7 +665,7 @@ export default function AdminTournaments() {
                     required
                     value={form.totalSpots}
                     onChange={(e) => setForm({ ...form, totalSpots: Number(e.target.value) })}
-                    className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-2.5 py-2 text-xs text-white"
+                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
                   />
                 </div>
               </div>
@@ -678,7 +680,7 @@ export default function AdminTournaments() {
                     required
                     value={form.entryFee}
                     onChange={(e) => setForm({ ...form, entryFee: Number(e.target.value) })}
-                    className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white"
+                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white"
                   />
                 </div>
 
@@ -690,7 +692,7 @@ export default function AdminTournaments() {
                     type="number"
                     value={form.perKill}
                     onChange={(e) => setForm({ ...form, perKill: Number(e.target.value) })}
-                    className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white"
+                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white"
                   />
                 </div>
 
@@ -702,7 +704,7 @@ export default function AdminTournaments() {
                     type="number"
                     value={form.winPrize}
                     onChange={(e) => setForm({ ...form, winPrize: Number(e.target.value) })}
-                    className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white"
+                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white"
                   />
                 </div>
               </div>
@@ -728,7 +730,7 @@ export default function AdminTournaments() {
                       });
                     }
                   }}
-                  className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white mb-2"
+                  className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white mb-2"
                 />
 
                 <label className="block text-[11px] font-semibold text-slate-400 mb-1">
@@ -740,7 +742,7 @@ export default function AdminTournaments() {
                   value={form.matchTime}
                   onChange={(e) => setForm({ ...form, matchTime: e.target.value })}
                   placeholder="e.g. Today at 04:00 PM"
-                  className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white"
+                  className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white"
                 />
                 <p className="text-[10px] text-slate-400 mt-1">
                   Note: Match time nikalte hi ye event players ke lobby se automatically hide ho jayega.
@@ -755,7 +757,7 @@ export default function AdminTournaments() {
                   rows="2"
                   value={form.rules}
                   onChange={(e) => setForm({ ...form, rules: e.target.value })}
-                  className="w-full bg-[#080d1e] border border-blue-900 rounded-xl px-3 py-2 text-xs text-white"
+                  className="w-full bg-[#070212] border border-purple-900 rounded-xl px-3 py-2 text-xs text-white"
                 ></textarea>
               </div>
 

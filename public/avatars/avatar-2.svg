@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#240742" />
+      <stop offset="100%" stop-color="#0a0214" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#facc15" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="100" fill="url(#g2)" stroke="#facc15" stroke-width="4" />
+  <!-- Crown -->
+  <path d="M 50 85 L 65 50 L 85 75 L 100 35 L 115 75 L 135 50 L 150 85 Z" fill="url(#gold)" stroke="#ca8a04" stroke-width="2" />
+  <circle cx="100" cy="50" r="4" fill="#ef4444" />
+  <!-- Head & White Hair -->
+  <path d="M 55 105 Q 100 120 145 105 Q 130 155 100 165 Q 70 155 55 105 Z" fill="#140624" stroke="#a855f7" stroke-width="2" />
+  <!-- Purple Demon Eyes -->
+  <polygon points="70,105 90,110 75,115" fill="#c084fc" />
+  <polygon points="130,105 110,110 125,115" fill="#c084fc" />
+  <!-- Battle Mask -->
+  <polygon points="80,125 120,125 100,150" fill="#9333ea" />
+  <polygon points="85,128 115,128 100,145" fill="#070212" />
+</svg>
