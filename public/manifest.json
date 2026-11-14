@@ -1,0 +1,30 @@
+{
+  "short_name": "RushX",
+  "name": "RushX - Free Fire Esports Tournaments",
+  "description": "Compete in Free Fire BR & Clash Squad tournaments. Win real cash daily with instant UPI payouts.",
+  "icons": [
+    {
+      "src": "/app-logo.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#080d1a",
+  "theme_color": "#080d1a",
+  "display": "standalone",
+  "orientation": "portrait"
+}

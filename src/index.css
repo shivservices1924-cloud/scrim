@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #070212;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d041c;
+}
+::-webkit-scrollbar-thumb {
+  background: #9333ea;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a855f7;
+}
+
+/* Ticker Animation */
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 25s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Pulsing Badge Glow */
+.glow-purple {
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.45);
+}
+.glow-blue {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+}
+.glow-gold {
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.35);
+}
+.glow-green {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+}

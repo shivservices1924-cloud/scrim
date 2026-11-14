@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="maskableBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1226" />
+      <stop offset="50%" stop-color="#080d1a" />
+      <stop offset="100%" stop-color="#030610" />
+    </linearGradient>
+    <linearGradient id="rushGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="50%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#eab308" />
+    </linearGradient>
+  </defs>
+  <!-- Full edge-to-edge background for maskable safe-zone compliance -->
+  <rect width="512" height="512" fill="url(#maskableBg)" />
+  
+  <!-- Safe zone circular medallion (Radius 180 within 205px safe zone) -->
+  <circle cx="256" cy="256" r="180" fill="url(#rushGrad)" stroke="#f59e0b" stroke-width="8" />
+  <circle cx="256" cy="256" r="165" fill="none" stroke="#60a5fa" stroke-width="4" opacity="0.5" />
+  
+  <!-- Centered Rush Flame & X Icon inside safe zone -->
+  <g transform="translate(256, 256) scale(0.72) translate(-256, -256)">
+    <path d="M160 140 L230 256 L150 372 H210 L256 300 L302 372 H362 L282 256 L352 140 H292 L256 198 L220 140 Z" fill="#ffffff" />
+    <path d="M220 140 L256 198 L292 140 H330 L270 236 L300 256 L332 210 L352 140 Z" fill="url(#goldGrad)" opacity="0.95" />
+    <circle cx="256" cy="95" r="18" fill="#f59e0b" />
+  </g>
+</svg>
+

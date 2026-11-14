@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /control-room-777
+Disallow: /control-room-777/*
+Disallow: /api/admin
+Disallow: /api/admin/*
+
+Sitemap: https://scrim-six.vercel.app/sitemap.xml
+
