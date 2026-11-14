@@ -343,7 +343,7 @@ export default function Home() {
             {/* Card 1: BR SOLO TOURNAMENT */}
             <div
               onClick={() => navigate('/tournaments?category=BR_FULL_MAP')}
-              className="group relative h-48 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
+              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
                 src="/poster-br-solo.jpg"
@@ -357,23 +357,47 @@ export default function Home() {
                 BR SOLO • BERMUDA
               </div>
 
-              <div className="absolute bottom-2.5 left-2.5 right-2.5">
+              {/* Title & Live Category Action */}
+              <div className="absolute bottom-8 left-2.5 right-2.5">
                 <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
                   BR SOLO TOURNAMENT
                 </h4>
-                <div className="flex items-center justify-between text-[11px] text-slate-300 mt-1">
-                  <span>Solo Bermuda</span>
-                  <span className="flex items-center gap-1 text-amber-400 font-bold">
-                    Win ₹80-₹360
-                  </span>
+              </div>
+
+              {/* Social Channels Overlay - Replaces old link with user verified links */}
+              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
+                <div className="flex items-center gap-1">
+                  <a
+                    href="https://www.instagram.com/rushx_scrim/"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
+                    /rushx_scrim
+                  </a>
+                  <a
+                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Youtube className="w-2.5 h-2.5 text-red-400" />
+                    Live
+                  </a>
                 </div>
+                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
+                  ₹80-₹360
+                </span>
               </div>
             </div>
 
             {/* Card 2: BR DUO TOURNAMENT */}
             <div
               onClick={() => navigate('/tournaments?category=BR_FULL_MAP')}
-              className="group relative h-48 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
+              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
                 src="/poster-br-duo.svg"
@@ -387,23 +411,46 @@ export default function Home() {
                 BR DUO • BERMUDA
               </div>
 
-              <div className="absolute bottom-2.5 left-2.5 right-2.5">
+              <div className="absolute bottom-8 left-2.5 right-2.5">
                 <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
                   BR DUO TOURNAMENT
                 </h4>
-                <div className="flex items-center justify-between text-[11px] text-slate-300 mt-1">
-                  <span>Team Up Duo</span>
-                  <span className="flex items-center gap-1 text-amber-400 font-bold">
-                    Win ₹160-₹720
-                  </span>
+              </div>
+
+              {/* Social Channels Overlay */}
+              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
+                <div className="flex items-center gap-1">
+                  <a
+                    href="https://www.instagram.com/rushx_scrim/"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
+                    /rushx_scrim
+                  </a>
+                  <a
+                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Youtube className="w-2.5 h-2.5 text-red-400" />
+                    Live
+                  </a>
                 </div>
+                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
+                  ₹160-₹720
+                </span>
               </div>
             </div>
 
             {/* Card 3: CS HEADSHOT TOURNAMENT */}
             <div
               onClick={() => navigate('/tournaments?category=CS_HEADSHOT')}
-              className="group relative h-48 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
+              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
                 src="/poster-cs.svg"
@@ -417,21 +464,46 @@ export default function Home() {
                 HEADSHOT ONLY
               </div>
 
-              <div className="absolute bottom-2.5 left-2.5 right-2.5">
+              <div className="absolute bottom-8 left-2.5 right-2.5">
                 <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
                   CS HEADSHOT TOURNAMENT
                 </h4>
-                <div className="flex items-center justify-between text-[11px] text-slate-300 mt-1">
-                  <span>Bermuda CS</span>
-                  <span className="text-amber-400 font-bold">Win ₹80-₹360</span>
+              </div>
+
+              {/* Social Channels Overlay */}
+              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
+                <div className="flex items-center gap-1">
+                  <a
+                    href="https://www.instagram.com/rushx_scrim/"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
+                    /rushx_scrim
+                  </a>
+                  <a
+                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Youtube className="w-2.5 h-2.5 text-red-400" />
+                    Live
+                  </a>
                 </div>
+                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
+                  ₹80-₹360
+                </span>
               </div>
             </div>
 
             {/* Card 4: LONE WOLF 1V1 */}
             <div
               onClick={() => navigate('/tournaments?category=LW_HEADSHOT')}
-              className="group relative h-48 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
+              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
                 src="/poster-lone-wolf.svg"
@@ -445,14 +517,39 @@ export default function Home() {
                 LONE WOLF 1V1
               </div>
 
-              <div className="absolute bottom-2.5 left-2.5 right-2.5">
+              <div className="absolute bottom-8 left-2.5 right-2.5">
                 <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
                   LONE WOLF 1V1
                 </h4>
-                <div className="flex items-center justify-between text-[11px] text-slate-300 mt-1">
-                  <span>1V1 Iron Cage</span>
-                  <span className="text-amber-400 font-bold">Win ₹80-₹360</span>
+              </div>
+
+              {/* Social Channels Overlay */}
+              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
+                <div className="flex items-center gap-1">
+                  <a
+                    href="https://www.instagram.com/rushx_scrim/"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
+                    /rushx_scrim
+                  </a>
+                  <a
+                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                  >
+                    <Youtube className="w-2.5 h-2.5 text-red-400" />
+                    Live
+                  </a>
                 </div>
+                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
+                  ₹80-₹360
+                </span>
               </div>
             </div>
           </div>
