@@ -30,10 +30,10 @@ export default function TournamentCard({ tournament, onJoin, onViewRoom, hasJoin
       >
         <img
           src={tournament.banner || (
-            tournament.category === 'CS_HEADSHOT' ? '/poster-cs.svg' :
-            tournament.matchType === 'DUO' ? '/poster-br-duo.svg' :
-            tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.svg' :
-            '/poster-br-solo.svg'
+            tournament.category === 'CS_HEADSHOT' ? '/poster-cs.jpg' :
+            tournament.matchType === 'DUO' ? '/poster-br-duo.jpg' :
+            tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.jpg' :
+            '/poster-br-solo.jpg'
           )}
           alt={tournament.title}
           onError={(e) => {

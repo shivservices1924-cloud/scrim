@@ -13,7 +13,10 @@ import {
   AlertCircle,
   HelpCircle,
   X,
-  UserCheck
+  UserCheck,
+  Trophy,
+  Crown,
+  Crosshair
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getPlayerAvatar } from '../utils/avatar';
@@ -171,10 +174,10 @@ export default function ContestDetails() {
       <div className="relative w-full h-52 bg-[#090214] overflow-hidden">
         <img
           src={tournament.banner || (
-            tournament.category === 'CS_HEADSHOT' ? '/poster-cs.svg' :
-            tournament.matchType === 'DUO' ? '/poster-br-duo.svg' :
-            tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.svg' :
-            '/poster-br-solo.svg'
+            tournament.category === 'CS_HEADSHOT' ? '/poster-cs.jpg' :
+            tournament.matchType === 'DUO' ? '/poster-br-duo.jpg' :
+            tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.jpg' :
+            '/poster-br-solo.jpg'
           )}
           alt={tournament.title}
           onError={(e) => {
@@ -349,6 +352,95 @@ export default function ContestDetails() {
           </div>
         </div>
 
+        {/* MATCH RESULTS / LEADERBOARD SECTION (Shown when match is COMPLETED) */}
+        {isCompleted && (
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-amber-400" />
+                <h3 className="font-heading font-black text-white text-base tracking-wide">
+                  Match Results & Leaderboard
+                </h3>
+              </div>
+              <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[11px] font-heading font-bold px-2.5 py-0.5 rounded-full">
+                COMPLETED
+              </span>
+            </div>
+
+            <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 shadow-xl space-y-3">
+              <div className="grid grid-cols-3 gap-2 bg-[#070212] p-2.5 rounded-xl border border-purple-900/40 text-center">
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-semibold uppercase">Total Players</span>
+                  <span className="font-heading font-black text-white text-sm">{tournament.joinedPlayers?.length || 0}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-semibold uppercase">Per Kill</span>
+                  <span className="font-heading font-black text-amber-400 text-sm">₹{tournament.perKill || 0}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-semibold uppercase">Prize Pool</span>
+                  <span className="font-heading font-black text-emerald-400 text-sm">₹{tournament.prizePool || 0}</span>
+                </div>
+              </div>
+
+              {/* Player list with kills & winnings */}
+              <div className="space-y-2 pt-1 divide-y divide-purple-900/30">
+                {(!tournament.joinedPlayers || tournament.joinedPlayers.length === 0) ? (
+                  <div className="py-6 text-center text-xs text-slate-400">
+                    No results recorded for this match yet.
+                  </div>
+                ) : (
+                  [...tournament.joinedPlayers]
+                    .sort((a, b) => ((Number(b.winAmount) || 0) - (Number(a.winAmount) || 0)) || ((Number(b.kills) || 0) - (Number(a.kills) || 0)))
+                    .map((player, idx) => {
+                      const isWinner = Boolean(player.isWinner || (idx === 0 && Number(player.winAmount) > 0));
+                      return (
+                        <div key={player.id || idx} className="pt-2.5 pb-2 flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2.5">
+                            <span className={`w-6 h-6 rounded-full font-heading font-black flex items-center justify-center text-[10px] ${
+                              idx === 0 ? 'bg-amber-400 text-black shadow-md shadow-amber-400/30' :
+                              idx === 1 ? 'bg-slate-300 text-black' :
+                              idx === 2 ? 'bg-amber-700 text-white' :
+                              'bg-[#240b45] text-purple-300'
+                            }`}>
+                              #{idx + 1}
+                            </span>
+                            <img src={getPlayerAvatar(player)} alt="Avatar" className="w-8 h-8 rounded-full border border-purple-500/50 object-cover" />
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-heading font-bold text-white text-xs">
+                                  {player.ffIgn || player.username}
+                                </p>
+                                {isWinner && (
+                                  <span className="bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase flex items-center gap-0.5">
+                                    <Crown className="w-2.5 h-2.5" /> Booyah
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[10px] text-slate-400 font-mono">
+                                User: {player.username} {player.ffUid ? `• UID: ${player.ffUid}` : ''}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <div className="flex items-center justify-end gap-1 text-slate-300 font-heading font-bold text-xs">
+                              <Crosshair className="w-3.5 h-3.5 text-amber-400" />
+                              <span>{player.kills || 0} Kills</span>
+                            </div>
+                            <span className="font-heading font-black text-sm text-emerald-400 block">
+                              ₹{player.winAmount || 0} Won
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ABOUT THIS MATCH - RULES AND REGULATIONS (RushX Royal Cyber-Purple Theme) */}
         <div id="rules-section" className="space-y-2 pt-2">
           <h3 className="font-heading font-bold text-purple-300 text-xs tracking-wider uppercase">
@@ -522,9 +614,20 @@ export default function ContestDetails() {
                       </div>
                     </div>
 
-                    <span className="bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      Confirmed
-                    </span>
+                    {isCompleted ? (
+                      <div className="text-right">
+                        <span className="text-[11px] font-bold text-amber-400 block font-heading">
+                          {player.kills || 0} Kills
+                        </span>
+                        <span className="text-[11px] font-black text-emerald-400 block font-heading">
+                          ₹{player.winAmount || 0} Won
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        Confirmed
+                      </span>
+                    )}
                   </div>
                 ))
               )}

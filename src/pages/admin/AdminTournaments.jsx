@@ -42,7 +42,7 @@ export default function AdminTournaments() {
     winPrize: 0,
     totalSpots: 48,
     rules: 'MAP: BERMUDA ONLY! BAN GUN: DOUBLE VECTOR, M79! BAN CHARACTER: RYDEN! MIN LEVEL 40! IDP TIME: 5 MIN BEFORE MATCH! RECORDING MANDATORY.',
-    banner: '/poster-br-solo.svg'
+    banner: '/poster-br-solo.jpg'
   });
 
   const fetchTournaments = async () => {
@@ -83,7 +83,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! BAN GUN: DOUBLE VECTOR, M79! BAN CHARACTER: RYDEN! MIN LEVEL 40! IDP TIME: 5 MIN BEFORE MATCH!',
-          banner: '/poster-br-solo.svg'
+          banner: '/poster-br-solo.jpg'
         });
         break;
 
@@ -101,7 +101,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! DUO MATCH. ENTRY ₹25 PER PLAYER. ₹18 PER KILL. BAN DOUBLE VECTOR, M79, RYDEN.',
-          banner: '/poster-br-duo.svg'
+          banner: '/poster-br-duo.jpg'
         });
         break;
 
@@ -119,7 +119,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! HIGH STAKES SOLO! ₹36 PER KILL! BAN DOUBLE VECTOR & M79. MIN LEVEL 40. SCREEN RECORDING MUST.',
-          banner: '/poster-br-solo.svg'
+          banner: '/poster-br-solo.jpg'
         });
         break;
 
@@ -137,7 +137,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! HIGH STAKES DUO! ENTRY ₹50/PLAYER. ₹36 PER KILL. BAN DOUBLE VECTOR & M79.',
-          banner: '/poster-br-duo.svg'
+          banner: '/poster-br-duo.jpg'
         });
         break;
 
@@ -155,7 +155,7 @@ export default function AdminTournaments() {
           winPrize: 80,
           totalSpots: 2,
           rules: 'ONLY HEADSHOT ALLOWED! MAP: BERMUDA CS. WOODPECKER / DESERT EAGLE ONLY HEADSHOTS. BODY KILL DISQUALIFICATION! WINNER WINS ₹80.',
-          banner: '/poster-cs.svg'
+          banner: '/poster-cs.jpg'
         });
         break;
 
@@ -173,7 +173,7 @@ export default function AdminTournaments() {
           winPrize: 360,
           totalSpots: 4,
           rules: 'HEADSHOT ONLY DUO! MAP: BERMUDA CS. ENTRY ₹100/PLAYER. WINNING TEAM TAKES ₹360 CASH.',
-          banner: '/poster-cs.svg'
+          banner: '/poster-cs.jpg'
         });
         break;
 
@@ -191,7 +191,7 @@ export default function AdminTournaments() {
           winPrize: 80,
           totalSpots: 2,
           rules: 'LONE WOLF HEADSHOT 1V1! MAP: BERMUDA. ONLY HEADSHOT DAMAGE ALLOWED. WINNER GETS ₹80.',
-          banner: '/poster-lone-wolf.svg'
+          banner: '/poster-lone-wolf.jpg'
         });
         break;
 
@@ -209,7 +209,7 @@ export default function AdminTournaments() {
           winPrize: 360,
           totalSpots: 4,
           rules: 'LONE WOLF 2V2 HEADSHOT TOURNAMENT! ENTRY ₹100/PLAYER. WINNER TEAM GETS ₹360! SCREEN RECORDING MANDATORY.',
-          banner: '/poster-lone-wolf.svg'
+          banner: '/poster-lone-wolf.jpg'
         });
         break;
 

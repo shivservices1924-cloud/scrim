@@ -362,11 +362,11 @@ export default function Home() {
               className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
-                src="/poster-br-solo.svg"
+                src="/poster-br-solo.jpg"
                 alt="BR Solo Tournament"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-br-solo.jpg';
+                  e.currentTarget.src = '/poster-br-solo.svg';
                 }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -420,11 +420,11 @@ export default function Home() {
               className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
-                src="/poster-br-duo.svg"
+                src="/poster-br-duo.jpg"
                 alt="BR Duo Tournament"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-br-duo.jpg';
+                  e.currentTarget.src = '/poster-br-duo.svg';
                 }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -477,11 +477,11 @@ export default function Home() {
               className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
-                src="/poster-cs.svg"
+                src="/poster-cs.jpg"
                 alt="CS Headshot Tournament"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-cs.jpg';
+                  e.currentTarget.src = '/poster-cs.svg';
                 }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -534,11 +534,11 @@ export default function Home() {
               className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
             >
               <img
-                src="/poster-lone-wolf.svg"
+                src="/poster-lone-wolf.jpg"
                 alt="Lone Wolf 1v1 Tournament"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-lone-wolf.jpg';
+                  e.currentTarget.src = '/poster-lone-wolf.svg';
                 }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

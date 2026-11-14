@@ -305,9 +305,16 @@ export default function AdminTournamentManage() {
             <span>Player Kills & Winner Money Settlement</span>
           </div>
 
-          <span className="text-xs bg-purple-950/60 border border-purple-800/40 px-3 py-1 rounded-full text-purple-300 font-bold">
-            {joinedPlayers.length} Registered Players
-          </span>
+          <div className="flex items-center gap-2">
+            {tournament.status === 'COMPLETED' && (
+              <span className="text-xs bg-emerald-950/80 border border-emerald-500/50 px-3 py-1 rounded-full text-emerald-300 font-bold uppercase tracking-wider">
+                ✓ Settled & Completed
+              </span>
+            )}
+            <span className="text-xs bg-purple-950/60 border border-purple-800/40 px-3 py-1 rounded-full text-purple-300 font-bold">
+              {joinedPlayers.length} Registered Players
+            </span>
+          </div>
         </div>
 
         <div className="bg-[#070212] p-3 rounded-xl border border-purple-900/40 text-xs text-slate-300 flex items-center justify-between">
@@ -357,9 +364,12 @@ export default function AdminTournamentManage() {
                           (IGN: {player.ffIgn})
                         </span>
                       </div>
-                      <span className="text-[11px] text-slate-500">
-                        Player UID: {player.id}
-                      </span>
+                      <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                        <span>FF UID: {player.ffUid || player.userId || player.id}</span>
+                        {player.teammateIgn && (
+                          <span className="text-purple-300">• Teammate: {player.teammateIgn} ({player.teammateUid})</span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-3 flex-wrap">

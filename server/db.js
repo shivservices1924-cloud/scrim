@@ -590,15 +590,16 @@ class Database {
 
   async findUserByIdAsync(id) {
     if (!id || typeof id !== 'string') return null;
-    let user = this.getUserById(id);
-    if (user) return toUserCamel(user);
 
+    // Resilient serverless query: Always check Supabase first to prevent cold container data loss
     try {
-      const { data, error } = await supabase
+      const syncTask = supabase
         .from('users')
         .select('*')
         .eq('id', id)
         .limit(1);
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('User fetch timeout')), 2500));
+      const { data, error } = await Promise.race([syncTask, timeoutTask]);
 
       if (!error && data && data.length > 0) {
         const fetchedUser = toUserCamel(data[0]);
@@ -614,6 +615,9 @@ class Database {
     } catch (e) {
       console.warn('findUserByIdAsync Supabase notice:', e.message);
     }
+
+    let user = this.getUserById(id);
+    if (user) return toUserCamel(user);
     return null;
   }
 
@@ -682,7 +686,12 @@ class Database {
   }
 
   async updateUser(id, updates) {
-    const idx = this.data.users.findIndex(u => u.id === id);
+    let idx = this.data.users.findIndex(u => u.id === id);
+    if (idx === -1) {
+      await this.findUserByIdAsync(id);
+      idx = this.data.users.findIndex(u => u.id === id);
+    }
+
     if (idx !== -1) {
       this.data.users[idx] = toUserCamel({ ...this.data.users[idx], ...updates, updatedAt: new Date().toISOString() });
       this.saveLocal();
@@ -690,9 +699,13 @@ class Database {
       // Direct write to Supabase using validated schema mapping
       try {
         const fullSnake = toUserSnake(this.data.users[idx]);
-        const { error } = await supabase.from('users').upsert(fullSnake);
+        const updateTask = supabase.from('users').upsert(fullSnake);
+        const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('User upsert timeout')), 3500));
+        const { error } = await Promise.race([updateTask, timeoutTask]);
         if (error) {
           console.error('Supabase user update error:', error.message);
+        } else {
+          console.log(`✅ User ${id} updated in Supabase cloud.`);
         }
       } catch (e) {
         console.error('Supabase user update exception:', e.message);
@@ -820,6 +833,49 @@ class Database {
     return this.data.joined_players.filter(jp => jp.userId === userId);
   }
 
+  async syncJoinedPlayersFromSupabase(tournamentId) {
+    try {
+      let query = supabase.from('joined_players').select('*');
+      if (tournamentId) {
+        query = query.eq('tournament_id', tournamentId);
+      }
+      const syncTask = query.order('joined_at', { ascending: true });
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Joined sync timeout')), 3000));
+      const { data, error } = await Promise.race([syncTask, timeoutTask]);
+
+      if (!error && Array.isArray(data)) {
+        const camels = data.map(toJoinedPlayerCamel);
+        if (tournamentId) {
+          const others = this.data.joined_players.filter(j => j.tournamentId !== tournamentId);
+          this.data.joined_players = [...others, ...camels];
+        } else {
+          this.data.joined_players = camels;
+        }
+        this.saveLocal();
+        return tournamentId ? camels : this.data.joined_players;
+      }
+    } catch (e) {
+      console.warn('syncJoinedPlayersFromSupabase notice:', e.message);
+    }
+    return tournamentId ? this.getJoinedPlayers(tournamentId) : this.data.joined_players;
+  }
+
+  async syncJoinedPlayersByUserFromSupabase(userId) {
+    try {
+      const syncTask = supabase.from('joined_players').select('*').eq('user_id', userId);
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('User joined sync timeout')), 3000));
+      const { data, error } = await Promise.race([syncTask, timeoutTask]);
+
+      if (!error && Array.isArray(data)) {
+        const camels = data.map(toJoinedPlayerCamel);
+        return camels;
+      }
+    } catch (e) {
+      console.warn('syncJoinedPlayersByUserFromSupabase notice:', e.message);
+    }
+    return this.getJoinedMatchesByUser(userId);
+  }
+
   async joinTournament(joinData) {
     this.data.joined_players.push(joinData);
     const tournament = this.getTournamentById(joinData.tournamentId);
@@ -874,6 +930,95 @@ class Database {
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
     return this.data.transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }
+
+  async syncTransactionsFromSupabase(userId) {
+    try {
+      let query = supabase.from('transactions').select('*').order('created_at', { ascending: false });
+      if (userId) {
+        query = query.eq('user_id', userId);
+      }
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Tx sync timeout')), 3000));
+      const { data, error } = await Promise.race([query, timeoutTask]);
+
+      if (!error && Array.isArray(data)) {
+        const camels = data.map(toTransactionCamel);
+        if (userId) {
+          const others = this.data.transactions.filter(t => t.userId !== userId);
+          this.data.transactions = [...camels, ...others].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        } else {
+          this.data.transactions = camels;
+        }
+        this.saveLocal();
+        return camels;
+      }
+    } catch (e) {
+      console.warn('syncTransactionsFromSupabase notice:', e.message);
+    }
+    return this.getTransactions(userId);
+  }
+
+  async syncAllUsersFromSupabase() {
+    try {
+      const syncTask = supabase.from('users').select('*').order('created_at', { ascending: false });
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Users sync timeout')), 3000));
+      const { data, error } = await Promise.race([syncTask, timeoutTask]);
+
+      if (!error && Array.isArray(data)) {
+        this.data.users = data.map(toUserCamel);
+        this.saveLocal();
+        return this.data.users;
+      }
+    } catch (e) {
+      console.warn('syncAllUsersFromSupabase notice:', e.message);
+    }
+    return this.getUsers();
+  }
+
+  async syncDepositRequestsFromSupabase(userId) {
+    try {
+      let query = supabase.from('deposit_requests').select('*').order('created_at', { ascending: false });
+      if (userId) query = query.eq('user_id', userId);
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Deposit sync timeout')), 3000));
+      const { data, error } = await Promise.race([query, timeoutTask]);
+      if (!error && Array.isArray(data)) {
+        const camels = data.map(toDepositCamel);
+        if (userId) {
+          const others = this.data.deposit_requests.filter(d => d.userId !== userId);
+          this.data.deposit_requests = [...camels, ...others];
+        } else {
+          this.data.deposit_requests = camels;
+        }
+        this.saveLocal();
+        return camels;
+      }
+    } catch (e) {
+      console.warn('syncDepositRequestsFromSupabase notice:', e.message);
+    }
+    return this.getDepositRequests(userId);
+  }
+
+  async syncWithdrawalRequestsFromSupabase(userId) {
+    try {
+      let query = supabase.from('withdrawal_requests').select('*').order('created_at', { ascending: false });
+      if (userId) query = query.eq('user_id', userId);
+      const timeoutTask = new Promise((_, reject) => setTimeout(() => reject(new Error('Withdrawal sync timeout')), 3000));
+      const { data, error } = await Promise.race([query, timeoutTask]);
+      if (!error && Array.isArray(data)) {
+        const camels = data.map(toWithdrawalCamel);
+        if (userId) {
+          const others = this.data.withdrawal_requests.filter(w => w.userId !== userId);
+          this.data.withdrawal_requests = [...camels, ...others];
+        } else {
+          this.data.withdrawal_requests = camels;
+        }
+        this.saveLocal();
+        return camels;
+      }
+    } catch (e) {
+      console.warn('syncWithdrawalRequestsFromSupabase notice:', e.message);
+    }
+    return this.getWithdrawalRequests(userId);
   }
 
   async createTransaction(txData) {

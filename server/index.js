@@ -638,14 +638,14 @@ app.post('/api/admin/update-version', requireAdmin, async (req, res) => {
   }
 });
 
-// Current User Info & Real-Time Stats
-app.get('/api/auth/me', authenticateToken, (req, res) => {
-  const user = db.getUserById(req.user.id);
+// Current User Info & Real-Time Stats (Synced with Supabase Cloud)
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+  const user = await db.findUserByIdAsync(req.user.id);
   if (!user) {
     return res.status(404).json({ error: 'User not found.' });
   }
 
-  const userJoined = db.getJoinedMatchesByUser(user.id);
+  const userJoined = await db.syncJoinedPlayersByUserFromSupabase(user.id);
   const matchesPlayed = Math.max(userJoined.length, Number(user.matchesPlayed) || 0);
   const totalKills = Math.max(
     userJoined.reduce((sum, j) => sum + (Number(j.kills) || 0), 0),
@@ -657,10 +657,15 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
   );
 
   const { passwordHash: _, ...safeUser } = user;
+  const depBal = Number(safeUser.depositBalance) || 0;
+  const winBal = Number(safeUser.winBalance) || 0;
+
   return res.json({
     user: {
       ...safeUser,
-      totalBalance: (Number(safeUser.depositBalance) || 0) + (Number(safeUser.winBalance) || 0),
+      depositBalance: depBal,
+      winBalance: winBal,
+      totalBalance: depBal + winBal,
       matchesPlayed,
       totalKills,
       totalEarning
@@ -750,15 +755,17 @@ app.get('/api/tournaments/:id', async (req, res) => {
     return res.status(404).json({ error: 'Tournament not found.' });
   }
 
-  const joinedPlayers = db.getJoinedPlayers(tournament.id);
+  // Ensure fresh joined players sync directly from Supabase
+  const joinedPlayers = await db.syncJoinedPlayersFromSupabase(tournament.id);
   const currentUser = getOptionalUser(req);
 
   const hasJoined = currentUser ? joinedPlayers.some(jp => jp.userId === currentUser.id) : false;
   const isAdmin = currentUser ? currentUser.role === 'admin' : false;
 
-  // STRICT REQUIREMENT: "agr mai admin panel se kisi tournament ka id pass gernate kru to wo sirf registered players ko show kre id and pass"
-  // ONLY registered players who joined, or the admin can see Room ID & Password!
+  // STRICT REQUIREMENT: Only registered players or admin see Room ID & Password
   const isAuthorized = hasJoined || isAdmin;
+
+  const perKillRate = Number(tournament.perKill) || 0;
 
   return res.json({
     ...tournament,
@@ -767,15 +774,27 @@ app.get('/api/tournaments/:id', async (req, res) => {
     roomPassword: isAuthorized ? tournament.roomPassword : '',
     isCredentialsLocked: !isAuthorized,
     hasJoined,
+    joinedSpots: Math.max(joinedPlayers.length, Number(tournament.joinedSpots) || 0),
     joinedPlayersCount: joinedPlayers.length,
     userJoinedRecord: currentUser ? joinedPlayers.find(jp => jp.userId === currentUser.id) || null : null,
-    joinedPlayers: joinedPlayers.map(jp => ({
-      id: jp.id,
-      username: jp.username,
-      ffIgn: jp.ffIgn,
-      kills: jp.kills,
-      winAmount: jp.winAmount
-    }))
+    joinedPlayers: joinedPlayers.map(jp => {
+      const kills = Number(jp.kills) || 0;
+      const winAmount = Number(jp.winAmount) || 0;
+      const isWinner = Boolean(jp.isWinner || (winAmount > (kills * perKillRate) && winAmount > 0));
+      return {
+        id: jp.id,
+        userId: jp.userId,
+        username: jp.username,
+        ffIgn: jp.ffIgn,
+        ffUid: jp.ffUid,
+        teammateIgn: jp.teammateIgn || '',
+        teammateUid: jp.teammateUid || '',
+        kills,
+        winAmount,
+        isWinner,
+        joinedAt: jp.joinedAt
+      };
+    })
   });
 });
 
@@ -920,10 +939,13 @@ app.get('/api/my-matches', authenticateToken, (req, res) => {
 // WALLET & PAYMENT ROUTES
 // ==========================================
 
-// Get Wallet Balance & Transactions
-app.get('/api/wallet', authenticateToken, (req, res) => {
-  const user = db.getUserById(req.user.id);
-  const transactions = db.getTransactions(user.id);
+// Get Wallet Balance & Transactions (Direct Supabase Cloud Sync)
+app.get('/api/wallet', authenticateToken, async (req, res) => {
+  const user = await db.findUserByIdAsync(req.user.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found.' });
+  }
+  const transactions = await db.syncTransactionsFromSupabase(user.id);
 
   const depositBal = Number(user.depositBalance) || 0;
   const winBal = Number(user.winBalance) || 0;
@@ -937,14 +959,14 @@ app.get('/api/wallet', authenticateToken, (req, res) => {
 });
 
 // Get User's Deposit Requests History
-app.get('/api/wallet/deposits', authenticateToken, (req, res) => {
-  const deposits = db.getDepositRequests(req.user.id);
+app.get('/api/wallet/deposits', authenticateToken, async (req, res) => {
+  const deposits = await db.syncDepositRequestsFromSupabase(req.user.id);
   return res.json(deposits);
 });
 
 // Get User's Withdrawal Requests History
-app.get('/api/wallet/withdrawals', authenticateToken, (req, res) => {
-  const withdrawals = db.getWithdrawalRequests(req.user.id);
+app.get('/api/wallet/withdrawals', authenticateToken, async (req, res) => {
+  const withdrawals = await db.syncWithdrawalRequestsFromSupabase(req.user.id);
   return res.json(withdrawals);
 });
 
@@ -1267,7 +1289,7 @@ app.post('/api/admin/tournaments', requireAdmin, async (req, res) => {
       roomId: '',
       roomPassword: '',
       rules: rules ? rules.trim() : 'MAP: BERMUDA ONLY! IDP TIME 10 MINS BEFORE MATCH!',
-      banner: banner || '/poster-br-solo.svg',
+      banner: banner || '/poster-br-solo.jpg',
       createdAt: new Date().toISOString()
     };
 
@@ -1337,6 +1359,7 @@ app.post('/api/admin/tournaments/:id/generate-room', requireAdmin, async (req, r
 app.post('/api/admin/tournaments/:id/settle', requireAdmin, async (req, res) => {
   try {
     const tournamentId = req.params.id;
+    await db.syncTournamentsFromSupabase();
     const tournament = db.getTournamentById(tournamentId);
     if (!tournament) {
       return res.status(404).json({ error: 'Tournament not found.' });
@@ -1350,7 +1373,7 @@ app.post('/api/admin/tournaments/:id/settle', requireAdmin, async (req, res) => 
     const now = new Date();
     const dateFormatted = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-    const joinedPlayers = db.getJoinedPlayers(tournamentId);
+    const joinedPlayers = await db.syncJoinedPlayersFromSupabase(tournamentId);
 
     let csWinnerId = null;
     if (winnerInput) {
@@ -1377,7 +1400,7 @@ app.post('/api/admin/tournaments/:id/settle', requireAdmin, async (req, res) => 
         isWinner
       });
 
-      const user = db.getUserById(jp.userId);
+      const user = await db.findUserByIdAsync(jp.userId);
       if (user) {
         const currentWin = Number(user.winBalance) || 0;
         const newWin = currentWin + totalReward;
@@ -1435,15 +1458,17 @@ app.post('/api/admin/tournaments/:id/settle', requireAdmin, async (req, res) => 
   }
 });
 
-// Admin: Get all Deposits
-app.get('/api/admin/deposits', requireAdmin, (req, res) => {
-  return res.json(db.getDepositRequests());
+// Admin: Get all Deposits (Synced with Supabase Cloud)
+app.get('/api/admin/deposits', requireAdmin, async (req, res) => {
+  const deposits = await db.syncDepositRequestsFromSupabase();
+  return res.json(deposits);
 });
 
 // Admin: Verify Deposit
 app.post('/api/admin/deposits/:id/verify', requireAdmin, async (req, res) => {
   try {
     const { action, adminNote } = req.body;
+    await db.syncDepositRequestsFromSupabase();
     const deposit = db.data.deposit_requests.find(d => d.id === req.params.id);
 
     if (!deposit) {
@@ -1458,7 +1483,7 @@ app.post('/api/admin/deposits/:id/verify', requireAdmin, async (req, res) => {
     const dateFormatted = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
     if (action === 'APPROVE') {
-      const user = db.getUserById(deposit.userId);
+      const user = await db.findUserByIdAsync(deposit.userId);
       if (!user) {
         return res.status(404).json({ error: 'Associated user not found.' });
       }
@@ -1500,15 +1525,17 @@ app.post('/api/admin/deposits/:id/verify', requireAdmin, async (req, res) => {
   }
 });
 
-// Admin: Get all Withdrawals
-app.get('/api/admin/withdrawals', requireAdmin, (req, res) => {
-  return res.json(db.getWithdrawalRequests());
+// Admin: Get all Withdrawals (Synced with Supabase Cloud)
+app.get('/api/admin/withdrawals', requireAdmin, async (req, res) => {
+  const withdrawals = await db.syncWithdrawalRequestsFromSupabase();
+  return res.json(withdrawals);
 });
 
 // Admin: Verify Withdrawal
 app.post('/api/admin/withdrawals/:id/verify', requireAdmin, async (req, res) => {
   try {
     const { action, adminNote } = req.body;
+    await db.syncWithdrawalRequestsFromSupabase();
     const withdrawal = db.data.withdrawal_requests.find(w => w.id === req.params.id);
 
     if (!withdrawal) {
@@ -1530,7 +1557,7 @@ app.post('/api/admin/withdrawals/:id/verify', requireAdmin, async (req, res) => 
       });
       return res.json({ message: `Withdrawal of ₹${withdrawal.amount} marked as Paid/Approved.` });
     } else {
-      const user = db.getUserById(withdrawal.userId);
+      const user = await db.findUserByIdAsync(withdrawal.userId);
       if (user) {
         const refundedWinBal = (Number(user.winBalance) || 0) + Number(withdrawal.amount);
         await db.updateUser(user.id, { winBalance: refundedWinBal });
@@ -1563,13 +1590,18 @@ app.post('/api/admin/withdrawals/:id/verify', requireAdmin, async (req, res) => 
   }
 });
 
-// Admin: Users List
-app.get('/api/admin/users', requireAdmin, (req, res) => {
-  const users = db.getUsers().map(u => {
+// Admin: Users List (Direct Supabase Cloud Sync)
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
+  const users = await db.syncAllUsersFromSupabase();
+  const allJoined = await db.syncJoinedPlayersFromSupabase();
+  const list = users.map(u => {
     const { passwordHash: _, ...safe } = u;
-    const joined = db.getJoinedMatchesByUser(u.id);
+    const joined = allJoined.filter(j => j.userId === u.id);
     return {
       ...safe,
+      depositBalance: Number(u.depositBalance) || 0,
+      winBalance: Number(u.winBalance) || 0,
+      totalBalance: (Number(u.depositBalance) || 0) + (Number(u.winBalance) || 0),
       isBanned: Boolean(u.isBanned),
       banReason: u.banReason || '',
       matchesPlayed: Math.max(joined.length, Number(u.matchesPlayed) || 0),
@@ -1583,7 +1615,7 @@ app.get('/api/admin/users', requireAdmin, (req, res) => {
       )
     };
   });
-  return res.json(users);
+  return res.json(list);
 });
 
 // Admin: Ban Player (Anti-Cheat & Hacker Protection)
@@ -1644,11 +1676,11 @@ app.put('/api/admin/tournaments/:id/notice', requireAdmin, async (req, res) => {
   }
 });
 
-// Admin: Manual Balance Adjustment
-app.post('/api/admin/users/:id/adjust-balance', requireAdmin, (req, res) => {
+// Admin: Manual Balance Adjustment (Synced with Supabase Cloud)
+app.post('/api/admin/users/:id/adjust-balance', requireAdmin, async (req, res) => {
   try {
     const { depositAdjustment, winAdjustment, note } = req.body;
-    const user = db.getUserById(req.params.id);
+    const user = await db.findUserByIdAsync(req.params.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
@@ -1656,7 +1688,7 @@ app.post('/api/admin/users/:id/adjust-balance', requireAdmin, (req, res) => {
     const newDep = Math.max(0, (Number(user.depositBalance) || 0) + (Number(depositAdjustment) || 0));
     const newWin = Math.max(0, (Number(user.winBalance) || 0) + (Number(winAdjustment) || 0));
 
-    db.updateUser(user.id, {
+    await db.updateUser(user.id, {
       depositBalance: newDep,
       winBalance: newWin
     });
@@ -1664,7 +1696,7 @@ app.post('/api/admin/users/:id/adjust-balance', requireAdmin, (req, res) => {
     const now = new Date();
     const dateFormatted = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-    db.createTransaction({
+    await db.createTransaction({
       id: 'tx_' + Date.now(),
       userId: user.id,
       type: 'credit',
