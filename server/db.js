@@ -99,7 +99,6 @@ const toUserSnake = (u) => {
   const ffUid = u.ff_uid || u.ffUid || '';
   const referralCode = u.referral_code || u.referralCode || null;
   const referredBy = u.referred_by || u.referredBy || null;
-  const avatar = u.avatar || u.profilePic || u.profile_pic || null;
 
   return {
     id: String(u.id),
@@ -110,7 +109,6 @@ const toUserSnake = (u) => {
     password_hash: passwordHash,
     ff_ign: ffIgn,
     ff_uid: ffUid,
-    avatar: avatar,
     deposit_balance: Number(u.depositBalance ?? u.deposit_balance ?? 0),
     win_balance: Number(u.winBalance ?? u.win_balance ?? 0),
     total_earning: Number(u.totalEarning ?? u.total_earning ?? 0),

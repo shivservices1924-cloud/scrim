@@ -16,8 +16,7 @@ export default function Tournaments() {
   const [userJoinedIds, setUserJoinedIds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Tabs: 'UPCOMING' | 'ONGOING' | 'COMPLETED'
-  const currentTab = searchParams.get('tab')?.toUpperCase() || 'UPCOMING';
+  // Category and game type filters
   const currentCategory = searchParams.get('category') || '';
   const currentGameType = searchParams.get('gameType') || '';
 
@@ -53,12 +52,13 @@ export default function Tournaments() {
       document.removeEventListener('visibilitychange', onFocus);
       window.removeEventListener('rushx_tournament_update', onCustomUpdate);
     };
-  }, [currentTab, currentCategory, currentGameType]);
+  }, [currentCategory, currentGameType]);
 
   const fetchTournaments = async (isBackground = false) => {
     try {
       if (!isBackground) setLoading(true);
-      let url = `/api/tournaments?status=${currentTab}`;
+      // Strictly upcoming tournaments for browsing & joining
+      let url = `/api/tournaments?status=UPCOMING`;
       if (currentCategory) url += `&category=${currentCategory}`;
       if (currentGameType) url += `&gameType=${currentGameType}`;
 
@@ -81,12 +81,7 @@ export default function Tournaments() {
 
   useEffect(() => {
     fetchTournaments();
-  }, [currentTab, currentCategory, currentGameType]);
-
-  const handleTabChange = (tabName) => {
-    searchParams.set('tab', tabName.toLowerCase());
-    setSearchParams(searchParams);
-  };
+  }, [currentCategory, currentGameType]);
 
   const handleCategoryChange = (cat) => {
     if (cat) {
@@ -132,7 +127,7 @@ export default function Tournaments() {
             <h1 className="font-heading font-extrabold text-white text-base sm:text-lg tracking-wide leading-tight">
               {pageTitle}
             </h1>
-            <p className="text-[11px] text-emerald-400 font-bold">Map: BERMUDA ONLY</p>
+            <p className="text-[11px] text-emerald-400 font-bold">Upcoming Tournaments • Bermuda Only</p>
           </div>
         </div>
 
@@ -161,7 +156,7 @@ export default function Tournaments() {
               onClick={() => handleCategoryChange(cat.id)}
               className={`px-3 py-1 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'bg-blue-600 text-white shadow-md'
+                  ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md'
                   : 'bg-[#10051e] text-slate-400 border border-purple-900/50 hover:text-white'
               }`}
             >
@@ -169,35 +164,6 @@ export default function Tournaments() {
             </button>
           );
         })}
-      </div>
-
-      {/* Tabs: Ongoing | Upcoming | Resulted */}
-      <div className="bg-[#0d041c] border-b border-purple-900/50 px-4 pt-2">
-        <div className="flex items-center justify-around border-b border-slate-800">
-          {[
-            { id: 'ONGOING', label: 'Ongoing' },
-            { id: 'UPCOMING', label: 'Upcoming' },
-            { id: 'COMPLETED', label: 'Resulted' }
-          ].map((tab) => {
-            const isActive = currentTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`pb-2.5 font-heading text-sm font-bold tracking-wider relative transition-all ${
-                  isActive
-                    ? 'text-cyan-400'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                {tab.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 shadow-sm shadow-cyan-400"></span>
-                )}
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       {/* Toast Alert */}
@@ -216,20 +182,13 @@ export default function Tournaments() {
             <p className="text-xs text-slate-400">Loading contests...</p>
           </div>
         ) : (() => {
-          // Rule: In UPCOMING tab, auto-hide matches whose time has passed
-          // In ONGOING/COMPLETED tabs, only show for registered players
+          // Strictly upcoming matches that haven't expired
           const displayed = tournaments.filter(t => {
-            if (currentTab === 'UPCOMING') {
-              const schedTime = t.scheduledAt ? new Date(t.scheduledAt).getTime() : 0;
-              if (schedTime > 0 && schedTime <= nowTs) {
-                return false;
-              }
-              return true;
+            const schedTime = t.scheduledAt ? new Date(t.scheduledAt).getTime() : 0;
+            if (schedTime > 0 && schedTime <= nowTs) {
+              return false;
             }
-            if (currentTab === 'ONGOING' || currentTab === 'COMPLETED') {
-              return Boolean(t.isJoined) || userJoinedIds.includes(t.id);
-            }
-            return true;
+            return t.status === 'UPCOMING';
           });
 
           if (displayed.length === 0) {
@@ -237,23 +196,11 @@ export default function Tournaments() {
               <div className="py-16 text-center space-y-3 bg-[#10051e] border border-purple-900/40 rounded-2xl p-6">
                 <AlertCircle className="w-10 h-10 text-slate-500 mx-auto" />
                 <h3 className="font-heading font-bold text-base text-white">
-                  {currentTab === 'UPCOMING'
-                    ? 'No Upcoming Matches Found'
-                    : `No Registered ${currentTab === 'ONGOING' ? 'Ongoing' : 'Completed'} Matches`}
+                  No Upcoming Matches Found
                 </h3>
                 <p className="text-xs text-slate-400 max-w-xs mx-auto">
-                  {currentTab === 'UPCOMING'
-                    ? 'There are currently no upcoming matches scheduled in this category.'
-                    : `Ongoing and Completed matches appear here for all tournaments you have joined.`}
+                  There are currently no upcoming matches scheduled in this category. New tournaments are added frequently, check back shortly!
                 </p>
-                {currentTab !== 'UPCOMING' && (
-                  <button
-                    onClick={() => handleTabChange('UPCOMING')}
-                    className="mt-2 py-2 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:brightness-110 text-white font-heading font-bold text-xs shadow-md transition-all"
-                  >
-                    Browse Upcoming Matches
-                  </button>
-                )}
               </div>
             );
           }

@@ -1053,16 +1053,24 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Maximum withdrawal allowed in one transaction is ₹1,000.' });
     }
 
-    const user = db.getUserById(req.user.id);
+    const user = await db.findUserByIdAsync(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
     const winBalance = Number(user.winBalance) || 0;
 
     if (numAmount > winBalance) {
       return res.status(400).json({
-        error: `Withdrawal is only permitted from Win Balance. You have ₹${winBalance} in Win Balance. Deposit balance cannot be withdrawn.`
+        error: `Insufficient Win Balance! You have ₹${winBalance} in Win Balance. Deposit balance cannot be withdrawn.`
       });
     }
 
-    const todayCount = db.getTodayWithdrawalCount(user.id);
+    const userWithdrawals = await db.syncWithdrawalRequestsFromSupabase(user.id);
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const todayCount = userWithdrawals.filter(
+      w => w.userId === user.id && new Date(w.createdAt) >= oneDayAgo && w.status !== 'REJECTED'
+    ).length;
+
     if (todayCount >= 2) {
       return res.status(400).json({
         error: 'Daily limit reached! Maximum 2 withdrawals per day are permitted. Please request again tomorrow.'
