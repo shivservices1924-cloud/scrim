@@ -1223,14 +1223,19 @@ app.get('/api/wallet/deposit-info', authenticateToken, (req, res) => {
 // ADMIN PANEL ROUTES
 // ==========================================
 
-app.get('/api/admin/dashboard', requireAdmin, (req, res) => {
-  const users = db.getUsers().filter(u => u.role !== 'admin');
-  const tournaments = db.getTournaments();
-  const deposits = db.getDepositRequests();
-  const withdrawals = db.getWithdrawalRequests();
+app.get('/api/admin/dashboard', requireAdmin, async (req, res) => {
+  const [allUsers, allTournaments, deposits, withdrawals] = await Promise.all([
+    db.syncAllUsersFromSupabase(),
+    db.syncTournamentsFromSupabase(),
+    db.syncDepositRequestsFromSupabase(),
+    db.syncWithdrawalRequestsFromSupabase()
+  ]);
 
-  const pendingDeposits = deposits.filter(d => d.status === 'PENDING');
-  const pendingWithdrawals = withdrawals.filter(w => w.status === 'PENDING');
+  const users = (allUsers || []).filter(u => u.role !== 'admin');
+  const tournaments = allTournaments || [];
+
+  const pendingDeposits = (deposits || []).filter(d => d.status === 'PENDING');
+  const pendingWithdrawals = (withdrawals || []).filter(w => w.status === 'PENDING');
   const activeTournaments = tournaments.filter(t => t.status === 'UPCOMING' || t.status === 'ONGOING');
 
   const totalPrizePool = tournaments.reduce((acc, t) => acc + (Number(t.prizePool) || 0), 0);
@@ -1563,6 +1568,29 @@ app.post('/api/admin/withdrawals/:id/verify', requireAdmin, async (req, res) => 
         adminNote: adminNote || 'Transferred to UPI successfully',
         processedAt: now.toISOString()
       });
+
+      // Update corresponding transaction in Supabase and cache so it shows APPROVED in Wallet History
+      try {
+        const { data: txList } = await supabase
+          .from('transactions')
+          .select('id, description')
+          .eq('user_id', withdrawal.userId)
+          .eq('wallet_type', 'win')
+          .eq('type', 'debit')
+          .ilike('description', `%Withdrawal%`)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (txList && txList.length > 0) {
+          const approvedDesc = `Withdrawal APPROVED & Paid: ₹${withdrawal.amount} sent to ${withdrawal.upiId || withdrawal.accountDetails} (${adminNote || 'Payment Verified'})`;
+          await supabase.from('transactions').update({ description: approvedDesc }).eq('id', txList[0].id);
+          const cachedTx = db.data.transactions.find(t => t.id === txList[0].id);
+          if (cachedTx) cachedTx.description = approvedDesc;
+        }
+      } catch (e) {
+        console.warn('Tx update description notice:', e.message);
+      }
+
       return res.json({ message: `Withdrawal of ₹${withdrawal.amount} marked as Paid/Approved.` });
     } else {
       const user = await db.findUserByIdAsync(withdrawal.userId);

@@ -1075,21 +1075,29 @@ class Database {
   }
 
   async updateDepositRequest(id, updates) {
-    const idx = this.data.deposit_requests.findIndex(d => d.id === id);
+    let idx = this.data.deposit_requests.findIndex(d => d.id === id);
+    if (idx === -1) {
+      await this.syncDepositRequestsFromSupabase();
+      idx = this.data.deposit_requests.findIndex(d => d.id === id);
+    }
+
+    const snakeUpdates = {};
+    if (updates.status !== undefined) snakeUpdates.status = updates.status;
+    if (updates.adminNote !== undefined) snakeUpdates.admin_note = updates.adminNote;
+    if (updates.processedAt !== undefined) snakeUpdates.processed_at = updates.processedAt;
+
+    try {
+      await supabase.from('deposit_requests').update(snakeUpdates).eq('id', id);
+    } catch (e) {
+      console.warn('Supabase update deposit notice:', e.message);
+    }
+
     if (idx !== -1) {
       this.data.deposit_requests[idx] = { ...this.data.deposit_requests[idx], ...updates };
       this.saveLocal();
-
-      try {
-        const snakeUpdates = {};
-        if (updates.status !== undefined) snakeUpdates.status = updates.status;
-        if (updates.adminNote !== undefined) snakeUpdates.admin_note = updates.adminNote;
-        if (updates.processedAt !== undefined) snakeUpdates.processed_at = updates.processedAt;
-        await supabase.from('deposit_requests').update(snakeUpdates).eq('id', id);
-      } catch (e) {}
       return this.data.deposit_requests[idx];
     }
-    return null;
+    return { id, ...updates };
   }
 
   // Withdrawals
@@ -1126,21 +1134,29 @@ class Database {
   }
 
   async updateWithdrawalRequest(id, updates) {
-    const idx = this.data.withdrawal_requests.findIndex(w => w.id === id);
+    let idx = this.data.withdrawal_requests.findIndex(w => w.id === id);
+    if (idx === -1) {
+      await this.syncWithdrawalRequestsFromSupabase();
+      idx = this.data.withdrawal_requests.findIndex(w => w.id === id);
+    }
+
+    const snakeUpdates = {};
+    if (updates.status !== undefined) snakeUpdates.status = updates.status;
+    if (updates.adminNote !== undefined) snakeUpdates.admin_note = updates.adminNote;
+    if (updates.processedAt !== undefined) snakeUpdates.processed_at = updates.processedAt;
+
+    try {
+      await supabase.from('withdrawal_requests').update(snakeUpdates).eq('id', id);
+    } catch (e) {
+      console.warn('Supabase update withdrawal notice:', e.message);
+    }
+
     if (idx !== -1) {
       this.data.withdrawal_requests[idx] = { ...this.data.withdrawal_requests[idx], ...updates };
       this.saveLocal();
-
-      try {
-        const snakeUpdates = {};
-        if (updates.status !== undefined) snakeUpdates.status = updates.status;
-        if (updates.adminNote !== undefined) snakeUpdates.admin_note = updates.adminNote;
-        if (updates.processedAt !== undefined) snakeUpdates.processed_at = updates.processedAt;
-        await supabase.from('withdrawal_requests').update(snakeUpdates).eq('id', id);
-      } catch (e) {}
       return this.data.withdrawal_requests[idx];
     }
-    return null;
+    return { id, ...updates };
   }
 
   getTodayWithdrawalCount(userId) {

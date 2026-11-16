@@ -237,11 +237,10 @@ export default function AdminDashboard() {
               <button
                 key={f.id}
                 onClick={() => handlePeriodChange(f.id)}
-                className={`px-3 py-1.5 rounded-xl font-heading text-xs font-bold transition-all whitespace-nowrap ${
-                  period === f.id
+                className={`px-3 py-1.5 rounded-xl font-heading text-xs font-bold transition-all whitespace-nowrap ${period === f.id
                     ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-md shadow-orange-600/30 scale-[1.02]'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-                }`}
+                  }`}
               >
                 {f.label}
               </button>
@@ -296,16 +295,14 @@ export default function AdminDashboard() {
                 <span className="text-[10px] font-heading font-bold text-slate-400 uppercase tracking-widest">
                   Net Profit (बचत)
                 </span>
-                <span className={`font-heading font-black text-2xl sm:text-3xl tracking-tight mt-0.5 ${
-                  financial.netProfit >= 0 ? 'text-amber-400 drop-shadow-[0_2px_10px_rgba(251,191,36,0.4)]' : 'text-rose-400'
-                }`}>
+                <span className={`font-heading font-black text-2xl sm:text-3xl tracking-tight mt-0.5 ${financial.netProfit >= 0 ? 'text-amber-400 drop-shadow-[0_2px_10px_rgba(251,191,36,0.4)]' : 'text-rose-400'
+                  }`}>
                   ₹{financial.netProfit}
                 </span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${
-                  financial.netProfit >= 0
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${financial.netProfit >= 0
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                     : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                }`}>
+                  }`}>
                   {financial.profitMargin >= 0 ? `+${financial.profitMargin}% Margin` : `${financial.profitMargin}%`}
                 </span>
               </div>
@@ -382,9 +379,8 @@ export default function AdminDashboard() {
                 <span className="text-[11px] font-heading font-extrabold uppercase tracking-wider">Bacha Hua (Net)</span>
                 <Sparkles className="w-4 h-4" />
               </div>
-              <p className={`font-heading font-black text-2xl ${
-                financial.netProfit >= 0 ? 'text-amber-400' : 'text-rose-400'
-              }`}>
+              <p className={`font-heading font-black text-2xl ${financial.netProfit >= 0 ? 'text-amber-400' : 'text-rose-400'
+                }`}>
                 ₹{financial.netProfit}
               </p>
               <div className="text-[11px] text-slate-300 space-y-1 pt-1 border-t border-purple-900/40">

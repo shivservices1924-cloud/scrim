@@ -128,21 +128,21 @@ export default function WithdrawHistory() {
 
                     <div>
                       {isPending && (
-                        <span className="bg-amber-950/80 border border-amber-500/50 text-amber-300 font-heading font-bold text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow">
+                        <span className="bg-amber-950/90 border border-amber-400 text-amber-300 font-heading font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg shadow-amber-950/50">
                           <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                          <span>Pending (Waiting Admin)</span>
+                          <span>PENDING (Under Review)</span>
                         </span>
                       )}
                       {isApproved && (
-                        <span className="bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 font-heading font-bold text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Done / Transferred</span>
+                        <span className="bg-emerald-950/90 border border-emerald-400 text-emerald-300 font-heading font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg shadow-emerald-950/50">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <span>APPROVED (Payment Sent)</span>
                         </span>
                       )}
                       {isRejected && (
-                        <span className="bg-red-950/80 border border-red-500/50 text-red-300 font-heading font-bold text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow">
-                          <XCircle className="w-3.5 h-3.5 text-red-400" />
-                          <span>Rejected & Refunded</span>
+                        <span className="bg-red-950/90 border border-red-400 text-red-300 font-heading font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg shadow-red-950/50">
+                          <XCircle className="w-4 h-4 text-red-400" />
+                          <span>REJECTED (Refunded)</span>
                         </span>
                       )}
                     </div>
@@ -174,11 +174,16 @@ export default function WithdrawHistory() {
                   </div>
 
                   {/* Timestamps & Notes */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-purple-900/30">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-purple-900/30 gap-1">
                     <span>Requested: {new Date(w.createdAt).toLocaleString()}</span>
+                    {w.processedAt && (
+                      <span className="text-emerald-400 font-semibold">
+                        Processed: {new Date(w.processedAt).toLocaleString()}
+                      </span>
+                    )}
                     {w.adminNote && (
-                      <span className="text-amber-300 font-medium truncate max-w-[150px]">
-                        Note: {w.adminNote}
+                      <span className="text-amber-300 font-medium">
+                        Admin Note: {w.adminNote}
                       </span>
                     )}
                   </div>
