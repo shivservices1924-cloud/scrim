@@ -1015,7 +1015,6 @@ app.post('/api/tournaments/:id/join', authenticateToken, async (req, res) => {
     return res.status(500).json({ error: error.message || 'Failed to join tournament.' });
   }
 });
-});
 
 // My Joined Matches (Only joined by user)
 app.get('/api/my-matches', authenticateToken, (req, res) => {
