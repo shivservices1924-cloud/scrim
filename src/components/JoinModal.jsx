@@ -78,7 +78,7 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#10051e] border border-purple-800/80 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div className="bg-[#121620] border border-[#1f2738] rounded-2xl max-w-sm w-full p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -89,25 +89,25 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
 
         {/* Modal Header */}
         <div className="mb-4">
-          <span className="bg-purple-600/30 text-purple-400 text-[10px] font-heading font-bold px-2 py-0.5 rounded uppercase border border-purple-500/30">
+          <span className="bg-[#F5C400]/20 text-[#F5C400] text-[10px] font-heading font-bold px-2 py-0.5 rounded uppercase border border-[#F5C400]/40">
             {tournament.gameType} {tournament.matchType} Contest
           </span>
           <h2 className="font-heading font-extrabold text-white text-lg mt-1 leading-snug">
             {tournament.title}
           </h2>
-          <p className="text-xs text-purple-300 mt-0.5">Match ID: {tournament.matchId}</p>
+          <p className="text-xs text-slate-400 mt-0.5">Match ID: {tournament.matchId}</p>
         </div>
 
         {/* Fee & Wallet Summary */}
-        <div className="bg-[#0a0216] p-3 rounded-xl border border-purple-900/40 mb-4 flex items-center justify-between">
+        <div className="bg-[#0b0e14] p-3 rounded-xl border border-[#1f2738] mb-4 flex items-center justify-between">
           <div>
             <span className="text-[11px] text-slate-400">Entry Fee:</span>
-            <p className="font-heading font-extrabold text-amber-400 text-lg">₹{entryFee}</p>
+            <p className="font-heading font-extrabold text-[#F5C400] text-lg">₹{entryFee}</p>
           </div>
           <div className="text-right">
             <span className="text-[11px] text-slate-400">Your Wallet Balance:</span>
             <div className="flex items-center gap-1 justify-end">
-              <Wallet className="w-3.5 h-3.5 text-purple-400" />
+              <Wallet className="w-3.5 h-3.5 text-[#F5C400]" />
               <p
                 className={`font-heading font-extrabold text-base ${
                   hasEnoughBalance ? 'text-emerald-400' : 'text-red-400'
@@ -131,7 +131,7 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
             <p className="text-sm text-slate-300">You must be logged in to join tournaments.</p>
             <button
               onClick={() => navigate('/login')}
-              className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm"
+              className="w-full py-2.5 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-black text-sm"
             >
               Log In to Continue
             </button>
@@ -141,17 +141,17 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
             <div className="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-200">
               Low Balance! You need ₹{entryFee - totalBalance} more to join this match.
               <br />
-              <span className="font-bold text-amber-300">Minimum deposit is ₹50.</span>
+              <span className="font-bold text-[#F5C400]">Minimum deposit is ₹50.</span>
             </div>
             <button
               onClick={() => {
                 onClose();
                 navigate('/wallet/deposit');
               }}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 text-white font-heading font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-green-600/20"
+              className="w-full py-2.5 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#F5C400]/20"
             >
               Add Money to Wallet (Min ₹50)
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 text-black" />
             </button>
           </div>
         ) : (
@@ -159,7 +159,7 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
             {/* Player In-Game Details */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Your Free Fire Name (IGN) <span className="text-red-400">*</span>
+                Your Free Fire Name (IGN) <span className="text-[#F5C400]">*</span>
               </label>
               <input
                 type="text"
@@ -167,13 +167,13 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
                 value={ffIgn}
                 onChange={(e) => setFfIgn(e.target.value)}
                 placeholder="Exact In-Game Name (e.g. God_Devil)"
-                className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-400 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
+                className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
               />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Your Free Fire Player UID <span className="text-red-400">*</span>
+                Your Free Fire Player UID <span className="text-[#F5C400]">*</span>
               </label>
               <input
                 type="text"
@@ -181,19 +181,19 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
                 value={ffUid}
                 onChange={(e) => setFfUid(e.target.value)}
                 placeholder="e.g. 35444498"
-                className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-400 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
+                className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
               />
             </div>
 
             {/* If DUO match, require Teammate info */}
             {tournament.matchType === 'DUO' && (
-              <div className="pt-2 border-t border-purple-900/40 space-y-3">
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wide">
+              <div className="pt-2 border-t border-[#1f2738] space-y-3">
+                <span className="text-xs font-bold text-[#F5C400] uppercase tracking-wide">
                   Teammate (Player 2) Details:
                 </span>
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Teammate FF Name (IGN) <span className="text-red-400">*</span>
+                    Teammate FF Name (IGN) <span className="text-[#F5C400]">*</span>
                   </label>
                   <input
                     type="text"
@@ -201,12 +201,12 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
                     value={teammateIgn}
                     onChange={(e) => setTeammateIgn(e.target.value)}
                     placeholder="Teammate IGN"
-                    className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-400 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
+                    className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Teammate FF Player UID <span className="text-red-400">*</span>
+                    Teammate FF Player UID <span className="text-[#F5C400]">*</span>
                   </label>
                   <input
                     type="text"
@@ -214,20 +214,20 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
                     value={teammateUid}
                     onChange={(e) => setTeammateUid(e.target.value)}
                     placeholder="Teammate UID"
-                    className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-400 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
+                    className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
                   />
                 </div>
               </div>
             )}
 
-            <div className="bg-purple-950/40 border border-purple-800/40 rounded-xl p-2.5 text-[11px] text-purple-200">
+            <div className="bg-[#0b0e14] border border-[#1f2738] rounded-xl p-2.5 text-[11px] text-slate-300">
               ⚡ ₹{entryFee} will be deducted from your wallet balance. Room ID & Password will be available on this page 10 minutes before match time.
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-heading font-extrabold text-base tracking-wider shadow-lg shadow-blue-600/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-base tracking-wider shadow-lg shadow-[#F5C400]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               {loading ? 'Processing Join...' : `Confirm & Pay ₹${entryFee}`}
             </button>

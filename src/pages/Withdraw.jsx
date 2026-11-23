@@ -110,13 +110,13 @@ export default function Withdraw() {
   };
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0b0e14]/95 backdrop-blur-md border-b border-[#1f2738] px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/wallet')}
-            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] flex items-center justify-center text-[#F5C400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -127,7 +127,7 @@ export default function Withdraw() {
 
         <button
           onClick={() => navigate('/wallet/withdraw-history')}
-          className="text-xs font-heading font-bold text-rose-400 bg-rose-950/60 border border-rose-500/40 px-3 py-1.5 rounded-xl hover:bg-rose-900/60 transition-colors"
+          className="text-xs font-heading font-bold text-[#F5C400] bg-[#121620] border border-[#1f2738] px-3 py-1.5 rounded-xl hover:border-[#F5C400] transition-colors"
         >
           History
         </button>
@@ -135,9 +135,9 @@ export default function Withdraw() {
 
       <div className="p-4 space-y-5">
         {/* Important Rules Alert Box */}
-        <div className="bg-gradient-to-r from-red-950/60 to-[#180930] border border-red-500/40 rounded-2xl p-4 space-y-2">
-          <div className="flex items-center gap-2 text-red-400 font-heading font-extrabold text-sm">
-            <ShieldCheck className="w-4 h-4" />
+        <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-4 space-y-2">
+          <div className="flex items-center gap-2 text-[#F5C400] font-heading font-extrabold text-sm">
+            <ShieldCheck className="w-4 h-4 text-[#F5C400]" />
             <span>RushX Withdrawal Rules:</span>
           </div>
           <ul className="text-xs space-y-1 text-slate-300 list-disc list-inside">
@@ -148,13 +148,13 @@ export default function Withdraw() {
         </div>
 
         {/* Available Win Balance Box */}
-        <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 flex items-center justify-between shadow-lg">
+        <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-4 flex items-center justify-between shadow-lg">
           <div>
             <span className="text-[11px] text-slate-400 uppercase font-semibold">
               Withdrawable Win Balance:
             </span>
             <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="font-heading font-black text-3xl text-emerald-400">
+              <span className="font-heading font-black text-3xl text-[#F5C400]">
                 ₹{winBalance}
               </span>
             </div>
@@ -163,9 +163,9 @@ export default function Withdraw() {
             </span>
           </div>
 
-          <div className="text-right bg-[#180930] p-2.5 rounded-xl border border-purple-900/50">
+          <div className="text-right bg-[#0b0e14] p-2.5 rounded-xl border border-[#1f2738]">
             <span className="text-[10px] text-slate-400 uppercase font-bold">Daily Limit</span>
-            <p className="text-xs font-bold text-purple-300 mt-0.5">Max 2 / Day</p>
+            <p className="text-xs font-bold text-[#F5C400] mt-0.5">Max 2 / Day</p>
           </div>
         </div>
 
@@ -185,8 +185,8 @@ export default function Withdraw() {
 
         {/* Withdrawal Form */}
         {winBalance < 100 ? (
-          <div className="bg-[#10051e] border border-amber-500/30 rounded-2xl p-5 text-center space-y-3">
-            <Clock className="w-10 h-10 text-amber-400 mx-auto" />
+          <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-5 text-center space-y-3">
+            <Clock className="w-10 h-10 text-[#F5C400] mx-auto" />
             <h3 className="font-heading font-bold text-base text-white">
               Minimum ₹100 Required to Withdraw
             </h3>
@@ -195,13 +195,13 @@ export default function Withdraw() {
             </p>
             <button
               onClick={() => navigate('/tournaments')}
-              className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-heading font-bold text-sm shadow-md shadow-purple-600/30"
+              className="py-2.5 px-6 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-bold text-sm shadow-md shadow-[#F5C400]/20"
             >
               Play Tournaments
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 space-y-4">
+          <form onSubmit={handleSubmit} className="bg-[#121620] border border-[#1f2738] rounded-2xl p-4 space-y-4">
             <h3 className="font-heading font-extrabold text-sm text-white uppercase tracking-wider">
               Request Withdrawal
             </h3>
@@ -209,7 +209,7 @@ export default function Withdraw() {
             {/* Amount */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Withdrawal Amount (₹100 - ₹1,000 / transaction, Available: ₹{winBalance}) <span className="text-red-400">*</span>
+                Withdrawal Amount (₹100 - ₹1,000 / transaction, Available: ₹{winBalance}) <span className="text-[#F5C400]">*</span>
               </label>
               <div className="flex items-center gap-2 mb-2">
                 {['100', '200', '500', '1000'].filter(a => Number(a) <= winBalance).map(preset => (
@@ -217,7 +217,7 @@ export default function Withdraw() {
                     type="button"
                     key={preset}
                     onClick={() => setAmount(preset)}
-                    className="py-1 px-3 rounded-lg bg-[#0a0216] border border-purple-900/60 text-xs font-heading font-bold hover:border-purple-500"
+                    className="py-1 px-3 rounded-lg bg-[#0b0e14] border border-[#1f2738] text-xs font-heading font-bold hover:border-[#F5C400] text-white"
                   >
                     ₹{preset}
                   </button>
@@ -226,7 +226,7 @@ export default function Withdraw() {
                   <button
                     type="button"
                     onClick={() => setAmount(String(winBalance))}
-                    className="py-1 px-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 text-xs font-heading font-bold ml-auto"
+                    className="py-1 px-3 rounded-lg bg-[#F5C400]/10 border border-[#F5C400]/40 text-[#F5C400] text-xs font-heading font-bold ml-auto"
                   >
                     All (₹{winBalance})
                   </button>
@@ -239,7 +239,7 @@ export default function Withdraw() {
                 required
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
+                className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
                 placeholder="Enter amount (100 - 1000)"
               />
             </div>
@@ -255,8 +255,8 @@ export default function Withdraw() {
                   onClick={() => setMethod('UPI')}
                   className={`py-2 rounded-xl text-xs font-heading font-bold border transition-all ${
                     method === 'UPI'
-                      ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 border-purple-400 text-white shadow-md'
-                      : 'bg-[#0a0216] border-purple-900/60 text-slate-300'
+                      ? 'bg-[#F5C400] border-[#F5C400] text-black shadow-md'
+                      : 'bg-[#0b0e14] border-[#1f2738] text-slate-300'
                   }`}
                 >
                   UPI ID (Fastest)
@@ -266,8 +266,8 @@ export default function Withdraw() {
                   onClick={() => setMethod('BANK')}
                   className={`py-2 rounded-xl text-xs font-heading font-bold border transition-all ${
                     method === 'BANK'
-                      ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 border-purple-400 text-white shadow-md'
-                      : 'bg-[#0a0216] border-purple-900/60 text-slate-300'
+                      ? 'bg-[#F5C400] border-[#F5C400] text-black shadow-md'
+                      : 'bg-[#0b0e14] border-[#1f2738] text-slate-300'
                   }`}
                 >
                   Bank Transfer (IMPS)
@@ -279,7 +279,7 @@ export default function Withdraw() {
             {method === 'UPI' ? (
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Your UPI ID (Google Pay, PhonePe, Paytm) <span className="text-red-400">*</span>
+                  Your UPI ID (Google Pay, PhonePe, Paytm) <span className="text-[#F5C400]">*</span>
                 </label>
                 <input
                   type="text"
@@ -287,13 +287,13 @@ export default function Withdraw() {
                   value={upiId}
                   onChange={(e) => setUpiId(e.target.value)}
                   placeholder="e.g. 9876543210@paytm or name@oksbi"
-                  className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
+                  className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600"
                 />
               </div>
             ) : (
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Bank Account Details (A/C No, IFSC, Name) <span className="text-red-400">*</span>
+                  Bank Account Details (A/C No, IFSC, Name) <span className="text-[#F5C400]">*</span>
                 </label>
                 <textarea
                   rows="3"
@@ -301,7 +301,7 @@ export default function Withdraw() {
                   value={accountDetails}
                   onChange={(e) => setAccountDetails(e.target.value)}
                   placeholder="Name: &#10;Account No: &#10;IFSC Code: "
-                  className="w-full bg-[#0a0216] border border-purple-900 focus:border-purple-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600 text-xs"
+                  className="w-full bg-[#0b0e14] border border-[#1f2738] focus:border-[#F5C400] rounded-xl px-3 py-2 text-sm text-white focus:outline-none placeholder:text-slate-600 text-xs"
                 ></textarea>
               </div>
             )}
@@ -309,7 +309,7 @@ export default function Withdraw() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-heading font-extrabold text-base tracking-wider shadow-lg shadow-red-600/30 active:scale-[0.98] transition-all"
+              className="w-full py-3.5 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-extrabold text-base tracking-wider shadow-lg shadow-[#F5C400]/20 active:scale-[0.98] transition-all"
             >
               {loading ? 'Processing...' : `Confirm Withdrawal of ₹${amount}`}
             </button>
