@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    background-color: #070212;
+    background-color: #0b0e14;
     color: #ffffff;
     font-family: 'Inter', sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -17,14 +17,14 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d041c;
+  background: #0b0e14;
 }
 ::-webkit-scrollbar-thumb {
-  background: #9333ea;
+  background: #F5C400;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a855f7;
+  background: #ffd214;
 }
 
 /* Ticker Animation */

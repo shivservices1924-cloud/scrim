@@ -89,7 +89,7 @@ export default function AdminLogin() {
         {/* Isolated Branding Header */}
         <div className="text-center mb-8">
           <div className="w-20 h-20 rounded-full bg-white border-2 border-amber-400 p-1 mx-auto mb-3 shadow-xl shadow-amber-500/25 flex items-center justify-center overflow-hidden">
-            <img src="/app-logo.png" alt="RushX Admin Logo" className="w-full h-full object-cover rounded-full" />
+            <img src="/logo.svg" alt="RushX Admin Logo" className="w-full h-full object-cover rounded-full" />
           </div>
           <h1 className="font-heading font-black text-2xl tracking-wider text-white">
             RUSHX ADMIN CONSOLE
@@ -128,7 +128,7 @@ export default function AdminLogin() {
                   type="text"
                   required
                   autoComplete="off"
-                  placeholder="Enter admin username"
+                  placeholder="Enter admin username (e.g. admin or rushx_ujjwal_admin)"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full bg-[#070c18] border border-blue-900 focus:border-amber-500 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none placeholder:text-slate-600"
@@ -229,7 +229,7 @@ export default function AdminLogin() {
             )}
 
             <div className="bg-blue-950/40 border border-blue-500/30 rounded-xl p-3 text-[11px] text-blue-200">
-              Enter the platform Master Security Recovery Key configured in your server environment variables.
+              Enter your Master Security Recovery Key (Default Emergency Key: <span className="font-mono font-bold text-amber-300">RUSHX777MASTER</span>).
             </div>
 
             <form onSubmit={handleResetPassword} className="space-y-3.5">
@@ -240,7 +240,7 @@ export default function AdminLogin() {
                 <input
                   type="text"
                   required
-                  placeholder="Enter Master Recovery Key"
+                  placeholder="Enter Master Recovery Key (e.g. RUSHX777MASTER)"
                   value={recoveryKey}
                   onChange={(e) => setRecoveryKey(e.target.value)}
                   className="w-full bg-[#070d1a] border border-blue-900 focus:border-amber-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none font-mono"

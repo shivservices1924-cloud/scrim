@@ -1,593 +1,322 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AnnouncementTicker from '../components/AnnouncementTicker';
 import SEO from '../components/SEO';
+import TournamentCard from '../components/TournamentCard';
+import JoinModal from '../components/JoinModal';
+import RoomModal from '../components/RoomModal';
 import {
   RefreshCw,
-  Calendar,
-  CheckCircle2,
-  ChevronRight,
-  ChevronLeft,
-  Flame,
-  Shield,
-  Swords,
-  Target,
-  Crosshair,
   Crown,
-  MessageCircle,
-  Instagram,
-  Youtube,
-  HelpCircle,
+  Users,
+  Shield,
+  Target,
+  Flame,
+  ChevronRight,
   Sparkles,
-  ExternalLink
+  AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [tournaments, setTournaments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const { user, token } = useAuth();
 
-  const slides = [
-    {
-      id: 'cups',
-      tag: 'MAP: BERMUDA ONLY • RUSHX ESPORTS',
-      icon: Flame,
-      tagColor: 'text-red-400',
-      title: 'BR & HEADSHOT CUPS',
-      desc: '₹18 & ₹36 Per Kill in BR! CS & Lone Wolf Headshot cups. Room ID strictly for registered players!',
-      btnText: 'Explore Matches',
-      btnAction: () => navigate('/tournaments'),
-      badge: 'Min Deposit ₹50',
-      bgGradient: 'from-red-950 via-slate-900 to-amber-950',
-      borderColor: 'border-red-500/40',
-      bgImage: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 'app_download',
-      tag: 'OFFICIAL APP • ZERO LAG ESPORTS',
-      icon: Sparkles,
-      tagColor: 'text-blue-400',
-      title: 'DOWNLOAD RUSHX APP',
-      desc: 'Get instant match notifications, faster room ID access, and seamless gaming on Android & iOS.',
-      btnText: 'Download Now',
-      btnAction: () => navigate('/download'),
-      badge: 'Android & iOS',
-      bgGradient: 'from-blue-950 via-[#0a1435] to-indigo-950',
-      borderColor: 'border-blue-500/50',
-      bgImage: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 'whatsapp',
-      tag: 'FASTEST NOTIFICATIONS • ROOM ID UPDATES',
-      icon: MessageCircle,
-      tagColor: 'text-emerald-400',
-      title: 'JOIN WHATSAPP CHANNEL',
-      desc: 'Never miss a match! Get real-time Room ID alerts, custom schedule timings & direct admin updates.',
-      btnText: 'Join WhatsApp Channel',
-      btnAction: () => window.open('https://whatsapp.com/channel/0029Vb3RushXEsports', '_blank'),
-      badge: 'Live Alerts ⚡',
-      bgGradient: 'from-emerald-950 via-slate-900 to-teal-950',
-      borderColor: 'border-emerald-500/40',
-      bgImage: 'https://images.unsplash.com/photo-1614680376593-902f749f7ffc?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 'instagram',
-      tag: 'COMMUNITY & HIGHLIGHTS',
-      icon: Instagram,
-      tagColor: 'text-pink-400',
-      title: 'FOLLOW ON INSTAGRAM',
-      desc: 'Daily winner showcases, crazy clutch clips, top kill leaders, and upcoming tournament announcements!',
-      btnText: 'Follow @rushx_scrim',
-      btnAction: () => window.open('https://www.instagram.com/rushx_scrim/', '_blank'),
-      badge: '@rushx_scrim',
-      bgGradient: 'from-purple-950 via-slate-900 to-pink-950',
-      borderColor: 'border-pink-500/40',
-      bgImage: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 'youtube',
-      tag: 'OFFICIAL LIVESTREAM & HIGHLIGHTS',
-      icon: Youtube,
-      tagColor: 'text-red-400',
-      title: 'SUBSCRIBE ON YOUTUBE',
-      desc: 'Watch daily Free Fire custom room scrim livestreams, tournament finals, and pro player montages!',
-      btnText: 'Subscribe Channel',
-      btnAction: () => window.open('https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ', '_blank'),
-      badge: 'Live Scrims 🔴',
-      bgGradient: 'from-red-950 via-slate-900 to-purple-950',
-      borderColor: 'border-red-500/40',
-      bgImage: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 'feedback',
-      tag: '24/7 SUPPORT & ANTI-CHEAT DESK',
-      icon: HelpCircle,
-      tagColor: 'text-cyan-400',
-      title: 'PLAYER FEEDBACK & SUPPORT',
-      desc: 'Got feedback or want to report a hacker? Submit match screen recording proof or chat directly with admin.',
-      btnText: 'Support & Feedback',
-      btnAction: () => navigate('/contact'),
-      badge: '24/7 Support',
-      bgGradient: 'from-blue-950 via-slate-900 to-cyan-950',
-      borderColor: 'border-cyan-500/40',
-      bgImage: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80'
-    }
+  const [tournaments, setTournaments] = useState([]);
+  const [userJoinedIds, setUserJoinedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('ALL'); // 'ALL', 'SOLO', 'DUO', 'SQUAD', 'CS_1V1', 'LW_1V1'
+  const [selectedForJoin, setSelectedForJoin] = useState(null);
+  const [selectedForRoom, setSelectedForRoom] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
+  const [nowTs, setNowTs] = useState(Date.now());
+
+  const categories = [
+    { id: 'SOLO', label: 'Solo', icon: Crown, category: 'BR_FULL_MAP', matchType: 'SOLO' },
+    { id: 'DUO', label: 'Duo', icon: Users, category: 'BR_FULL_MAP', matchType: 'DUO' },
+    { id: 'SQUAD', label: 'Squad', icon: Shield, category: 'BR_FULL_MAP', matchType: 'SQUAD' },
+    { id: 'CS_1V1', label: 'CS 1v1', icon: Target, category: 'CS_HEADSHOT', matchType: '' },
+    { id: 'LW_1V1', label: 'Lone Wolf 1v1', icon: Flame, category: 'LW_HEADSHOT', matchType: '' }
   ];
 
-  // Auto-slide every 4 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveSlide(prev => (prev + 1) % slides.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [slides.length]);
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    touchEndX.current = e.changedTouches[0].clientX;
-    handleSwipe();
-  };
-
-  const handleSwipe = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 40) {
-      if (diff > 0) {
-        // Swipe left -> next
-        setActiveSlide(prev => (prev + 1) % slides.length);
-      } else {
-        // Swipe right -> prev
-        setActiveSlide(prev => (prev - 1 + slides.length) % slides.length);
-      }
+  const loadTournaments = async (isBackground = false) => {
+    try {
+      if (!isBackground) setLoading(true);
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await fetch('/api/tournaments?status=UPCOMING', { headers });
+      const data = await res.json();
+      const list = Array.isArray(data) ? data : [];
+      setTournaments(list);
+      const joined = list.filter(t => t.isJoined).map(t => t.id);
+      setUserJoinedIds(joined);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const loadUpcoming = () => {
-    fetch('/api/tournaments?status=UPCOMING')
-      .then(res => res.json())
-      .then(data => {
-        setTournaments(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  };
-
   useEffect(() => {
-    loadUpcoming();
-    // Fast polling every 6 seconds so newly added tournaments show up instantly!
-    const pollInterval = setInterval(loadUpcoming, 6000);
-    const onFocus = () => loadUpcoming();
+    loadTournaments();
+    const interval = setInterval(() => {
+      setNowTs(Date.now());
+      loadTournaments(true);
+    }, 4000);
+
+    const onFocus = () => {
+      setNowTs(Date.now());
+      loadTournaments(true);
+    };
 
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
 
     return () => {
-      clearInterval(pollInterval);
+      clearInterval(interval);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
     };
-  }, []);
+  }, [token]);
 
-  const now = Date.now();
+  const handleJoinedSuccess = (data) => {
+    setToastMessage(data.message || 'Joined successfully!');
+    setTimeout(() => setToastMessage(''), 4000);
+    loadTournaments();
+  };
+
+  const handleCategoryClick = (catId) => {
+    if (selectedCategory === catId) {
+      setSelectedCategory('ALL'); // Toggle off if clicked again
+    } else {
+      setSelectedCategory(catId);
+    }
+  };
+
+  // Strictly filter out expired tournaments (real-time expiry)
   const activeUpcoming = tournaments.filter(t => {
     if (t.status !== 'UPCOMING') return false;
     const sched = t.scheduledAt ? new Date(t.scheduledAt).getTime() : 0;
-    return sched === 0 || sched > now;
+    if (sched > 0 && sched <= nowTs) return false;
+
+    if (selectedCategory === 'ALL') return true;
+
+    if (selectedCategory === 'SOLO') {
+      return (t.category === 'BR_FULL_MAP' || !t.category) && (t.matchType === 'SOLO' || !t.matchType);
+    }
+    if (selectedCategory === 'DUO') {
+      return (t.category === 'BR_FULL_MAP' || !t.category) && t.matchType === 'DUO';
+    }
+    if (selectedCategory === 'SQUAD') {
+      return (t.category === 'BR_FULL_MAP' || !t.category) && t.matchType === 'SQUAD';
+    }
+    if (selectedCategory === 'CS_1V1') {
+      return t.category === 'CS_HEADSHOT' || t.category === 'CS_1V1' || (t.gameType && t.gameType.includes('CS'));
+    }
+    if (selectedCategory === 'LW_1V1') {
+      return t.category === 'LW_HEADSHOT' || (t.gameType && t.gameType.includes('LONE'));
+    }
+    return true;
   });
 
-  const brCount = activeUpcoming.filter(t => t.category === 'BR_FULL_MAP').length;
-  const csCount = activeUpcoming.filter(t => t.category === 'CS_1V1').length;
-  const csHsCount = activeUpcoming.filter(t => t.category === 'CS_HEADSHOT').length;
-  const lwHsCount = activeUpcoming.filter(t => t.category === 'LW_HEADSHOT').length;
-
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
       <SEO
         title="Play Free Fire Tournaments & Win Cash"
-        description="Join India's most trusted Free Fire esports tournaments. Compete in BR, Clash Squad, and Headshot matches with instant UPI payouts."
+        description="Join India's most trusted Free Fire esports tournaments. Compete in Solo, Duo, Squad, Clash Squad, and Lone Wolf with instant UPI payouts."
         path="/"
       />
+
       {/* Announcement Marquee Ticker */}
       <AnnouncementTicker />
 
+      {/* Toast Alert */}
+      {toastMessage && (
+        <div className="mx-4 mt-3 bg-emerald-950/90 border border-emerald-500/80 p-3 rounded-xl text-emerald-200 text-xs font-bold animate-bounce flex items-center gap-2">
+          <span>✅</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Main Content Area */}
       <div className="p-4 space-y-5">
-        {/* Featured Hero Banner Slideable Carousel */}
-        <div
-          className="relative"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {slides.map((s, idx) => {
-            if (idx !== activeSlide) return null;
-            const Icon = s.icon;
-            return (
-              <div
-                key={s.id}
-                className={`relative rounded-3xl overflow-hidden bg-gradient-to-r ${s.bgGradient} border ${s.borderColor} shadow-2xl p-5 min-h-[190px] flex flex-col justify-between transition-all duration-300 animate-fadeIn`}
-              >
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-overlay"
-                  style={{ backgroundImage: `url(${s.bgImage})` }}
-                ></div>
+        {/* Screen 4 Hero Banner: DAILY TOURNAMENTS */}
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#171b26] via-[#121620] to-[#0f131a] border border-[#1f2738] p-5 shadow-2xl flex items-center justify-between min-h-[170px]">
+          {/* Subtle gold glow */}
+          <div className="absolute top-0 right-1/4 w-36 h-36 bg-[#F5C400]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                <div className="relative z-10 space-y-1">
-                  <div className={`flex items-center gap-1.5 ${s.tagColor} font-heading font-extrabold text-[11px] tracking-wider`}>
-                    <Icon className="w-3.5 h-3.5 fill-current animate-pulse shrink-0" />
-                    <span>{s.tag}</span>
-                  </div>
-                  <h2 className="font-heading font-black text-2xl text-white tracking-wide drop-shadow-md leading-tight">
-                    {s.title}
-                  </h2>
-                  <p className="text-xs text-slate-200/90 font-medium max-w-[280px] leading-relaxed">
-                    {s.desc}
-                  </p>
-                </div>
-
-                <div className="relative z-10 pt-3 flex items-center justify-between gap-2">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (typeof s.btnAction === 'function') {
-                        s.btnAction();
-                      }
-                    }}
-                    onTouchEnd={(e) => {
-                      e.stopPropagation();
-                    }}
-                    aria-label={s.btnText}
-                    className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-heading font-bold text-xs px-4 py-2 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center gap-1.5 cursor-pointer z-20"
-                  >
-                    <span>{s.btnText}</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                  <span className="text-[10px] font-bold text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-full border border-amber-500/40">
-                    {s.badge}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Carousel Navigation Arrows */}
-          <button
-            onClick={() => setActiveSlide(prev => (prev - 1 + slides.length) % slides.length)}
-            aria-label="Previous slide"
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-xs backdrop-blur-sm z-20 border border-white/20 transition-all"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setActiveSlide(prev => (prev + 1) % slides.length)}
-            aria-label="Next slide"
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-xs backdrop-blur-sm z-20 border border-white/20 transition-all"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-
-          {/* Carousel Indicator Dots */}
-          <div className="flex items-center justify-center gap-1.5 mt-2.5">
-            {slides.map((_, i) => (
+          <div className="relative z-10 space-y-1.5 max-w-[62%]">
+            <span className="text-[10px] font-mono tracking-widest text-[#F5C400] font-black uppercase flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-[#F5C400]" />
+              RUSHX ESPORTS
+            </span>
+            <h2 className="font-heading font-black text-2xl text-white tracking-wide leading-tight drop-shadow">
+              DAILY <br />TOURNAMENTS
+            </h2>
+            <p className="text-[11px] font-bold text-slate-300 tracking-wider">
+              PLAY • WIN • EARN
+            </p>
+            <div className="pt-2">
               <button
-                key={i}
-                onClick={() => setActiveSlide(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  activeSlide === i ? 'w-6 bg-cyan-400 shadow-sm shadow-cyan-400' : 'w-1.5 bg-slate-700 hover:bg-slate-500'
-                }`}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
+                type="button"
+                onClick={() => navigate('/tournaments')}
+                className="bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-xs px-4 py-2 rounded-xl shadow-lg shadow-amber-500/20 active:scale-95 transition-all uppercase tracking-wider cursor-pointer"
+              >
+                JOIN NOW
+              </button>
+            </div>
+          </div>
+
+          {/* Hero Character Art */}
+          <div className="relative z-10 w-28 h-32 flex items-center justify-center shrink-0">
+            <img
+              src="/poster-br-solo.jpg"
+              alt="Esports Champion"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/logo.svg';
+              }}
+              className="w-full h-full object-cover rounded-xl border border-[#F5C400]/40 shadow-xl filter brightness-105"
+            />
           </div>
         </div>
 
-        {/* Section: My Matches */}
+        {/* Screen 4 Category Selectors (Solo, Duo, Squad, CS 1v1, Lone Wolf 1v1) */}
         <div>
-          <h3 className="font-heading font-extrabold text-base tracking-wide text-white mb-3 flex items-center justify-between">
-            <span>My Matches (Your Registered Matches Only)</span>
-            <button
-              onClick={() => {
-                if (!user) return navigate('/login');
-                navigate('/my-matches');
-              }}
-              className="text-xs text-blue-400 font-semibold hover:underline"
-            >
-              View All
-            </button>
-          </h3>
+          <div className="flex items-center justify-between mb-2.5 px-0.5">
+            <h3 className="font-heading font-extrabold text-sm text-white tracking-wide">
+              Tournament Categories
+            </h3>
+            {selectedCategory !== 'ALL' && (
+              <button
+                onClick={() => setSelectedCategory('ALL')}
+                className="text-[11px] text-[#F5C400] hover:underline font-bold"
+              >
+                Reset Filter
+              </button>
+            )}
+          </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            {/* Ongoing Card */}
-            <button
-              onClick={() => {
-                if (!user) return navigate('/login');
-                navigate('/my-matches?tab=ongoing');
-              }}
-              className="bg-[#10051e] hover:bg-[#180930] border border-purple-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-                <RefreshCw className="w-6 h-6 animate-[spin_4s_linear_infinite]" />
-              </div>
-              <span className="text-xs font-semibold text-slate-200">Ongoing</span>
-            </button>
-
-            {/* Upcoming Card */}
-            <button
-              onClick={() => {
-                if (!user) return navigate('/login');
-                navigate('/my-matches?tab=upcoming');
-              }}
-              className="bg-[#10051e] hover:bg-[#180930] border border-purple-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
-                <Calendar className="w-6 h-6" />
-              </div>
-              <span className="text-xs font-semibold text-slate-200">Upcoming</span>
-            </button>
-
-            {/* Completed Card */}
-            <button
-              onClick={() => {
-                if (!user) return navigate('/login');
-                navigate('/my-matches?tab=completed');
-              }}
-              className="bg-[#10051e] hover:bg-[#180930] border border-purple-900/50 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 group transition-all shadow-md active:scale-95"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
-                <CheckCircle2 className="w-6 h-6" />
-              </div>
-              <span className="text-xs font-semibold text-slate-200">Completed</span>
-            </button>
+          <div className="grid grid-cols-5 gap-2">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryClick(cat.id)}
+                  className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-xl transition-all ${
+                    isSelected
+                      ? 'bg-[#F5C400] text-black shadow-lg shadow-amber-500/25 scale-[1.03] border-2 border-[#FFD000]'
+                      : 'bg-[#121620] hover:bg-[#1a202e] text-slate-300 border border-[#1f2738]'
+                  }`}
+                >
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center mb-1 transition-colors ${
+                      isSelected
+                        ? 'bg-black text-[#F5C400]'
+                        : 'bg-[#1a202e] text-[#F5C400]'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className={`text-[10px] font-heading font-black tracking-wide text-center leading-tight truncate max-w-full ${
+                    isSelected ? 'text-black' : 'text-slate-300'
+                  }`}>
+                    {cat.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Section: Esports Games (Updated as requested) */}
-        <div>
-          <h3 className="font-heading font-extrabold text-base tracking-wide text-white mb-3">
-            Esports Games (Map: Bermuda)
-          </h3>
-
-          <div className="grid grid-cols-2 gap-3">
-            {/* Card 1: BR SOLO TOURNAMENT */}
-            <div
-              onClick={() => navigate('/tournaments?category=BR_FULL_MAP')}
-              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
-            >
-              <img
-                src="/poster-br-solo.jpg"
-                alt="BR Solo Tournament"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-br-solo.svg';
-                }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
-
-              <div className="absolute top-2.5 left-2.5 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow flex items-center gap-1">
-                <Crown className="w-3 h-3 text-amber-300" />
-                BR SOLO • BERMUDA
-              </div>
-
-              {/* Title & Live Category Action */}
-              <div className="absolute bottom-8 left-2.5 right-2.5">
-                <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
-                  BR SOLO TOURNAMENT
-                </h4>
-              </div>
-
-              {/* Social Channels Overlay - Replaces old link with user verified links */}
-              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
-                <div className="flex items-center gap-1">
-                  <a
-                    href="https://www.instagram.com/rushx_scrim/"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
-                    /rushx_scrim
-                  </a>
-                  <a
-                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Youtube className="w-2.5 h-2.5 text-red-400" />
-                    Live
-                  </a>
-                </div>
-                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
-                  ₹80-₹360
+        {/* Screen 4: Upcoming Tournaments Section */}
+        <div className="space-y-3 pt-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading font-black text-base tracking-wide text-white">
+                Upcoming Tournaments
+              </h3>
+              {selectedCategory !== 'ALL' && (
+                <span className="text-[10px] font-extrabold bg-[#F5C400]/20 text-[#F5C400] border border-[#F5C400]/40 px-2 py-0.5 rounded-full">
+                  {categories.find(c => c.id === selectedCategory)?.label}
                 </span>
-              </div>
+              )}
             </div>
 
-            {/* Card 2: BR DUO TOURNAMENT */}
-            <div
-              onClick={() => navigate('/tournaments?category=BR_FULL_MAP')}
-              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
+            <button
+              onClick={() => {
+                if (selectedCategory === 'ALL') {
+                  navigate('/tournaments');
+                } else {
+                  const c = categories.find(cat => cat.id === selectedCategory);
+                  navigate(`/tournaments?category=${encodeURIComponent(c?.category || '')}&matchType=${encodeURIComponent(c?.matchType || '')}`);
+                }
+              }}
+              className="text-xs text-[#F5C400] hover:text-[#FFD000] font-bold flex items-center gap-0.5"
             >
-              <img
-                src="/poster-br-duo.jpg"
-                alt="BR Duo Tournament"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-br-duo.svg';
-                }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
-
-              <div className="absolute top-2.5 left-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow flex items-center gap-1">
-                <Crown className="w-3 h-3 text-amber-300" />
-                BR DUO • BERMUDA
-              </div>
-
-              <div className="absolute bottom-8 left-2.5 right-2.5">
-                <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
-                  BR DUO TOURNAMENT
-                </h4>
-              </div>
-
-              {/* Social Channels Overlay */}
-              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
-                <div className="flex items-center gap-1">
-                  <a
-                    href="https://www.instagram.com/rushx_scrim/"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
-                    /rushx_scrim
-                  </a>
-                  <a
-                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Youtube className="w-2.5 h-2.5 text-red-400" />
-                    Live
-                  </a>
-                </div>
-                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
-                  ₹160-₹720
-                </span>
-              </div>
-            </div>
-
-            {/* Card 3: CS HEADSHOT TOURNAMENT */}
-            <div
-              onClick={() => navigate('/tournaments?category=CS_HEADSHOT')}
-              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
-            >
-              <img
-                src="/poster-cs.jpg"
-                alt="CS Headshot Tournament"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-cs.svg';
-                }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
-
-              <div className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow flex items-center gap-1">
-                <Crosshair className="w-3 h-3" />
-                HEADSHOT ONLY
-              </div>
-
-              <div className="absolute bottom-8 left-2.5 right-2.5">
-                <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
-                  CS HEADSHOT TOURNAMENT
-                </h4>
-              </div>
-
-              {/* Social Channels Overlay */}
-              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
-                <div className="flex items-center gap-1">
-                  <a
-                    href="https://www.instagram.com/rushx_scrim/"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
-                    /rushx_scrim
-                  </a>
-                  <a
-                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Youtube className="w-2.5 h-2.5 text-red-400" />
-                    Live
-                  </a>
-                </div>
-                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
-                  ₹80-₹360
-                </span>
-              </div>
-            </div>
-
-            {/* Card 4: LONE WOLF 1V1 */}
-            <div
-              onClick={() => navigate('/tournaments?category=LW_HEADSHOT')}
-              className="group relative h-52 rounded-2xl overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 cursor-pointer shadow-xl shadow-purple-950/50 active:scale-95 transition-all bg-[#0d041c]"
-            >
-              <img
-                src="/poster-lone-wolf.jpg"
-                alt="Lone Wolf 1v1 Tournament"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/poster-lone-wolf.svg';
-                }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
-
-              <div className="absolute top-2.5 left-2.5 bg-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow flex items-center gap-1">
-                <Crosshair className="w-3 h-3" />
-                LONE WOLF 1V1
-              </div>
-
-              <div className="absolute bottom-8 left-2.5 right-2.5">
-                <h4 className="font-heading font-black text-white text-sm leading-tight drop-shadow">
-                  LONE WOLF 1V1
-                </h4>
-              </div>
-
-              {/* Social Channels Overlay */}
-              <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between z-20">
-                <div className="flex items-center gap-1">
-                  <a
-                    href="https://www.instagram.com/rushx_scrim/"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-pink-950 border border-pink-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-pink-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Instagram className="w-2.5 h-2.5 text-pink-400" />
-                    /rushx_scrim
-                  </a>
-                  <a
-                    href="https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#120722]/90 hover:bg-red-950 border border-red-500/70 rounded-md px-1.5 py-0.5 text-[8.5px] font-black text-red-300 flex items-center gap-1 shadow-md hover:scale-105 transition-all"
-                  >
-                    <Youtube className="w-2.5 h-2.5 text-red-400" />
-                    Live
-                  </a>
-                </div>
-                <span className="text-[10px] text-amber-400 font-extrabold bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30">
-                  ₹80-₹360
-                </span>
-              </div>
-            </div>
+              <span>View All</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
-        </div>
 
+          {/* Tournament Cards List */}
+          {loading ? (
+            <div className="py-16 text-center space-y-3">
+              <RefreshCw className="w-8 h-8 text-[#F5C400] animate-spin mx-auto" />
+              <p className="text-xs text-slate-400">Loading live tournaments...</p>
+            </div>
+          ) : activeUpcoming.length === 0 ? (
+            <div className="py-12 text-center space-y-2 bg-[#121620] border border-[#1f2738] rounded-2xl p-6">
+              <AlertCircle className="w-9 h-9 text-slate-500 mx-auto" />
+              <h4 className="font-heading font-bold text-sm text-white">
+                No Upcoming {selectedCategory !== 'ALL' ? categories.find(c => c.id === selectedCategory)?.label : ''} Matches
+              </h4>
+              <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                No matches currently scheduled in this category. Reset the filter to view all upcoming tournaments.
+              </p>
+              {selectedCategory !== 'ALL' && (
+                <button
+                  onClick={() => setSelectedCategory('ALL')}
+                  className="mt-2 text-xs text-[#F5C400] font-bold hover:underline"
+                >
+                  Show All Tournaments
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {activeUpcoming.map((tournament) => {
+                const hasJoined = Boolean(tournament.isJoined) || userJoinedIds.includes(tournament.id);
+                return (
+                  <TournamentCard
+                    key={tournament.id}
+                    tournament={tournament}
+                    hasJoined={hasJoined}
+                    onJoin={(t) => setSelectedForJoin(t)}
+                    onViewRoom={(t) => setSelectedForRoom(t)}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Join Tournament Modal */}
+      <JoinModal
+        isOpen={Boolean(selectedForJoin)}
+        onClose={() => setSelectedForJoin(null)}
+        tournament={selectedForJoin}
+        onSuccess={handleJoinedSuccess}
+      />
+
+      {/* View Room ID & Password Modal */}
+      <RoomModal
+        isOpen={Boolean(selectedForRoom)}
+        onClose={() => setSelectedForRoom(null)}
+        tournament={selectedForRoom}
+      />
     </div>
   );
 }

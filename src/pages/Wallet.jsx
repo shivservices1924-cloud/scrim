@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, PlusCircle, ArrowDownToLine, RefreshCw, AlertCircle, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { ArrowLeft, RefreshCw, ArrowUpRight, ArrowDownLeft, Wallet as WalletIcon, PlusCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import SEO from '../components/SEO';
 
@@ -44,23 +44,24 @@ export default function Wallet() {
   }, [token]);
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
       <SEO
-        title="Esports Wallet & Cash Payouts"
-        description="Deposit funds, view your winnings balance, and withdraw instant cash to UPI on RushX Esports."
+        title="Esports Wallet • RushX Esports"
+        description="View your balance, instant UPI withdrawals, and transaction history on RushX Esports."
         path="/wallet"
       />
-      {/* Top Header matching Screenshot 3 */}
-      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
+
+      {/* Screen 9 Header */}
+      <div className="sticky top-0 z-40 bg-[#0b0e14]/95 backdrop-blur-md border-b border-[#1f2738] px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/')}
             aria-label="Go back"
-            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] flex items-center justify-center text-slate-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-heading font-extrabold text-white text-lg tracking-wide">
+          <h1 className="font-heading font-black text-white text-lg tracking-wide">
             Wallet
           </h1>
         </div>
@@ -71,156 +72,112 @@ export default function Wallet() {
           className="p-2 text-slate-400 hover:text-white"
           title="Refresh Balance"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#F5C400]' : ''}`} />
         </button>
       </div>
 
-      <div className="p-4 space-y-6">
-        {/* Balance Display Card (Screenshot 3) */}
-        <div className="text-center py-6 px-4 bg-gradient-to-b from-[#1f0a3d] to-[#120524] border border-purple-900/60 rounded-3xl shadow-xl relative overflow-hidden">
-          {/* Subtle glow background */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-20 bg-purple-600/30 blur-3xl pointer-events-none"></div>
+      <div className="p-4 space-y-5">
+        {/* Screen 9: Total Balance Card */}
+        <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-5 shadow-xl relative overflow-hidden">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                Total Balance
+              </p>
+              <h2 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tight mt-1">
+                ₹ {walletData.totalBalance || (walletData.depositBalance + walletData.winBalance)}
+              </h2>
+            </div>
 
-          <p className="text-xs font-semibold text-purple-300 uppercase tracking-widest">
-            Total Account Balance
-          </p>
+            <button
+              onClick={() => navigate('/withdraw')}
+              className="bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-xs px-4 py-2 rounded-xl shadow-lg shadow-amber-500/20 active:scale-95 transition-all uppercase tracking-wider"
+            >
+              Withdraw
+            </button>
+          </div>
 
-          <div className="mt-2 flex items-center justify-center gap-1.5">
-            <span className="font-heading font-black text-4xl sm:text-5xl text-white tracking-tight">
-              Total Balance = {walletData.totalBalance}
+          {/* Sub-row: Deposit Balance vs Winnings */}
+          <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[#1f2738] text-xs">
+            <div>
+              <span className="text-slate-400 block text-[10px] uppercase font-semibold">Deposit Balance</span>
+              <span className="font-heading font-black text-sm text-white">₹ {walletData.depositBalance || 0}</span>
+            </div>
+            <div>
+              <span className="text-slate-400 block text-[10px] uppercase font-semibold">Winning Balance</span>
+              <span className="font-heading font-black text-sm text-[#F5C400]">₹ {walletData.winBalance || 0}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Deposit Quick Action */}
+        <button
+          onClick={() => navigate('/deposit')}
+          className="w-full py-3 rounded-xl bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] text-[#F5C400] font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>Add Money / Deposit (Instant UPI)</span>
+        </button>
+
+        {/* Screen 9: Transaction History */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="font-heading font-black text-sm text-white tracking-wide">
+              Transaction History
+            </h3>
+            <span className="text-xs text-slate-500 font-semibold">
+              Recent
             </span>
           </div>
 
-          {/* Purple separator pill like in screenshot 3 */}
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full mx-auto my-3"></div>
-
-          {/* Sub-row: Deposit Balance & Win Balance */}
-          <div className="flex items-center justify-center gap-4 text-xs mt-3">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-500/30">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span>Deposit Balance: {walletData.depositBalance}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-green-400 font-semibold bg-green-950/40 px-3 py-1 rounded-full border border-green-500/30">
-              <span className="w-2 h-2 rounded-full bg-green-400"></span>
-              <span>Win Balance: {walletData.winBalance}</span>
-            </div>
-          </div>
-
-          <p className="text-[10px] text-amber-300 mt-3 font-medium">
-            ⚠️ Only Win Balance can be withdrawn. Minimum withdrawal is ₹100.
-          </p>
-        </div>
-
-        {/* Action Buttons: Buy More & Withdraw (Screenshot 3) */}
-        <div className="space-y-3">
-          {/* Green Button: Buy More (Deposit) */}
-          <button
-            onClick={() => navigate('/wallet/deposit')}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-heading font-extrabold text-base tracking-wider shadow-lg shadow-emerald-600/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-          >
-            <PlusCircle className="w-5 h-5" />
-            <span>Buy More (Min ₹50)</span>
-          </button>
-
-          {/* Red Button: Withdraw */}
-          <button
-            onClick={() => navigate('/wallet/withdraw')}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-heading font-extrabold text-base tracking-wider shadow-lg shadow-red-600/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-          >
-            <ArrowDownToLine className="w-5 h-5" />
-            <span>Withdraw (Min ₹100 • Winnings Only)</span>
-          </button>
-
-          {/* Quick History Navigation Links */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <button
-              onClick={() => navigate('/wallet/deposit-history')}
-              className="py-2.5 px-3 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-emerald-400 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
-            >
-              <PlusCircle className="w-3.5 h-3.5" />
-              <span>Deposit History</span>
-            </button>
-            <button
-              onClick={() => navigate('/wallet/withdraw-history')}
-              className="py-2.5 px-3 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-rose-400 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
-            >
-              <ArrowDownToLine className="w-3.5 h-3.5" />
-              <span>Withdraw History</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Section: Wallet history (Screenshot 3) */}
-        <div className="space-y-3">
-          <h2 className="font-heading font-extrabold text-base tracking-wide text-white">
-            Wallet history
-          </h2>
-
-          {loading ? (
-            <div className="py-8 text-center text-slate-400 text-xs">
-              Loading transactions...
-            </div>
-          ) : walletData.transactions.length === 0 ? (
-            <div className="py-8 text-center bg-[#10051e] rounded-2xl border border-purple-900/40 p-4">
-              <p className="text-xs text-slate-400">No transactions recorded yet.</p>
+          {(!walletData.transactions || walletData.transactions.length === 0) ? (
+            <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-8 text-center text-xs text-slate-400">
+              No transactions yet. Join tournaments or add money to start competing!
             </div>
           ) : (
-            <div className="space-y-3">
-              {walletData.transactions.map((tx) => {
-                const isCredit = tx.type === 'credit';
+            <div className="space-y-2">
+              {walletData.transactions.map((tx, idx) => {
+                const isCredit = tx.type === 'WIN' || tx.type === 'DEPOSIT' || (tx.amount > 0 && !tx.isDebit);
+                const title = tx.type === 'WIN'
+                  ? 'Tournament Win'
+                  : tx.type === 'JOIN'
+                  ? 'Entry Fee Deducted'
+                  : tx.type === 'WITHDRAW'
+                  ? 'Payout Received'
+                  : tx.description || 'Transaction';
+
                 return (
                   <div
-                    key={tx.id}
-                    className="bg-[#10051e] border border-purple-900/50 rounded-2xl p-3.5 space-y-2 shadow-md hover:border-purple-600/60 transition-colors"
+                    key={tx.id || idx}
+                    className="bg-[#121620] border border-[#1f2738] rounded-xl p-3 flex items-center justify-between"
                   >
-                    {/* Top Row: Type badge, Txn ID, Amount, Wallet Type, Date/Time, New Balance */}
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`font-heading font-black text-[11px] px-2 py-0.5 rounded uppercase tracking-wider ${
-                            isCredit
-                              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                              : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          }`}
-                        >
-                          {tx.type}
-                        </span>
-                        <span className="text-slate-400 text-[11px] font-mono">
-                          Transaction Id-{tx.txId}
-                        </span>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        isCredit ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                      }`}>
+                        {isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                       </div>
-
-                      <div className="text-right">
-                        <span
-                          className={`font-heading font-black text-sm ${
-                            isCredit ? 'text-emerald-400' : 'text-red-400'
-                          }`}
-                        >
-                          Amt:{isCredit ? '+' : '-'} {tx.amount}
-                        </span>
+                      <div>
+                        <h4 className="font-heading font-bold text-xs text-white">
+                          {title}
+                        </h4>
+                        <p className="text-[10px] text-slate-400">
+                          {tx.createdAt ? new Date(tx.createdAt).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                          }) : 'Recent'}
+                        </p>
                       </div>
                     </div>
 
-                    {/* Middle Row: Target wallet and date */}
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
-                      <span>
-                        {tx.walletType === 'win'
-                          ? 'To winWallet'
-                          : tx.walletType === 'deposit'
-                          ? 'To depositWallet'
-                          : 'From Wallet'}
+                    <div className="text-right">
+                      <span className={`font-heading font-black text-sm ${
+                        isCredit ? 'text-emerald-400' : 'text-rose-400'
+                      }`}>
+                        {isCredit ? `+ ₹ ${Math.abs(tx.amount)}` : `- ₹ ${Math.abs(tx.amount)}`}
                       </span>
-                      <span>{tx.date}</span>
                     </div>
-
-                    <div className="text-right text-[11px] text-purple-300 font-semibold">
-                      New bal: {tx.newBalance}
-                    </div>
-
-                    {/* Bottom Row: Detailed Description */}
-                    <p className="text-xs text-slate-300 bg-[#0a0216] p-2 rounded-xl border border-purple-900/40 leading-snug font-medium">
-                      {tx.description}
-                    </p>
                   </div>
                 );
               })}

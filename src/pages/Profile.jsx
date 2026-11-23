@@ -4,34 +4,33 @@ import {
   ArrowLeft,
   User,
   Wallet,
-  BarChart2,
   Trophy,
-  Bell,
-  Headphones,
-  ShieldAlert,
   ChevronRight,
   LogOut,
   Edit2,
   Check,
-  ShieldCheck,
-  Lock,
   Sparkles,
+  ShieldAlert,
+  Flame,
+  Crosshair,
   Award
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import SEO from '../components/SEO';
-import { GAMING_AVATARS, getUserAvatar } from '../utils/avatar';
+import { GAMING_AVATARS, getUserAvatar, getPlayerAvatar } from '../utils/avatar';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { user, token, logout, refreshUser } = useAuth();
 
+  const [activeTab, setActiveTab] = useState('STATS'); // 'STATS' or 'MATCHES'
   const [editingProfile, setEditingProfile] = useState(false);
   const [selectingAvatar, setSelectingAvatar] = useState(false);
   const [ffIgn, setFfIgn] = useState(user?.ffIgn || '');
   const [ffUid, setFfUid] = useState(user?.ffUid || '');
   const [phone, setPhone] = useState(user?.phone || '');
   const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar || getUserAvatar(user));
+  const [recentMatches, setRecentMatches] = useState([]);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -43,6 +42,20 @@ export default function Profile() {
       setSelectedAvatar(user.avatar || getUserAvatar(user));
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!token) return;
+    fetch('/api/my-matches', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setRecentMatches(data.slice(0, 5));
+        }
+      })
+      .catch(() => {});
+  }, [token]);
 
   const handleSaveProfile = async (e) => {
     if (e) e.preventDefault();
@@ -102,157 +115,292 @@ export default function Profile() {
   const totalEarning = user?.totalEarning ?? 0;
   const currentAvatar = selectedAvatar || getUserAvatar(user);
 
+  // Approximate win rate
+  const winRate = matchesPlayed > 0 ? Math.min(100, Math.round((totalEarning > 0 ? (totalKills * 15) / matchesPlayed : 10))) : 0;
+  const kdRatio = matchesPlayed > 0 ? (totalKills / matchesPlayed).toFixed(1) : '0.0';
+
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-slate-100">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
       <SEO
-        title="Player Profile & Menu"
-        description="View and update your Free Fire IGN, game UID, match statistics, and wallet balance on RushX Esports."
+        title="Player Profile • RushX Esports"
+        description="View your match statistics, Free Fire credentials, and recent match results."
         path="/profile"
       />
 
-      {/* Header matching Logo Obsidian & Purple Neon Aesthetic */}
-      <div className="bg-[#0f0422] border-b border-purple-900/60 text-white px-4 py-3.5 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
+      {/* Screen 10 Header */}
+      <div className="bg-[#0b0e14]/95 border-b border-[#1f2738] text-white px-4 py-3.5 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
         <button
           onClick={() => navigate('/')}
           aria-label="Back to home"
-          className="text-purple-300 hover:text-white transition-colors"
+          className="text-slate-300 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-6 h-6" />
         </button>
-        <h1 className="font-heading font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-fuchsia-300 to-amber-300">
-          Player Menu & Profile
+        <h1 className="font-heading font-black text-lg tracking-wider text-white">
+          Profile
         </h1>
         <div className="w-6"></div>
       </div>
 
       <div className="p-4 space-y-4">
-        {/* Profile Avatar & Username Section */}
-        <div className="text-center pt-3 pb-2">
-          {/* Avatar with purple neon glowing ring */}
-          <div className="relative inline-block group">
-            <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-tr from-purple-600 via-fuchsia-600 to-amber-400 p-1 shadow-xl shadow-purple-950/60 flex items-center justify-center">
-              <div className="w-full h-full bg-[#0d021a] rounded-full overflow-hidden flex items-center justify-center border-2 border-purple-400/40">
-                <img
-                  src={currentAvatar}
-                  alt={user?.username || 'Player Avatar'}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
+        {/* Profile Card Header (Screen 10) */}
+        <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-4 flex items-center gap-4 shadow-xl">
+          <div className="relative">
+            <div className="w-18 h-18 rounded-full border-2 border-[#F5C400] p-0.5 bg-black shadow-lg">
+              <img
+                src={currentAvatar}
+                alt={user?.username || 'Avatar'}
+                className="w-16 h-16 rounded-full object-cover"
+              />
             </div>
-
-            {/* Change Avatar Button Pill */}
             <button
               onClick={() => setSelectingAvatar(!selectingAvatar)}
-              className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-500 text-white text-[11px] font-bold px-2 py-1 rounded-full border border-purple-300 shadow-md flex items-center gap-1 active:scale-95 transition-transform"
-              title="Change Gaming Avatar"
+              className="absolute -bottom-1 -right-1 bg-[#F5C400] text-black p-1 rounded-full shadow"
+              title="Change Avatar"
             >
-              <Sparkles className="w-3 h-3 text-amber-300" />
-              <span>Change</span>
+              <Sparkles className="w-3 h-3" />
             </button>
           </div>
 
-          {/* Username */}
-          <h2 className="font-heading font-black text-2xl mt-3 tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-fuchsia-200">
-            {user ? user.username : 'Guest Player'}
-          </h2>
-
-          {user && (
-            <p className="text-xs text-purple-300/80 font-medium mt-0.5">
-              FF IGN: <span className="text-white font-bold">{user.ffIgn || 'Not set'}</span> • UID: <span className="text-amber-400 font-mono">{user.ffUid || 'Not set'}</span>
+          <div className="flex-1">
+            <h2 className="font-heading font-black text-lg text-white tracking-wide">
+              {user?.username?.toUpperCase() || 'PLAYER'}
+            </h2>
+            <p className="text-xs text-slate-400 font-mono">
+              ID: {user?.ffUid || user?.id?.substring(0, 8) || '123456789'}
             </p>
-          )}
+            <div className="mt-1.5 flex items-center gap-2">
+              <span className="text-[10px] font-heading font-black bg-[#F5C400]/20 text-[#F5C400] border border-[#F5C400]/40 px-2 py-0.5 rounded-full uppercase">
+                {user?.ffIgn ? `IGN: ${user.ffIgn}` : 'Bronze 1'}
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Avatar Picker Modal / Section */}
+        {/* Avatar Selector Grid */}
         {selectingAvatar && (
-          <div className="bg-[#120524] rounded-2xl p-4 border border-purple-500/50 shadow-xl space-y-3 animate-fadeIn">
-            <div className="flex items-center justify-between">
-              <span className="font-heading font-bold text-xs text-purple-200 uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                Select Your Gaming Avatar
-              </span>
+          <div className="bg-[#121620] border border-[#F5C400]/50 rounded-2xl p-4 space-y-2 animate-fadeIn shadow-2xl">
+            <div className="flex items-center justify-between pb-1">
+              <h3 className="font-heading font-black text-xs text-[#F5C400] uppercase tracking-wider">
+                Select Gaming Avatar
+              </h3>
               <button
                 onClick={() => setSelectingAvatar(false)}
                 className="text-xs text-slate-400 hover:text-white"
               >
-                Close
+                Done
               </button>
             </div>
-
-            <div className="grid grid-cols-3 gap-3 pt-1">
-              {GAMING_AVATARS.map((av) => (
+            <div className="grid grid-cols-6 gap-2 pt-1">
+              {GAMING_AVATARS.map((av, idx) => (
                 <button
-                  key={av.id}
-                  onClick={() => handleSelectAvatar(av.path)}
-                  className={`p-2 rounded-xl flex flex-col items-center gap-1.5 border transition-all ${
-                    currentAvatar === av.path
-                      ? 'bg-purple-900/60 border-amber-400 shadow-lg shadow-purple-900/50 scale-105'
-                      : 'bg-[#180930] border-purple-900/40 hover:border-purple-500 hover:scale-102'
+                  key={idx}
+                  type="button"
+                  onClick={() => handleSelectAvatar(av)}
+                  className={`relative rounded-full p-0.5 border-2 transition-all ${
+                    selectedAvatar === av ? 'border-[#F5C400] scale-105' : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={av.path} alt={av.name} className="w-14 h-14 rounded-full object-cover" />
-                  <span className="text-[10.5px] font-bold text-slate-300 text-center leading-tight">
-                    {av.name}
-                  </span>
+                  <img src={av} alt={`Avatar ${idx + 1}`} className="w-10 h-10 rounded-full object-cover bg-black" />
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* 3 Stats Counters in Purple Obsidian Card Row */}
-        <div className="bg-[#120524] rounded-2xl p-4 shadow-xl border border-purple-900/50 grid grid-cols-3 divide-x divide-purple-900/50 text-center">
-          {/* Matches Played */}
-          <div className="flex flex-col items-center px-1">
-            <span className="font-heading font-black text-2xl text-purple-400">
-              {matchesPlayed}
-            </span>
-            <span className="text-[11px] text-slate-400 font-semibold mt-0.5">
-              Matches Played
-            </span>
-          </div>
-
-          {/* Total Kills */}
-          <div className="flex flex-col items-center px-1">
-            <span className="font-heading font-black text-2xl text-fuchsia-400">
-              {totalKills}
-            </span>
-            <span className="text-[11px] text-slate-400 font-semibold mt-0.5">
-              Total Kills
-            </span>
-          </div>
-
-          {/* Total Earning */}
-          <div className="flex flex-col items-center px-1">
-            <div className="flex items-center gap-1">
-              <div className="w-5 h-5 rounded-full bg-amber-400 text-amber-950 text-[10px] font-black flex items-center justify-center shadow-sm">
-                ₹
-              </div>
-              <span className="font-heading font-black text-2xl text-amber-400">
-                {totalEarning}
-              </span>
-            </div>
-            <span className="text-[11px] text-slate-400 font-semibold mt-0.5">
-              Total Earning
-            </span>
-          </div>
+        {/* Tab Toggle: Stats vs Matches (Strictly NO Achievements tab per request) */}
+        <div className="grid grid-cols-2 gap-2 bg-[#121620] p-1.5 rounded-xl border border-[#1f2738]">
+          <button
+            onClick={() => setActiveTab('STATS')}
+            className={`py-2 text-xs font-heading font-black rounded-lg transition-all ${
+              activeTab === 'STATS'
+                ? 'bg-[#F5C400] text-black shadow-md'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Stats
+          </button>
+          <button
+            onClick={() => setActiveTab('MATCHES')}
+            className={`py-2 text-xs font-heading font-black rounded-lg transition-all ${
+              activeTab === 'MATCHES'
+                ? 'bg-[#F5C400] text-black shadow-md'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Matches
+          </button>
         </div>
 
-        {msg && (
-          <div className="bg-emerald-950/80 text-emerald-200 text-xs font-bold p-3 rounded-xl border border-emerald-500/50 shadow flex items-center gap-2">
-            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{msg}</span>
+        {/* TAB 1: STATS */}
+        {activeTab === 'STATS' && (
+          <div className="space-y-4 animate-fadeIn">
+            {/* 3-Column Stats Grid (Screen 10) */}
+            <div className="bg-[#121620] rounded-2xl p-4 shadow-xl border border-[#1f2738] grid grid-cols-3 divide-x divide-[#1f2738] text-center">
+              <div>
+                <span className="font-heading font-black text-2xl text-white">
+                  {matchesPlayed}
+                </span>
+                <span className="text-[11px] text-slate-400 block font-semibold mt-0.5">
+                  Total Matches
+                </span>
+              </div>
+              <div>
+                <span className="font-heading font-black text-2xl text-[#F5C400]">
+                  {winRate}%
+                </span>
+                <span className="text-[11px] text-slate-400 block font-semibold mt-0.5">
+                  Win Rate
+                </span>
+              </div>
+              <div>
+                <span className="font-heading font-black text-2xl text-emerald-400">
+                  {totalKills}
+                </span>
+                <span className="text-[11px] text-slate-400 block font-semibold mt-0.5">
+                  Total Kills
+                </span>
+              </div>
+            </div>
+
+            {/* Recent Matches Section (Screen 10) */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <h3 className="font-heading font-black text-sm text-white tracking-wide">
+                  Recent Matches
+                </h3>
+                <Link
+                  to="/my-matches"
+                  className="text-xs text-[#F5C400] hover:text-[#FFD000] font-bold"
+                >
+                  View All
+                </Link>
+              </div>
+
+              {recentMatches.length === 0 ? (
+                <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-5 text-center text-xs text-slate-400">
+                  No recent matches yet. Join an upcoming tournament!
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {recentMatches.map((m, idx) => (
+                    <div
+                      key={m.id || idx}
+                      onClick={() => navigate(`/contest/${m.id}`)}
+                      className="bg-[#121620] border border-[#1f2738] hover:border-[#F5C400]/50 rounded-xl p-3 flex items-center justify-between cursor-pointer transition-all"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-black border border-[#1f2738] flex items-center justify-center text-[#F5C400]">
+                          <Trophy className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-heading font-black text-xs text-white">
+                            {m.title}
+                          </h4>
+                          <p className="text-[10px] text-slate-400">
+                            Time: {m.matchTime || 'Recent'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[11px] font-heading font-black text-[#F5C400] block">
+                          ₹{m.winPrize || m.prizePool}
+                        </span>
+                        <span className="text-[10px] text-emerald-400 font-bold">
+                          {m.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
+
+        {/* TAB 2: MATCHES */}
+        {activeTab === 'MATCHES' && (
+          <div className="space-y-3 animate-fadeIn">
+            {recentMatches.length === 0 ? (
+              <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-8 text-center text-xs text-slate-400 space-y-2">
+                <Trophy className="w-8 h-8 text-[#F5C400]/40 mx-auto" />
+                <p className="font-bold text-white">No registered matches</p>
+                <p>Register for Solo, Duo, or Clash Squad to view your match lobby.</p>
+              </div>
+            ) : (
+              recentMatches.map((m, idx) => (
+                <div
+                  key={m.id || idx}
+                  className="bg-[#121620] border border-[#1f2738] rounded-2xl p-3.5 flex items-center justify-between"
+                >
+                  <div>
+                    <h4 className="font-heading font-black text-xs text-white">
+                      {m.title}
+                    </h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5">
+                      Entry: ₹{m.entryFee} • Mode: {m.matchType || 'Solo'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate(`/contest/${m.id}`)}
+                    className="bg-[#F5C400] text-black font-heading font-black text-[11px] px-3 py-1.5 rounded-lg shadow uppercase"
+                  >
+                    View Lobby
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Quick Menu Actions */}
+        <div className="bg-[#121620] border border-[#1f2738] rounded-2xl divide-y divide-[#1f2738] overflow-hidden shadow-xl mt-4">
+          {/* Edit Game Details */}
+          <button
+            onClick={() => setEditingProfile(!editingProfile)}
+            className="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#1a202e] transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Edit2 className="w-4 h-4 text-[#F5C400]" />
+              <span className="text-xs font-bold text-white">Edit In-Game Free Fire Details</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-500" />
+          </button>
+
+          {/* Wallet */}
+          <button
+            onClick={() => navigate('/wallet')}
+            className="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#1a202e] transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Wallet className="w-4 h-4 text-[#F5C400]" />
+              <span className="text-xs font-bold text-white">My Wallet & Cash Payouts</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-500" />
+          </button>
+
+          {/* Rules & Support */}
+          <button
+            onClick={() => navigate('/rules')}
+            className="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#1a202e] transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <ShieldAlert className="w-4 h-4 text-[#F5C400]" />
+              <span className="text-xs font-bold text-white">Tournament Rules & Anti-Cheat</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-500" />
+          </button>
+        </div>
 
         {/* Edit Profile Form */}
         {editingProfile && (
           <form
             onSubmit={handleSaveProfile}
-            className="bg-[#120524] rounded-2xl p-4 shadow-xl border border-purple-500/50 space-y-3 animate-fadeIn"
+            className="bg-[#121620] rounded-2xl p-4 shadow-xl border border-[#F5C400]/40 space-y-3 animate-fadeIn"
           >
-            <h3 className="font-heading font-bold text-sm text-purple-200 uppercase tracking-wider">
-              Update Free Fire In-Game Details
+            <h3 className="font-heading font-black text-xs text-[#F5C400] uppercase tracking-wider">
+              Update Free Fire Details
             </h3>
             <div>
               <label className="block text-[11px] font-semibold text-slate-400 mb-1">
@@ -263,31 +411,19 @@ export default function Profile() {
                 required
                 value={ffIgn}
                 onChange={(e) => setFfIgn(e.target.value)}
-                className="w-full bg-[#0a0216] border border-purple-900 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-400"
+                className="w-full bg-[#0b0e14] border border-[#1f2738] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#F5C400]"
               />
             </div>
             <div>
               <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                Free Fire Character / Game UID
+                Free Fire Game UID
               </label>
               <input
                 type="text"
                 required
                 value={ffUid}
                 onChange={(e) => setFfUid(e.target.value)}
-                className="w-full bg-[#0a0216] border border-purple-900 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-400"
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                WhatsApp Phone Number
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91..."
-                className="w-full bg-[#0a0216] border border-purple-900 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-400"
+                className="w-full bg-[#0b0e14] border border-[#1f2738] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#F5C400]"
               />
             </div>
 
@@ -295,14 +431,14 @@ export default function Profile() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-heading font-bold text-xs tracking-wider shadow-md"
+                className="flex-1 py-2 rounded-xl bg-[#F5C400] text-black font-heading font-black text-xs tracking-wider"
               >
-                {saving ? 'Saving...' : 'Save In-Game Details'}
+                {saving ? 'Saving...' : 'Save Details'}
               </button>
               <button
                 type="button"
                 onClick={() => setEditingProfile(false)}
-                className="py-2.5 px-4 rounded-xl bg-[#1b0833] hover:bg-[#250b45] text-slate-300 text-xs font-bold border border-purple-900"
+                className="py-2 px-4 rounded-xl bg-[#1a202e] text-slate-300 text-xs font-bold border border-[#1f2738]"
               >
                 Cancel
               </button>
@@ -310,175 +446,18 @@ export default function Profile() {
           </form>
         )}
 
-        {/* Action Menu List */}
-        <div className="bg-[#120524] rounded-2xl shadow-xl border border-purple-900/50 divide-y divide-purple-900/40 overflow-hidden">
-          {/* Edit In-Game Profile */}
+        {/* Logout Button */}
+        <div className="pt-2">
           <button
-            onClick={() => setEditingProfile(!editingProfile)}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="w-full py-3 rounded-xl border border-rose-500/40 text-rose-400 hover:bg-rose-950/20 font-heading font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-purple-900/40 border border-purple-500/30 flex items-center justify-center text-purple-300">
-                <Edit2 className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  Edit Game Details & IGN
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  Update your Free Fire IGN & UID
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
+            <LogOut className="w-4 h-4" />
+            <span>Logout Account</span>
           </button>
-
-          {/* Change Avatar */}
-          <button
-            onClick={() => setSelectingAvatar(!selectingAvatar)}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-fuchsia-900/40 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-300">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  Select Gaming Avatar
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  Choose from 6 Free Fire badge avatars
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
-          </button>
-
-          {/* Wallet / Add Money */}
-          <button
-            onClick={() => navigate('/wallet')}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-amber-900/40 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                <Wallet className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  Wallet & Payouts
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  Deposit money, view win balance & withdraw
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
-          </button>
-
-          {/* My Matches */}
-          <button
-            onClick={() => navigate('/my-matches')}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-900/40 border border-blue-500/30 flex items-center justify-center text-blue-300">
-                <Trophy className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  My Registered Matches
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  View room ID, pass & ongoing matches
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
-          </button>
-
-          {/* Leaderboard */}
-          <button
-            onClick={() => navigate('/leaderboard')}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-amber-900/40 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                <Award className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  Tournament Leaderboard
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  Top kill leaders & champion rankings
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
-          </button>
-
-          {/* Anti-Cheat & Rules */}
-          <button
-            onClick={() => navigate('/rules')}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  Rules & Fair Play
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  Banned weapons, emulator policy & penalties
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
-          </button>
-
-          {/* 24/7 Support Desk */}
-          <button
-            onClick={() => navigate('/contact')}
-            className="w-full p-4 flex items-center justify-between text-left hover:bg-purple-950/40 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-pink-900/40 border border-pink-500/30 flex items-center justify-center text-pink-300">
-                <Headphones className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-sm font-bold text-white block">
-                  Customer Support Desk
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  WhatsApp, Telegram, YouTube & Email help
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-purple-400" />
-          </button>
-
-          {/* Logout Button */}
-          {user && (
-            <button
-              onClick={() => {
-                logout();
-                navigate('/login');
-              }}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-red-950/30 transition-colors text-red-400"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-red-950/60 border border-red-500/30 flex items-center justify-center text-red-400">
-                  <LogOut className="w-4 h-4" />
-                </div>
-                <span className="text-sm font-bold">
-                  Logout Account
-                </span>
-              </div>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
     </div>

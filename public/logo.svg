@@ -1,19 +1,109 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="rushGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3b82f6" />
-      <stop offset="50%" stop-color="#1d4ed8" />
-      <stop offset="100%" stop-color="#0f172a" />
-    </linearGradient>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#182032" />
+      <stop offset="60%" stop-color="#0a0d14" />
+      <stop offset="100%" stop-color="#040609" />
+    </radialGradient>
+
+    <!-- Metallic Gold Gradient -->
     <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fde047" />
-      <stop offset="100%" stop-color="#eab308" />
+      <stop offset="0%" stop-color="#FFE066" />
+      <stop offset="25%" stop-color="#F5C400" />
+      <stop offset="50%" stop-color="#E5A800" />
+      <stop offset="75%" stop-color="#FDD835" />
+      <stop offset="100%" stop-color="#C68A00" />
     </linearGradient>
+
+    <!-- Bright Gold Flare -->
+    <linearGradient id="goldFlare" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF9D2" />
+      <stop offset="40%" stop-color="#F5C400" />
+      <stop offset="100%" stop-color="#B27B00" />
+    </linearGradient>
+
+    <!-- Subtle Drop Shadow -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="120" fill="url(#rushGrad)" />
-  <circle cx="256" cy="256" r="180" fill="none" stroke="#2563eb" stroke-width="12" opacity="0.4" />
-  <!-- Rush Flame and X icon -->
-  <path d="M160 140 L230 256 L150 372 H210 L256 300 L302 372 H362 L282 256 L352 140 H292 L256 198 L220 140 Z" fill="#ffffff" />
-  <path d="M220 140 L256 198 L292 140 H330 L270 236 L300 256 L332 210 L352 140 Z" fill="url(#goldGrad)" opacity="0.9" />
-  <circle cx="256" cy="90" r="18" fill="#eab308" />
+
+  <!-- Base Dark Shield / Rounded Hexagon -->
+  <rect width="512" height="512" rx="110" fill="url(#bgGrad)" />
+  <rect width="502" height="502" x="5" y="5" rx="105" fill="none" stroke="url(#goldGrad)" stroke-width="4" opacity="0.6" />
+  <rect width="480" height="480" x="16" y="16" rx="95" fill="none" stroke="#222b3d" stroke-width="2" opacity="0.4" />
+
+  <!-- Shield Crest Outline in Gold -->
+  <path d="M120 120 L256 70 L392 120 V260 C392 360 256 440 256 440 C256 440 120 360 120 260 Z"
+        fill="#0b0f19" stroke="url(#goldGrad)" stroke-width="6" filter="url(#softShadow)" />
+
+  <!-- Inner Crest Accent -->
+  <path d="M136 134 L256 90 L376 134 V256 C376 342 256 414 256 414 C256 414 136 342 136 256 Z"
+        fill="#0f1524" opacity="0.8" />
+
+  <!-- Geometric 5-Point Imperial Crown (Matching Screen 1 & 4) -->
+  <g filter="url(#goldGlow)">
+    <!-- Crown Base Band -->
+    <path d="M180 200 L332 200 L322 216 L190 216 Z" fill="url(#goldGrad)" />
+    <!-- Crown Spikes -->
+    <path d="M176 195 L190 125 L224 165 L256 100 L288 165 L322 125 L336 195 Z"
+          fill="url(#goldFlare)" stroke="#FFE885" stroke-width="2" />
+    <!-- Jewels on Peaks -->
+    <circle cx="190" cy="122" r="5" fill="#FFFFFF" />
+    <circle cx="256" cy="96" r="7" fill="#FFFFFF" />
+    <circle cx="322" cy="122" r="5" fill="#FFFFFF" />
+  </g>
+
+  <!-- Aggressive "RUSHX" Typography (Centered Bold Stencil) -->
+  <g filter="url(#softShadow)">
+    <!-- Bold White Letters with Gold Highlights -->
+    <text x="256" y="295"
+          font-family="'Rajdhani', 'Impact', 'Arial Black', sans-serif"
+          font-weight="900"
+          font-size="68"
+          fill="#FFFFFF"
+          text-anchor="middle"
+          letter-spacing="6">
+      RUSH<tspan fill="url(#goldGrad)">X</tspan>
+    </text>
+
+    <!-- Gold Accent Line -->
+    <path d="M165 315 L347 315" stroke="url(#goldGrad)" stroke-width="4" stroke-linecap="round" />
+    <circle cx="256" cy="315" r="4" fill="#FFFFFF" />
+
+    <!-- "ESPORTS" with Gold Tracking -->
+    <text x="256" y="348"
+          font-family="'Rajdhani', 'Inter', sans-serif"
+          font-weight="800"
+          font-size="24"
+          fill="url(#goldGrad)"
+          text-anchor="middle"
+          letter-spacing="14">
+      ESPORTS
+    </text>
+
+    <!-- Star Flairs -->
+    <text x="175" y="346" font-size="14" fill="#F5C400" text-anchor="middle">✦</text>
+    <text x="337" y="346" font-size="14" fill="#F5C400" text-anchor="middle">✦</text>
+  </g>
+
+  <!-- Tagline Badge -->
+  <g opacity="0.9">
+    <rect x="160" y="375" width="192" height="26" rx="13" fill="#141c2e" stroke="url(#goldGrad)" stroke-width="1.5" />
+    <text x="256" y="392"
+          font-family="'Inter', sans-serif"
+          font-weight="700"
+          font-size="10.5"
+          fill="#E5B800"
+          text-anchor="middle"
+          letter-spacing="3">
+      PLAY • COMPETE • WIN
+    </text>
+  </g>
 </svg>

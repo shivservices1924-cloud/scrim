@@ -25,6 +25,7 @@ export default function VersionGate({ children }) {
   const isAdminOrDownload =
     location.pathname.startsWith('/admin') ||
     location.pathname.startsWith('/admin-portal') ||
+    location.pathname.startsWith('/control-room-777') ||
     location.pathname === '/download';
 
   const checkVersion = async () => {

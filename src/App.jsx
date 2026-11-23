@@ -44,9 +44,9 @@ function UserProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#070212] flex flex-col items-center justify-center text-purple-400">
-        <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-        <p className="text-xs font-semibold tracking-wider text-slate-300">Checking RushX Session...</p>
+      <div className="min-h-screen bg-[#0b0e14] flex flex-col items-center justify-center text-amber-400">
+        <div className="w-12 h-12 border-4 border-amber-400 border-t-transparent rounded-full animate-spin mb-3 shadow-lg shadow-amber-400/20"></div>
+        <p className="text-xs font-bold tracking-widest uppercase text-slate-300">Loading RushX Esports...</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function App() {
 
   return (
     <VersionGate>
-      <div className="min-h-screen bg-[#070212] flex flex-col justify-start text-white">
+      <div className="min-h-screen bg-[#0b0e14] flex flex-col justify-start text-white selection:bg-amber-400 selection:text-black">
         {/* PWA Add to Home Screen Banner */}
         {!isAdminRoute && <InstallAppBanner />}
 

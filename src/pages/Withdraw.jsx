@@ -135,7 +135,7 @@ export default function Withdraw() {
 
       <div className="p-4 space-y-5">
         {/* Important Rules Alert Box */}
-        <div className="bg-gradient-to-r from-red-950/60 to-[#0e1733] border border-red-500/40 rounded-2xl p-4 space-y-2">
+        <div className="bg-gradient-to-r from-red-950/60 to-[#180930] border border-red-500/40 rounded-2xl p-4 space-y-2">
           <div className="flex items-center gap-2 text-red-400 font-heading font-extrabold text-sm">
             <ShieldCheck className="w-4 h-4" />
             <span>RushX Withdrawal Rules:</span>

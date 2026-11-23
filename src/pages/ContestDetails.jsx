@@ -19,6 +19,7 @@ import {
   Crosshair
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getTournamentPoster, getTournamentPosterSvgFallback } from '../utils/poster';
 import { getPlayerAvatar } from '../utils/avatar';
 import JoinModal from '../components/JoinModal';
 
@@ -145,63 +146,55 @@ export default function ContestDetails() {
     : 'Locked (Join to Unlock)';
 
   return (
-    <div className="pb-28 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white selection:bg-purple-600 selection:text-white">
+    <div className="pb-36 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-[#180930]/95 text-purple-200 border border-purple-500 px-4 py-2 rounded-full text-xs font-bold shadow-2xl flex items-center gap-2 animate-bounce">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-[#121620] text-[#F5C400] border border-[#F5C400] px-4 py-2 rounded-full text-xs font-bold shadow-2xl flex items-center gap-2 animate-bounce">
           <Check className="w-4 h-4 text-emerald-400" />
           <span>{toastMsg}</span>
         </div>
       )}
 
       {/* Top App Header */}
-      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/60 px-4 py-3 flex items-center justify-between shadow-md">
+      <div className="sticky top-0 z-40 bg-[#0b0e14]/95 backdrop-blur-md border-b border-[#1f2738] px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             aria-label="Back"
-            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] flex items-center justify-center text-slate-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-heading font-extrabold text-white text-base tracking-wide">
-            Contest Details {tournament.matchId}
+          <h1 className="font-heading font-black text-white text-base tracking-wide">
+            Match Lobby
           </h1>
         </div>
       </div>
 
       {/* Hero Banner with Free Fire Max & RULES! Overlay */}
-      <div className="relative w-full h-52 bg-[#090214] overflow-hidden">
+      <div className="relative w-full h-52 bg-[#0b0e14] overflow-hidden">
         <img
-          src={tournament.banner || (
-            tournament.category === 'CS_HEADSHOT' ? '/poster-cs.jpg' :
-            tournament.matchType === 'DUO' ? '/poster-br-duo.jpg' :
-            tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.jpg' :
-            '/poster-br-solo.jpg'
-          )}
+          src={getTournamentPoster(tournament)}
           alt={tournament.title}
           onError={(e) => {
             e.currentTarget.onerror = null;
-            e.currentTarget.src = tournament.category === 'CS_HEADSHOT' ? '/poster-cs.jpg' :
-                                  tournament.matchType === 'DUO' ? '/poster-br-duo.jpg' :
-                                  tournament.category === 'LW_HEADSHOT' ? '/poster-lone-wolf.jpg' :
-                                  '/poster-br-solo.jpg';
+            e.currentTarget.src = getTournamentPosterSvgFallback(tournament);
           }}
-          className="w-full h-full object-cover object-center filter brightness-90"
+          className="w-full h-full object-cover object-center filter brightness-95"
         />
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070212] via-transparent to-black/30 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0e14] via-transparent to-black/30 pointer-events-none"></div>
 
         {/* Free Fire Max badge at top left */}
-        <div className="absolute top-2.5 left-3 bg-black/75 backdrop-blur-sm px-2.5 py-0.5 rounded border border-purple-500/30 text-[9px] font-black tracking-widest text-white uppercase">
+        <div className="absolute top-2.5 left-3 bg-black/85 backdrop-blur-sm px-2.5 py-0.5 rounded border border-[#1f2738] text-[9px] font-black tracking-widest text-[#F5C400] uppercase">
           FREE FIRE MAX
         </div>
 
         {/* RULES! button at top right */}
         <a
           href="#rules-section"
-          className="absolute top-2.5 right-3 bg-black/80 hover:bg-black/95 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/60 text-[11px] font-heading font-black tracking-wider text-amber-400 uppercase shadow-lg flex items-center gap-1 transition-all"
+          className="absolute top-2.5 right-3 bg-black/85 hover:bg-black/95 backdrop-blur-md px-3 py-1 rounded-full border border-[#F5C400]/60 text-[11px] font-heading font-black tracking-wider text-[#F5C400] uppercase shadow-lg flex items-center gap-1 transition-all"
         >
           <span>RULES!</span>
         </a>
@@ -211,9 +204,9 @@ export default function ContestDetails() {
         {/* ROOM DETAILS SECTION: ONLY VISIBLE AFTER JOINING / REGISTERING!
             "bina join kiye id aur pass ka kuch bhi show na ye bhi na dikhe ki id pass yaha milega" */}
         {isJoined && (
-          <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 space-y-3 shadow-xl">
+          <div className="bg-[#121620] border border-[#F5C400]/50 rounded-2xl p-4 space-y-3 shadow-xl">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-black text-purple-300 text-lg tracking-wide flex items-center gap-1.5">
+              <h2 className="font-heading font-black text-[#F5C400] text-base tracking-wide flex items-center gap-1.5">
                 <span>Room Details</span>
               </h2>
               <span className="text-[10px] text-emerald-400 font-bold bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-0.5 rounded-full flex items-center gap-1">
@@ -223,16 +216,16 @@ export default function ContestDetails() {
             </div>
 
             {/* ID Box */}
-            <div className="bg-[#060a15] border border-slate-700/70 rounded-xl px-4 py-3 flex items-center justify-between shadow-inner">
+            <div className="bg-[#0b0e14] border border-[#1f2738] rounded-xl px-4 py-3 flex items-center justify-between shadow-inner">
               <span className="font-heading font-black text-white text-sm tracking-wider w-20">
                 ID:
               </span>
-              <span className="font-mono font-bold text-sm text-cyan-300 flex-1 text-center truncate px-2">
+              <span className="font-mono font-bold text-sm text-[#F5C400] flex-1 text-center truncate px-2">
                 {tournament.roomId ? tournament.roomId : 'Coming Soon'}
               </span>
               <button
                 onClick={() => copyToClipboard(tournament.roomId || 'Coming Soon', 'Room ID')}
-                className="p-1.5 rounded-lg bg-[#180930] hover:bg-[#230d45] text-slate-300 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg bg-[#1a202e] hover:bg-[#222a3d] text-slate-300 hover:text-white transition-colors"
                 title="Copy ID"
               >
                 {copiedField === 'Room ID' ? (
@@ -244,16 +237,16 @@ export default function ContestDetails() {
             </div>
 
             {/* PASSWORD Box */}
-            <div className="bg-[#060a15] border border-slate-700/70 rounded-xl px-4 py-3 flex items-center justify-between shadow-inner">
+            <div className="bg-[#0b0e14] border border-[#1f2738] rounded-xl px-4 py-3 flex items-center justify-between shadow-inner">
               <span className="font-heading font-black text-white text-sm tracking-wider w-20">
                 PASSWORD:
               </span>
-              <span className="font-mono font-bold text-sm text-cyan-300 flex-1 text-center truncate px-2">
+              <span className="font-mono font-bold text-sm text-[#F5C400] flex-1 text-center truncate px-2">
                 {tournament.roomPassword ? tournament.roomPassword : 'Coming Soon'}
               </span>
               <button
                 onClick={() => copyToClipboard(tournament.roomPassword || 'Coming Soon', 'Room Password')}
-                className="p-1.5 rounded-lg bg-[#180930] hover:bg-[#230d45] text-slate-300 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg bg-[#1a202e] hover:bg-[#222a3d] text-slate-300 hover:text-white transition-colors"
                 title="Copy Password"
               >
                 {copiedField === 'Room Password' ? (
@@ -266,19 +259,19 @@ export default function ContestDetails() {
           </div>
         )}
 
-        {/* Time Left Box (Screenshot 1 & 2: "Time Left: 0d 0h 14m 1s") */}
-        <div className="bg-[#10051e] border border-purple-900/50 rounded-xl py-2 px-4 text-center shadow-md">
+        {/* Time Left Box */}
+        <div className="bg-[#121620] border border-[#1f2738] rounded-xl py-2 px-4 text-center shadow-md">
           <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-300">
-            <Clock className="w-3.5 h-3.5 text-purple-300" />
+            <Clock className="w-3.5 h-3.5 text-[#F5C400]" />
             <span className="font-mono font-bold text-sm text-white tracking-wider">
               Time Left: {timeLeftStr}
             </span>
           </div>
         </div>
 
-        {/* Title (Screenshot 1 & 2) */}
+        {/* Title */}
         <div>
-          <h2 className="font-heading font-black text-purple-300 text-sm uppercase leading-relaxed tracking-wide">
+          <h2 className="font-heading font-black text-white text-base uppercase leading-relaxed tracking-wide">
             {tournament.title} - ID{tournament.matchId}
           </h2>
         </div>
@@ -286,7 +279,7 @@ export default function ContestDetails() {
         {/* 3-Box Stats Grid (Team: Solo | Mode: BATTLE ROYAL | Map: BERMUDA) */}
         <div className="grid grid-cols-3 gap-2">
           {/* Card 1: Team */}
-          <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-2.5 text-center shadow">
+          <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-2.5 text-center shadow">
             <span className="text-[10px] text-slate-400 font-semibold block uppercase">Team:</span>
             <span className="font-heading font-bold text-white text-xs mt-0.5 block truncate">
               {tournament.matchType || 'Solo'}
@@ -294,7 +287,7 @@ export default function ContestDetails() {
           </div>
 
           {/* Card 2: Mode */}
-          <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-2.5 text-center shadow">
+          <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-2.5 text-center shadow">
             <span className="text-[10px] text-slate-400 font-semibold block uppercase">Mode:</span>
             <span className="font-heading font-bold text-white text-xs mt-0.5 block truncate">
               {tournament.gameType === 'CS' ? 'CLASH SQUAD' : 'BATTLE ROYAL'}
@@ -302,7 +295,7 @@ export default function ContestDetails() {
           </div>
 
           {/* Card 3: Map (BERMUDA ONLY) */}
-          <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-2.5 text-center shadow">
+          <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-2.5 text-center shadow">
             <span className="text-[10px] text-slate-400 font-semibold block uppercase">Map:</span>
             <span className="font-heading font-black text-emerald-400 text-xs mt-0.5 block truncate uppercase">
               BERMUDA
@@ -310,34 +303,34 @@ export default function ContestDetails() {
           </div>
         </div>
 
-        {/* Match Type & Entry Fee Row (Screenshot 1 & 2) */}
+        {/* Match Type & Entry Fee Row */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-2.5 flex items-center justify-center gap-1.5 text-xs">
+          <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-2.5 flex items-center justify-center gap-1.5 text-xs">
             <span className="text-slate-400 font-medium">Match Type:</span>
             <span className="font-bold text-white">Paid</span>
           </div>
-          <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-2.5 flex items-center justify-center gap-1.5 text-xs">
+          <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-2.5 flex items-center justify-center gap-1.5 text-xs">
             <span className="text-slate-400 font-medium">Entry Fee:</span>
-            <span className="font-heading font-black text-amber-400 text-sm">
+            <span className="font-heading font-black text-[#F5C400] text-sm">
               🪙 ₹{tournament.entryFee}
             </span>
           </div>
         </div>
 
-        {/* Match Schedule (Screenshot 1 & 2) */}
-        <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-2.5 text-center text-xs font-semibold text-slate-300">
+        {/* Match Schedule */}
+        <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-2.5 text-center text-xs font-semibold text-slate-300">
           <span>Match Schedule: </span>
-          <span className="text-cyan-300 font-bold">{tournament.matchTime}</span>
+          <span className="text-[#F5C400] font-bold">{tournament.matchTime}</span>
         </div>
 
-        {/* Prize Details Card (Screenshot 1) */}
+        {/* Prize Details Card */}
         <div className="space-y-1.5">
-          <h3 className="font-heading font-bold text-purple-300 text-xs tracking-wider uppercase">
+          <h3 className="font-heading font-bold text-slate-300 text-xs tracking-wider uppercase">
             Prize Details
           </h3>
-          <div className="bg-[#10051e] border border-purple-900/50 rounded-xl p-3 space-y-1 shadow">
+          <div className="bg-[#121620] border border-[#1f2738] rounded-xl p-3 space-y-1 shadow">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-heading font-black text-amber-400 text-sm">
+              <span className="font-heading font-black text-[#F5C400] text-sm">
                 {tournament.perKill > 0
                   ? `PER KILL ₹${tournament.perKill}`
                   : `BOOYAH / WINNER ₹${tournament.winPrize || tournament.prizePool}`}
@@ -505,14 +498,14 @@ export default function ContestDetails() {
         </div>
       </div>
 
-      {/* BOTTOM ACTION BUTTONS (Screenshot 1: Yellow "VIEW ALL JOININGS" + Green "Join Match") */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-t border-purple-900/60 p-3 max-w-md mx-auto space-y-2">
-        {/* VIEW ALL JOININGS (Gold/Yellow Button) */}
+      {/* BOTTOM ACTION BUTTONS */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0b0e14]/95 backdrop-blur-md border-t border-[#1f2738] p-3 max-w-md mx-auto space-y-2">
+        {/* VIEW ALL JOININGS */}
         <button
           onClick={() => setShowJoiningsModal(true)}
-          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black font-heading font-black text-xs uppercase tracking-wider shadow-md active:scale-98 transition-all flex items-center justify-center gap-1.5"
+          className="w-full py-2.5 rounded-xl bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] text-slate-200 font-heading font-black text-xs uppercase tracking-wider shadow-md active:scale-98 transition-all flex items-center justify-center gap-1.5"
         >
-          <Users className="w-4 h-4 text-black" />
+          <Users className="w-4 h-4 text-[#F5C400]" />
           <span>VIEW ALL JOININGS ({tournament.joinedSpots || 0}/{tournament.totalSpots || 48})</span>
         </button>
 
@@ -520,7 +513,7 @@ export default function ContestDetails() {
         {isJoined ? (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="w-full py-3 rounded-xl bg-emerald-600/90 hover:bg-emerald-600 text-white font-heading font-black text-sm tracking-wider shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-[#1a202e] border border-[#F5C400]/40 text-[#F5C400] font-heading font-black text-sm tracking-wider shadow-lg flex items-center justify-center gap-2"
           >
             <UserCheck className="w-4 h-4" />
             <span>YOU ARE REGISTERED • ROOM DETAILS ABOVE</span>
@@ -535,9 +528,9 @@ export default function ContestDetails() {
         ) : isFull ? (
           <button
             disabled
-            className="w-full py-3 rounded-xl bg-emerald-700/60 text-white font-heading font-black text-sm cursor-not-allowed tracking-wider"
+            className="w-full py-3 rounded-xl bg-slate-800 text-slate-500 font-heading font-black text-sm cursor-not-allowed tracking-wider"
           >
-            Team Full
+            TEAM FULL
           </button>
         ) : (
           <button
@@ -548,9 +541,9 @@ export default function ContestDetails() {
               }
               setShowJoinModal(true);
             }}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-heading font-black text-base tracking-wider shadow-lg shadow-green-500/30 active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-base uppercase tracking-wider shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2"
           >
-            <span>Join Match (₹{tournament.entryFee})</span>
+            <span>Join Now (₹{tournament.entryFee})</span>
           </button>
         )}
       </div>

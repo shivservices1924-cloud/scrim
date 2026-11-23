@@ -59,6 +59,71 @@ export default function AdminSettings() {
   const [msg, setMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Change Admin ID / Username & Password State
+  const [passForm, setPassForm] = useState({
+    newUsername: '',
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passSaving, setPassSaving] = useState(false);
+  const [passMsg, setPassMsg] = useState('');
+  const [passError, setPassError] = useState('');
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPassError('');
+    setPassMsg('');
+
+    if (!passForm.newPassword && !passForm.newUsername) {
+      setPassError('Please enter a new username or new password.');
+      return;
+    }
+
+    if (passForm.newPassword) {
+      if (passForm.newPassword.length < 6) {
+        setPassError('New password must be at least 6 characters long.');
+        return;
+      }
+      if (passForm.newPassword !== passForm.confirmPassword) {
+        setPassError('New password and confirmation do not match.');
+        return;
+      }
+    }
+
+    if (passForm.newUsername && passForm.newUsername.trim().length < 3) {
+      setPassError('New admin ID/username must be at least 3 characters.');
+      return;
+    }
+
+    try {
+      setPassSaving(true);
+      const res = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+          newUsername: passForm.newUsername.trim(),
+          currentPassword: passForm.currentPassword,
+          newPassword: passForm.newPassword
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update admin credentials.');
+      }
+      setPassMsg(data.message || 'Admin credentials successfully updated!');
+      setPassForm({ newUsername: '', currentPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setPassMsg(''), 5000);
+    } catch (err) {
+      setPassError(err.message);
+    } finally {
+      setPassSaving(false);
+    }
+  };
+
   const fetchSettings = async () => {
     try {
       setLoading(true);
@@ -559,6 +624,84 @@ export default function AdminSettings() {
               className="w-full bg-[#160a2b] border border-purple-800 focus:border-amber-500 rounded-xl px-3 py-2 text-sm text-amber-300 focus:outline-none font-mono"
             />
           </div>
+        </div>
+
+        {/* 9. Dedicated Change Admin Password Section */}
+        <div className="pt-4 border-t border-purple-900/40 space-y-4 bg-[#140626] p-4 rounded-xl border border-purple-800/60">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-bold text-sm text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-emerald-400" />
+              Change Admin Login Password
+            </h2>
+            <span className="text-[11px] text-slate-400">Username: <strong className="text-white">admin</strong></span>
+          </div>
+
+          {passMsg && (
+            <div className="p-3 bg-emerald-950/80 border border-emerald-500/50 rounded-xl text-emerald-300 text-xs font-semibold">
+              ✅ {passMsg}
+            </div>
+          )}
+
+          {passError && (
+            <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-xl text-red-300 text-xs font-semibold">
+              ❌ {passError}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">New Admin ID / Username (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. admin or new_id"
+                value={passForm.newUsername}
+                onChange={(e) => setPassForm({ ...passForm, newUsername: e.target.value })}
+                className="w-full bg-[#0d021c] border border-purple-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">Current Password (optional)</label>
+              <input
+                type="password"
+                placeholder="Current password"
+                value={passForm.currentPassword}
+                onChange={(e) => setPassForm({ ...passForm, currentPassword: e.target.value })}
+                className="w-full bg-[#0d021c] border border-purple-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">New Admin Password</label>
+              <input
+                type="password"
+                placeholder="Min 6 characters"
+                value={passForm.newPassword}
+                onChange={(e) => setPassForm({ ...passForm, newPassword: e.target.value })}
+                className="w-full bg-[#0d021c] border border-purple-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">Confirm New Password</label>
+              <input
+                type="password"
+                placeholder="Confirm password"
+                value={passForm.confirmPassword}
+                onChange={(e) => setPassForm({ ...passForm, confirmPassword: e.target.value })}
+                className="w-full bg-[#0d021c] border border-purple-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handlePasswordChange}
+            disabled={passSaving || (!passForm.newPassword && !passForm.newUsername)}
+            className="py-2.5 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-heading font-bold text-xs tracking-wide shadow-md transition-all disabled:opacity-50"
+          >
+            {passSaving ? 'Updating Credentials...' : 'Update Admin Credentials Now'}
+          </button>
         </div>
 
         <button

@@ -18,6 +18,7 @@ export default function Tournaments() {
 
   // Category and game type filters
   const currentCategory = searchParams.get('category') || '';
+  const currentMatchType = searchParams.get('matchType') || '';
   const currentGameType = searchParams.get('gameType') || '';
 
   // Selected modals
@@ -52,15 +53,16 @@ export default function Tournaments() {
       document.removeEventListener('visibilitychange', onFocus);
       window.removeEventListener('rushx_tournament_update', onCustomUpdate);
     };
-  }, [currentCategory, currentGameType]);
+  }, [currentCategory, currentMatchType, currentGameType]);
 
   const fetchTournaments = async (isBackground = false) => {
     try {
       if (!isBackground) setLoading(true);
       // Strictly upcoming tournaments for browsing & joining
       let url = `/api/tournaments?status=UPCOMING`;
-      if (currentCategory) url += `&category=${currentCategory}`;
-      if (currentGameType) url += `&gameType=${currentGameType}`;
+      if (currentCategory) url += `&category=${encodeURIComponent(currentCategory)}`;
+      if (currentMatchType) url += `&matchType=${encodeURIComponent(currentMatchType)}`;
+      if (currentGameType) url += `&gameType=${encodeURIComponent(currentGameType)}`;
 
       const token = localStorage.getItem('rushx_token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
@@ -81,13 +83,18 @@ export default function Tournaments() {
 
   useEffect(() => {
     fetchTournaments();
-  }, [currentCategory, currentGameType]);
+  }, [currentCategory, currentMatchType, currentGameType]);
 
-  const handleCategoryChange = (cat) => {
+  const handleFilterChange = (cat, matchType = '') => {
     if (cat) {
       searchParams.set('category', cat);
     } else {
       searchParams.delete('category');
+    }
+    if (matchType) {
+      searchParams.set('matchType', matchType);
+    } else {
+      searchParams.delete('matchType');
     }
     setSearchParams(searchParams);
   };
@@ -98,36 +105,44 @@ export default function Tournaments() {
     fetchTournaments();
   };
 
-  const pageTitle = currentCategory === 'CS_HEADSHOT'
+  const pageTitle = (currentCategory === 'BR_FULL_MAP' && currentMatchType === 'SOLO')
+    ? 'BR Solo Contests (Bermuda)'
+    : (currentCategory === 'BR_FULL_MAP' && currentMatchType === 'DUO')
+    ? 'BR Duo Contests (Bermuda)'
+    : currentCategory === 'CS_HEADSHOT'
     ? 'CS Headshot Contests'
     : currentCategory === 'LW_HEADSHOT'
     ? 'Lone Wolf Headshot'
     : currentCategory === 'CS_1V1'
     ? 'Clash Squad Contests'
-    : 'BR Full Map Contests (Bermuda)';
+    : currentMatchType === 'DUO'
+    ? 'BR Duo Contests'
+    : currentMatchType === 'SOLO'
+    ? 'BR Solo Contests'
+    : 'All Bermuda Contests';
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
       <SEO
         title="Tournaments & Matches"
         description="Browse upcoming and live Free Fire tournaments. Join Solo, Duo, Clash Squad, and Headshot matches on Bermuda map."
         path="/tournaments"
       />
       {/* Top Header */}
-      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-[#0b0e14]/95 backdrop-blur-md border-b border-[#1f2738] px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
             aria-label="Back to home"
-            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] flex items-center justify-center text-slate-300 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="font-heading font-extrabold text-white text-base sm:text-lg tracking-wide leading-tight">
-              {pageTitle}
+            <h1 className="font-heading font-black text-white text-base sm:text-lg tracking-wide leading-tight">
+              Tournaments
             </h1>
-            <p className="text-[11px] text-emerald-400 font-bold">Upcoming Tournaments • Bermuda Only</p>
+            <p className="text-[11px] text-[#F5C400] font-bold">Free Fire Bermuda Contests</p>
           </div>
         </div>
 
@@ -136,28 +151,29 @@ export default function Tournaments() {
           className="p-2 text-slate-400 hover:text-white"
           title="Refresh Tournaments"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#F5C400]' : ''}`} />
         </button>
       </div>
 
-      {/* Category Filter Chips */}
-      <div className="bg-[#0a0216] border-b border-purple-900/40 px-3 py-2 overflow-x-auto flex items-center gap-2 no-scrollbar">
+      {/* Category Filter Chips (Screen 5: All, Solo, Duo, Squad, CS 1v1, Lone Wolf) */}
+      <div className="bg-[#0b0e14] border-b border-[#1f2738] px-3 py-2.5 overflow-x-auto flex items-center gap-2 no-scrollbar">
         {[
-          { id: '', label: 'All Bermuda' },
-          { id: 'BR_FULL_MAP', label: 'BR Full Map' },
-          { id: 'CS_HEADSHOT', label: '🎯 CS Headshot' },
-          { id: 'LW_HEADSHOT', label: '🐺 LW Headshot' },
-          { id: 'CS_1V1', label: 'CS Normal' }
+          { id: '', matchType: '', label: 'All' },
+          { id: 'BR_FULL_MAP', matchType: 'SOLO', label: 'Solo' },
+          { id: 'BR_FULL_MAP', matchType: 'DUO', label: 'Duo' },
+          { id: 'BR_FULL_MAP', matchType: 'SQUAD', label: 'Squad' },
+          { id: 'CS_HEADSHOT', matchType: '', label: 'CS 1v1' },
+          { id: 'LW_HEADSHOT', matchType: '', label: 'Lone Wolf' }
         ].map(cat => {
-          const isSelected = currentCategory === cat.id;
+          const isSelected = (currentCategory === cat.id) && (currentMatchType === cat.matchType);
           return (
             <button
-              key={cat.id}
-              onClick={() => handleCategoryChange(cat.id)}
-              className={`px-3 py-1 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all ${
+              key={`${cat.id}_${cat.matchType}`}
+              onClick={() => handleFilterChange(cat.id, cat.matchType)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-heading font-black whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md'
-                  : 'bg-[#10051e] text-slate-400 border border-purple-900/50 hover:text-white'
+                  ? 'bg-[#F5C400] text-black shadow-lg shadow-amber-500/20'
+                  : 'bg-[#121620] text-slate-400 border border-[#1f2738] hover:text-white'
               }`}
             >
               {cat.label}
@@ -178,22 +194,29 @@ export default function Tournaments() {
       <div className="p-4 space-y-4">
         {loading ? (
           <div className="py-16 text-center space-y-3">
-            <RefreshCw className="w-8 h-8 text-purple-400 animate-spin mx-auto" />
+            <RefreshCw className="w-8 h-8 text-[#F5C400] animate-spin mx-auto" />
             <p className="text-xs text-slate-400">Loading contests...</p>
           </div>
         ) : (() => {
-          // Strictly upcoming matches that haven't expired
+          // Strictly upcoming matches that haven't expired & match active filters
           const displayed = tournaments.filter(t => {
             const schedTime = t.scheduledAt ? new Date(t.scheduledAt).getTime() : 0;
             if (schedTime > 0 && schedTime <= nowTs) {
               return false;
             }
-            return t.status === 'UPCOMING';
+            if (t.status !== 'UPCOMING') return false;
+            if (currentCategory && (t.category || '').toUpperCase() !== currentCategory.toUpperCase()) {
+              return false;
+            }
+            if (currentMatchType && (t.matchType || '').toUpperCase() !== currentMatchType.toUpperCase()) {
+              return false;
+            }
+            return true;
           });
 
           if (displayed.length === 0) {
             return (
-              <div className="py-16 text-center space-y-3 bg-[#10051e] border border-purple-900/40 rounded-2xl p-6">
+              <div className="py-16 text-center space-y-3 bg-[#121620] border border-[#1f2738] rounded-2xl p-6">
                 <AlertCircle className="w-10 h-10 text-slate-500 mx-auto" />
                 <h3 className="font-heading font-bold text-base text-white">
                   No Upcoming Matches Found

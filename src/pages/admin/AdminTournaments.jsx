@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { getTournamentPoster } from '../../utils/poster';
 import {
   Swords,
   Plus,
@@ -373,7 +374,7 @@ export default function AdminTournaments() {
               >
                 <div className="flex items-start gap-3">
                   <div className="w-16 h-16 rounded-xl bg-slate-900 overflow-hidden shrink-0 border border-purple-900/50">
-                    <img src={t.banner} alt={t.title} className="w-full h-full object-cover" />
+                    <img src={getTournamentPoster(t)} alt={t.title} className="w-full h-full object-cover" />
                   </div>
 
                   <div>
@@ -626,7 +627,15 @@ export default function AdminTournaments() {
                   <label className="block text-xs font-semibold text-slate-300 mb-1">Category</label>
                   <select
                     value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    onChange={(e) => {
+                      const newCat = e.target.value;
+                      let banner = form.banner;
+                      if (newCat === 'CS_HEADSHOT' || newCat === 'CS_1V1') banner = '/poster-cs.jpg';
+                      else if (newCat === 'LW_HEADSHOT') banner = '/poster-lone-wolf.jpg';
+                      else if (form.matchType === 'DUO') banner = '/poster-br-duo.jpg';
+                      else banner = '/poster-br-solo.jpg';
+                      setForm({ ...form, category: newCat, banner });
+                    }}
                     className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
                   >
                     <option value="BR_FULL_MAP">BR Full Map</option>
@@ -640,7 +649,15 @@ export default function AdminTournaments() {
                   <label className="block text-xs font-semibold text-slate-300 mb-1">Mode</label>
                   <select
                     value={form.matchType}
-                    onChange={(e) => setForm({ ...form, matchType: e.target.value })}
+                    onChange={(e) => {
+                      const newMode = e.target.value;
+                      let banner = form.banner;
+                      if (form.category === 'CS_HEADSHOT' || form.category === 'CS_1V1') banner = '/poster-cs.jpg';
+                      else if (form.category === 'LW_HEADSHOT') banner = '/poster-lone-wolf.jpg';
+                      else if (newMode === 'DUO') banner = '/poster-br-duo.jpg';
+                      else banner = '/poster-br-solo.jpg';
+                      setForm({ ...form, matchType: newMode, banner });
+                    }}
                     className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
                   >
                     <option value="SOLO">Solo (1 Player)</option>

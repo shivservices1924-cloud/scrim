@@ -48,6 +48,11 @@ export default function AdminLayout() {
         const res = await fetch('/api/admin/dashboard', {
           headers: { Authorization: `Bearer ${adminToken}` }
         });
+        if (res.status === 401 || res.status === 403) {
+          adminLogout();
+          navigate(`${basePath}/login`, { replace: true });
+          return;
+        }
         if (res.ok) {
           const data = await res.json();
           setCounts({
@@ -118,7 +123,7 @@ export default function AdminLayout() {
       <header className="md:hidden bg-[#091024]/95 backdrop-blur-md border-b border-blue-900/50 px-3.5 py-2.5 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-white border border-amber-400 p-0.5 flex items-center justify-center overflow-hidden shrink-0 shadow">
-            <img src="/app-logo.png" alt="RushX Admin" className="w-full h-full object-cover rounded-full" />
+            <img src="/logo.svg" alt="RushX Admin" className="w-full h-full object-cover rounded-full" />
           </div>
           <div>
             <span className="font-heading font-black text-white text-sm tracking-wider block leading-none">
@@ -160,7 +165,7 @@ export default function AdminLayout() {
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-2.5">
               <div className="w-10 h-10 rounded-full bg-white border-2 border-amber-400 p-0.5 flex items-center justify-center overflow-hidden shadow-lg shrink-0">
-                <img src="/app-logo.png" alt="RushX Admin Logo" className="w-full h-full object-cover rounded-full" />
+                <img src="/logo.svg" alt="RushX Admin Logo" className="w-full h-full object-cover rounded-full" />
               </div>
               <div>
                 <h2 className="font-heading font-black text-white text-base tracking-wider leading-none">
@@ -344,7 +349,7 @@ export default function AdminLayout() {
 
             <div className="text-center space-y-1">
               <div className="w-14 h-14 rounded-full bg-white border-2 border-amber-400 p-0.5 mx-auto flex items-center justify-center overflow-hidden shadow-lg shadow-amber-500/20">
-                <img src="/app-logo.png" alt="RushX Admin" className="w-full h-full object-cover rounded-full" />
+                <img src="/logo.svg" alt="RushX Admin" className="w-full h-full object-cover rounded-full" />
               </div>
               <h3 className="font-heading font-black text-lg text-white">
                 INSTALL RUSHX ADMIN ON PHONE

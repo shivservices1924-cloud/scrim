@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Clock, KeyRound, Award, AlertCircle, Crosshair } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import RoomModal from '../components/RoomModal';
+import SEO from '../components/SEO';
 
 export default function MyMatches() {
   const navigate = useNavigate();
@@ -49,28 +50,34 @@ export default function MyMatches() {
   };
 
   return (
-    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#070212] text-white">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-[#0d041c]/95 backdrop-blur-md border-b border-purple-900/50 px-4 py-3 flex items-center justify-between">
+    <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
+      <SEO
+        title="My Registered Matches • RushX Esports"
+        description="View your joined tournaments, room credentials, and match results."
+        path="/my-matches"
+      />
+
+      {/* Screen 11 Header */}
+      <div className="sticky top-0 z-40 bg-[#0b0e14]/95 backdrop-blur-md border-b border-[#1f2738] px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
-            className="w-9 h-9 rounded-full bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 flex items-center justify-center text-purple-300 transition-colors"
+            className="w-9 h-9 rounded-full bg-[#121620] hover:bg-[#1a202e] border border-[#1f2738] flex items-center justify-center text-slate-300 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-heading font-extrabold text-white text-lg tracking-wide">
-            My Registered Matches
+          <h1 className="font-heading font-black text-white text-lg tracking-wide">
+            My Matches
           </h1>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-[#10051e] border-b border-purple-900/50 px-4 pt-2">
-        <div className="flex items-center justify-around border-b border-slate-800">
+      {/* Screen 11 Tabs */}
+      <div className="bg-[#0b0e14] border-b border-[#1f2738] px-4 pt-2">
+        <div className="flex items-center justify-around border-b border-[#1f2738]">
           {[
-            { id: 'ONGOING', label: 'Ongoing' },
             { id: 'UPCOMING', label: 'Upcoming' },
+            { id: 'ONGOING', label: 'Ongoing' },
             { id: 'COMPLETED', label: 'Completed' }
           ].map((tab) => {
             const isActive = currentTab === tab.id;
@@ -78,13 +85,13 @@ export default function MyMatches() {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`pb-2.5 font-heading text-sm font-bold tracking-wider relative transition-all ${
-                  isActive ? 'text-cyan-400' : 'text-slate-400 hover:text-slate-200'
+                className={`pb-2.5 font-heading text-xs font-black tracking-wider relative transition-all ${
+                  isActive ? 'text-[#F5C400]' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {tab.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 shadow-sm shadow-cyan-400"></span>
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F5C400] shadow-sm shadow-amber-500/50"></span>
                 )}
               </button>
             );
@@ -98,7 +105,7 @@ export default function MyMatches() {
             Loading your matches...
           </div>
         ) : filteredMatches.length === 0 ? (
-          <div className="py-16 text-center space-y-3 bg-[#10051e] border border-purple-900/40 rounded-2xl p-6">
+          <div className="py-16 text-center space-y-3 bg-[#121620] border border-[#1f2738] rounded-2xl p-6">
             <AlertCircle className="w-10 h-10 text-slate-500 mx-auto" />
             <h3 className="font-heading font-bold text-base text-white">
               No {currentTab.toLowerCase()} matches found
@@ -108,7 +115,7 @@ export default function MyMatches() {
             </p>
             <button
               onClick={() => navigate('/tournaments')}
-              className="mt-2 py-2 px-5 rounded-xl bg-blue-600 text-white font-bold text-xs"
+              className="mt-2 py-2 px-5 rounded-xl bg-[#F5C400] text-black font-heading font-black text-xs uppercase"
             >
               Browse Tournaments
             </button>
@@ -117,26 +124,26 @@ export default function MyMatches() {
           filteredMatches.map((m) => (
             <div
               key={m.id}
-              className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 space-y-3 shadow-lg"
+              className="bg-[#121620] border border-[#1f2738] rounded-2xl p-4 space-y-3 shadow-lg"
             >
               <div className="flex items-center justify-between">
-                <span className="bg-purple-600/30 text-purple-400 border border-purple-500/30 text-[10px] font-heading font-extrabold px-2 py-0.5 rounded uppercase">
+                <span className="bg-[#F5C400]/20 text-[#F5C400] border border-[#F5C400]/40 text-[10px] font-heading font-extrabold px-2 py-0.5 rounded uppercase">
                   {m.gameType} {m.matchType} • {m.map}
                 </span>
-                <span className="text-xs text-slate-400 font-mono">{m.matchId}</span>
+                <span className="text-xs text-slate-400 font-mono">#{m.matchId}</span>
               </div>
 
-              <h3 className="font-heading font-bold text-white text-base leading-snug">
+              <h3 className="font-heading font-black text-white text-base leading-snug">
                 {m.title}
               </h3>
 
-              <div className="flex items-center gap-2 text-xs text-purple-300">
-                <Clock className="w-3.5 h-3.5 text-purple-400" />
-                <span>{m.matchTime}</span>
+              <div className="flex items-center gap-2 text-xs text-slate-300">
+                <Clock className="w-3.5 h-3.5 text-[#F5C400]" />
+                <span>Time: {m.matchTime}</span>
               </div>
 
               {/* Joined Credentials Box */}
-              <div className="bg-[#0a0216] p-2.5 rounded-xl border border-purple-900/40 text-xs space-y-1 text-slate-300">
+              <div className="bg-[#0b0e14] p-2.5 rounded-xl border border-[#1f2738] text-xs space-y-1 text-slate-300">
                 <div>
                   <span className="text-slate-400">Registered FF IGN: </span>
                   <span className="font-bold text-white">{m.joinedRecord?.ffIgn}</span> (UID: {m.joinedRecord?.ffUid})
@@ -159,32 +166,32 @@ export default function MyMatches() {
                     </div>
                     <div className="text-right">
                       <span className="text-[10px] text-slate-400 uppercase">Won:</span>
-                      <p className="font-heading font-black text-amber-400 text-base leading-none">
+                      <p className="font-heading font-black text-[#F5C400] text-base leading-none">
                         ₹{m.joinedRecord?.winAmount || 0}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => navigate(`/contest/${m.id}`)}
-                    className="w-full py-2 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-purple-300 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    className="w-full py-2.5 rounded-xl bg-[#F5C400] text-black font-heading font-black text-xs uppercase shadow transition-all"
                   >
-                    <span>View Match Result Details</span>
+                    View Match Results
                   </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => navigate(`/contest/${m.id}`)}
-                    className="py-2.5 rounded-xl bg-[#180930] hover:bg-[#230d45] border border-purple-500/30 text-purple-300 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    className="py-2.5 rounded-xl bg-[#1a202e] border border-[#1f2738] hover:border-[#F5C400]/40 text-slate-200 font-heading font-black text-xs flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    <span>Contest Page</span>
+                    <span>Lobby Page</span>
                   </button>
                   <button
                     onClick={() => setSelectedRoom(m)}
-                    className="py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-heading font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all"
+                    className="py-2.5 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-md transition-all"
                   >
-                    <KeyRound className="w-3.5 h-3.5" />
-                    <span>Room ID & Pass</span>
+                    <KeyRound className="w-3.5 h-3.5 text-black" />
+                    <span>View Room ID</span>
                   </button>
                 </div>
               )}
@@ -194,9 +201,9 @@ export default function MyMatches() {
       </div>
 
       <RoomModal
-        tournament={selectedRoom}
         isOpen={Boolean(selectedRoom)}
         onClose={() => setSelectedRoom(null)}
+        tournament={selectedRoom}
       />
     </div>
   );
