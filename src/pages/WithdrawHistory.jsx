@@ -146,19 +146,19 @@ export default function WithdrawHistory() {
                               {isPending && (
                                 <span className="bg-amber-950/90 border border-amber-400 text-amber-300 font-heading font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg shadow-amber-950/50">
                                   <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                                  <span>PENDING (Under Review)</span>
+                                  <span>PENDING</span>
                                 </span>
                               )}
                               {isApproved && (
                                 <span className="bg-emerald-950/90 border border-emerald-400 text-emerald-300 font-heading font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg shadow-emerald-950/50">
                                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                                  <span>APPROVED (Payment Sent)</span>
+                                  <span>APPROVED</span>
                                 </span>
                               )}
                               {isRejected && (
                                 <span className="bg-red-950/90 border border-red-400 text-red-300 font-heading font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg shadow-red-950/50">
                                   <XCircle className="w-4 h-4 text-red-400" />
-                                  <span>REJECTED (Refunded)</span>
+                                  <span>FAILED</span>
                                 </span>
                               )}
                             </div>

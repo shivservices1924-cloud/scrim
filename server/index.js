@@ -731,6 +731,10 @@ app.post('/api/admin/update-version', requireAdmin, async (req, res) => {
 
 // Current User Info & Real-Time Stats (Synced with Supabase Cloud)
 app.get('/api/auth/me', authenticateToken, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   const user = await db.findUserByIdAsync(req.user.id);
   if (!user) {
     return res.status(404).json({ error: 'User not found.' });
@@ -1047,11 +1051,20 @@ app.post('/api/tournaments/:id/join', authenticateToken, async (req, res) => {
         createdAt: now.toISOString()
       });
 
+      const updatedUser = await db.findUserByIdAsync(user.id);
+      const { passwordHash: _, ...safeUser } = updatedUser;
+
       return res.json({
         message: 'Successfully joined! Room ID & Password will unlock for you 10-15 mins before match time.',
         joinedSpots: (tournament.joinedSpots || 0) + 1,
         totalSpots: tournament.totalSpots,
-        remainingBalance: newDeposit + newWin
+        remainingBalance: newDeposit + newWin,
+        user: {
+          ...safeUser,
+          depositBalance: newDeposit,
+          winBalance: newWin,
+          totalBalance: newDeposit + newWin
+        }
       });
     });
   } catch (error) {
@@ -1089,6 +1102,10 @@ app.get('/api/my-matches', authenticateToken, (req, res) => {
 
 // Get Wallet Balance & Transactions (Direct Supabase Cloud Sync)
 app.get('/api/wallet', authenticateToken, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   const user = await db.findUserByIdAsync(req.user.id);
   if (!user) {
     return res.status(404).json({ error: 'User not found.' });
@@ -1108,12 +1125,18 @@ app.get('/api/wallet', authenticateToken, async (req, res) => {
 
 // Get User's Deposit Requests History
 app.get('/api/wallet/deposits', authenticateToken, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   const deposits = await db.syncDepositRequestsFromSupabase(req.user.id);
   return res.json(deposits);
 });
 
 // Get User's Withdrawal Requests History
 app.get('/api/wallet/withdrawals', authenticateToken, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   const withdrawals = await db.syncWithdrawalRequestsFromSupabase(req.user.id);
   return res.json(withdrawals);
 });
@@ -1274,11 +1297,20 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
         createdAt: now.toISOString()
       });
 
+      const updatedUser = await db.findUserByIdAsync(user.id);
+      const { passwordHash: _, ...safeUser } = updatedUser;
+
       return res.status(201).json({
         message: 'Withdrawal request submitted! Payout will be sent to your UPI/Bank shortly.',
         withdrawal: newWithdrawal,
         remainingWinBalance: newWinBal,
-        withdrawalsRemainingToday: Math.max(0, 1 - todayCount)
+        withdrawalsRemainingToday: Math.max(0, 1 - todayCount),
+        user: {
+          ...safeUser,
+          depositBalance: Number(user.depositBalance) || 0,
+          winBalance: newWinBal,
+          totalBalance: (Number(user.depositBalance) || 0) + newWinBal
+        }
       });
     });
   } catch (error) {
@@ -1489,12 +1521,46 @@ app.put('/api/admin/tournaments/:id', requireAdmin, async (req, res) => {
 });
 
 app.delete('/api/admin/tournaments/:id', requireAdmin, async (req, res) => {
-  const deleted = await db.deleteTournament(req.params.id);
-  if (!deleted) {
+  const tournament = db.getTournamentById(req.params.id);
+  if (!tournament) {
     return res.status(404).json({ error: 'Tournament not found.' });
   }
+
+  // Automatic entry fee refund for all joined players
+  const joinedPlayers = await db.syncJoinedPlayersFromSupabase(tournament.id);
+  const entryFee = Number(tournament.entryFee) || 0;
+  if (entryFee > 0 && joinedPlayers.length > 0) {
+    const now = new Date();
+    const dateFormatted = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+    for (const jp of joinedPlayers) {
+      try {
+        const user = await db.findUserByIdAsync(jp.userId);
+        if (user) {
+          const newDep = (Number(user.depositBalance) || 0) + entryFee;
+          await db.updateUser(user.id, { depositBalance: newDep });
+          await db.createTransaction({
+            id: 'tx_' + Date.now() + Math.random().toString(36).substring(2, 5),
+            userId: user.id,
+            type: 'credit',
+            walletType: 'deposit',
+            amount: entryFee,
+            newBalance: newDep + (Number(user.winBalance) || 0),
+            date: dateFormatted,
+            txId: Math.floor(1000000 + Math.random() * 9000000).toString(),
+            description: `Refund: Match ${tournament.title} cancelled by admin`,
+            createdAt: now.toISOString()
+          });
+        }
+      } catch (err) {
+        console.error('Error refunding joined player:', err);
+      }
+    }
+  }
+
+  const deleted = await db.deleteTournament(req.params.id);
   db._lastTourneySync = 0;
-  return res.json({ message: 'Tournament deleted successfully!' });
+  return res.json({ message: `Tournament deleted and ₹${entryFee} refunded to ${joinedPlayers.length} registered player(s).` });
 });
 
 // Admin: Set Room ID & Password manually

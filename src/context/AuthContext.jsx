@@ -124,19 +124,30 @@ export const AuthProvider = ({ children }) => {
 
   const refreshUser = async () => {
     try {
-      const headers = {};
+      const headers = { 'Cache-Control': 'no-cache, no-store' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      const res = await fetch('/api/auth/me', {
+      const res = await fetch(`/api/auth/me?_t=${Date.now()}`, {
+        cache: 'no-store',
         credentials: 'include',
         headers
       });
       if (res.ok) {
         const data = await safeJson(res, 'Failed to refresh');
-        setUser(data.user);
+        if (data.user) {
+          setUser(data.user);
+        }
       }
     } catch (e) {
       console.error('Error refreshing user:', e);
     }
+  };
+
+  const updateUserDirectly = (partialOrFullUser) => {
+    if (!partialOrFullUser) return;
+    setUser(prev => ({
+      ...prev,
+      ...partialOrFullUser
+    }));
   };
 
   const logout = async () => {
@@ -171,7 +182,8 @@ export const AuthProvider = ({ children }) => {
         adminLogin,
         logout,
         adminLogout,
-        refreshUser
+        refreshUser,
+        updateUserDirectly
       }}
     >
       {children}

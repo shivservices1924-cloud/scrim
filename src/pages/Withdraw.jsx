@@ -16,7 +16,7 @@ import SEO from '../components/SEO';
 
 export default function Withdraw() {
   const navigate = useNavigate();
-  const { user, token, refreshUser } = useAuth();
+  const { user, token, refreshUser, updateUserDirectly } = useAuth();
 
   const [amount, setAmount] = useState('100');
   const [method, setMethod] = useState('UPI');
@@ -114,6 +114,9 @@ export default function Withdraw() {
       }
 
       setSuccess('Withdrawal request submitted! Payout will be processed to your account via instant IMPS/UPI within 10-30 minutes.');
+      if (data.user && updateUserDirectly) {
+        updateUserDirectly(data.user);
+      }
       await refreshUser();
       fetchWithdrawals();
     } catch (err) {

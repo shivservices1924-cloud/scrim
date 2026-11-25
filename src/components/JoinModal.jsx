@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { X, AlertCircle, Shield, CheckCircle, Wallet, ArrowRight } from 'lucide-react';
 
 export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess }) {
-  const { user, token, refreshUser } = useAuth();
+  const { user, token, refreshUser, updateUserDirectly } = useAuth();
   const navigate = useNavigate();
 
   const [ffIgn, setFfIgn] = useState(user?.ffIgn || '');
@@ -66,6 +66,9 @@ export default function JoinModal({ tournament, isOpen, onClose, onJoinedSuccess
         throw new Error(data.error || 'Failed to join tournament.');
       }
 
+      if (data.user && updateUserDirectly) {
+        updateUserDirectly(data.user);
+      }
       await refreshUser();
       onJoinedSuccess(data);
       onClose();

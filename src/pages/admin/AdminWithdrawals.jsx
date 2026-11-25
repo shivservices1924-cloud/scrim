@@ -162,7 +162,7 @@ export default function AdminWithdrawals() {
                               : 'bg-red-950 text-red-400 border border-red-500/40'
                           }`}
                         >
-                          {w.status === 'APPROVED' ? 'DONE' : w.status}
+                          {w.status === 'PENDING' ? 'PENDING' : w.status === 'APPROVED' ? 'APPROVED' : 'FAILED'}
                         </span>
                       </div>
                     </div>
@@ -284,7 +284,7 @@ export default function AdminWithdrawals() {
                                 : 'bg-red-950 text-red-400 border border-red-500/40'
                             }`}
                           >
-                            {w.status === 'APPROVED' ? 'DONE' : w.status}
+                            {w.status === 'PENDING' ? 'PENDING' : w.status === 'APPROVED' ? 'APPROVED' : 'FAILED'}
                           </span>
                         </td>
                         <td className="p-3.5 text-right">

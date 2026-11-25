@@ -248,7 +248,7 @@ export default function AdminDeposits() {
                       </td>
                       <td className="p-3.5">
                         <span
-                          className={`font-heading font-extrabold text-[10px] px-2 py-0.5 rounded-full uppercase ${
+                          className={`font-heading font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase ${
                             d.status === 'PENDING'
                               ? 'bg-amber-950 text-amber-400 border border-amber-500/40 animate-pulse'
                               : d.status === 'APPROVED'
@@ -256,7 +256,7 @@ export default function AdminDeposits() {
                               : 'bg-red-950 text-red-400 border border-red-500/40'
                           }`}
                         >
-                          {d.status}
+                          {d.status === 'PENDING' ? 'PENDING' : d.status === 'APPROVED' ? 'APPROVED' : 'FAILED'}
                         </span>
                       </td>
                       <td className="p-3.5 text-right">

@@ -573,12 +573,26 @@ class Database {
         const fetchedUser = toUserCamel(data[0]);
         const existingIdx = this.data.users.findIndex(u => u.id === fetchedUser.id);
         if (existingIdx !== -1) {
-          this.data.users[existingIdx] = fetchedUser;
+          const localUser = this.data.users[existingIdx];
+          const localTime = new Date(localUser.updatedAt || localUser.updated_at || 0).getTime();
+          const remoteTime = new Date(fetchedUser.updatedAt || fetchedUser.updated_at || 0).getTime();
+
+          // Only overwrite if remote is genuinely newer than or equal to local state
+          if (remoteTime >= localTime) {
+            this.data.users[existingIdx] = fetchedUser;
+          } else {
+            // Local balance update is newer! Push local state to Supabase so cloud syncs up
+            try {
+              const fullSnake = toUserSnake(localUser);
+              supabase.from('users').upsert(fullSnake).then().catch(() => {});
+            } catch (err) {}
+            return localUser;
+          }
         } else {
           this.data.users.push(fetchedUser);
         }
         this.saveLocal();
-        return fetchedUser;
+        return this.data.users[existingIdx !== -1 ? existingIdx : this.data.users.length - 1];
       }
     } catch (e) {
       console.warn('findUserAsync Supabase query notice:', e.message);
@@ -603,12 +617,26 @@ class Database {
         const fetchedUser = toUserCamel(data[0]);
         const existingIdx = this.data.users.findIndex(u => u.id === fetchedUser.id);
         if (existingIdx !== -1) {
-          this.data.users[existingIdx] = fetchedUser;
+          const localUser = this.data.users[existingIdx];
+          const localTime = new Date(localUser.updatedAt || localUser.updated_at || 0).getTime();
+          const remoteTime = new Date(fetchedUser.updatedAt || fetchedUser.updated_at || 0).getTime();
+
+          // Only overwrite if remote is genuinely newer than or equal to local state
+          if (remoteTime >= localTime) {
+            this.data.users[existingIdx] = fetchedUser;
+          } else {
+            // Local balance update is newer! Push local state to Supabase so cloud syncs up
+            try {
+              const fullSnake = toUserSnake(localUser);
+              supabase.from('users').upsert(fullSnake).then().catch(() => {});
+            } catch (err) {}
+            return localUser;
+          }
         } else {
           this.data.users.push(fetchedUser);
         }
         this.saveLocal();
-        return fetchedUser;
+        return this.data.users[existingIdx !== -1 ? existingIdx : this.data.users.length - 1];
       }
     } catch (e) {
       console.warn('findUserByIdAsync Supabase notice:', e.message);
