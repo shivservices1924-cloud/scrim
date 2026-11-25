@@ -11,7 +11,9 @@ import {
   Instagram,
   Headphones,
   Trophy,
-  Zap
+  Zap,
+  Flame,
+  ShieldAlert
 } from 'lucide-react';
 
 export default function HeroBannerSlider({ onJoinClick }) {
@@ -26,13 +28,10 @@ export default function HeroBannerSlider({ onJoinClick }) {
       id: 'tournaments',
       tag: 'RUSHX ESPORTS',
       tagIcon: Sparkles,
-      title: (
-        <>
-          DAILY <br />
-          <span className="text-[#F5C400]">TOURNAMENTS</span>
-        </>
-      ),
-      subtitle: 'PLAY • WIN CASH • EARN DAILY',
+      titleMain: 'DAILY',
+      titleHighlight: 'TOURNAMENTS',
+      titleColor: '#F5C400',
+      subtitle: 'Play Free Fire • Win Real Cash Daily',
       btnText: 'JOIN NOW',
       btnAction: () => {
         if (onJoinClick) onJoinClick();
@@ -40,21 +39,20 @@ export default function HeroBannerSlider({ onJoinClick }) {
       },
       btnIcon: Zap,
       accentColor: '#F5C400',
-      bgGradient: 'from-[#1a1f2c] via-[#121620] to-[#0d1017]',
-      borderGlow: 'border-[#F5C400]/40',
-      heroImage: '/poster-br-solo.svg',
-      isExternal: false
+      btnTextColor: '#000000',
+      bgGradient: 'linear-gradient(135deg, #1f2738 0%, #121620 50%, #0b0e14 100%)',
+      borderColor: 'rgba(245, 196, 0, 0.45)',
+      boxGlow: '0 8px 30px rgba(245, 196, 0, 0.12)',
+      badgeIcon: Trophy,
+      heroImage: '/poster-br-solo.svg'
     },
     {
       id: 'instagram',
-      tag: 'INSTAGRAM OFFICIAL',
+      tag: 'OFFICIAL INSTAGRAM',
       tagIcon: Instagram,
-      title: (
-        <>
-          FOLLOW ON <br />
-          <span className="text-pink-400">INSTAGRAM</span>
-        </>
-      ),
+      titleMain: 'FOLLOW ON',
+      titleHighlight: 'INSTAGRAM',
+      titleColor: '#FF6492',
       subtitle: '@rushx_scrim • Daily Scrim Updates & Giveaways',
       btnText: 'FOLLOW NOW',
       btnAction: () => {
@@ -62,65 +60,59 @@ export default function HeroBannerSlider({ onJoinClick }) {
       },
       btnIcon: ExternalLink,
       accentColor: '#E1306C',
-      bgGradient: 'from-[#24101e] via-[#150d18] to-[#0c0810]',
-      borderGlow: 'border-pink-500/40',
-      badgeIcon: Instagram,
-      isExternal: true
+      btnTextColor: '#FFFFFF',
+      bgGradient: 'linear-gradient(135deg, #2b1224 0%, #190e1c 50%, #0d0811 100%)',
+      borderColor: 'rgba(225, 48, 108, 0.45)',
+      boxGlow: '0 8px 30px rgba(225, 48, 108, 0.15)',
+      badgeIcon: Instagram
     },
     {
       id: 'telegram',
       tag: 'OFFICIAL TELEGRAM',
       tagIcon: Send,
-      title: (
-        <>
-          JOIN OUR <br />
-          <span className="text-sky-400">TELEGRAM</span>
-        </>
-      ),
-      subtitle: 'Instant Custom Room ID & Match Password Alerts',
+      titleMain: 'JOIN OUR',
+      titleHighlight: 'TELEGRAM',
+      titleColor: '#38BDF8',
+      subtitle: 'Custom Room ID & Match Password Alerts',
       btnText: 'JOIN CHANNEL',
       btnAction: () => {
         window.open('https://t.me/RushXSupport', '_blank', 'noopener,noreferrer');
       },
       btnIcon: Send,
       accentColor: '#229ED9',
-      bgGradient: 'from-[#0b1c2b] via-[#0c1520] to-[#090e16]',
-      borderGlow: 'border-sky-500/40',
-      badgeIcon: Send,
-      isExternal: true
+      btnTextColor: '#FFFFFF',
+      bgGradient: 'linear-gradient(135deg, #0e2438 0%, #0d1824 50%, #090e14 100%)',
+      borderColor: 'rgba(34, 158, 217, 0.45)',
+      boxGlow: '0 8px 30px rgba(34, 158, 217, 0.15)',
+      badgeIcon: Send
     },
     {
       id: 'youtube',
       tag: 'YOUTUBE CHANNEL',
       tagIcon: Play,
-      title: (
-        <>
-          SUBSCRIBE <br />
-          <span className="text-red-500">YOUTUBE</span>
-        </>
-      ),
-      subtitle: 'Watch Live Match Streams, Highlights & Top Kills',
+      titleMain: 'SUBSCRIBE',
+      titleHighlight: 'YOUTUBE',
+      titleColor: '#FF4D4D',
+      subtitle: 'Live Match Streams & Top Highlights',
       btnText: 'SUBSCRIBE',
       btnAction: () => {
         window.open('https://www.youtube.com/channel/UClkDEDgopkyb1pfZKCPSXAQ', '_blank', 'noopener,noreferrer');
       },
       btnIcon: Play,
-      accentColor: '#FF0000',
-      bgGradient: 'from-[#260e0e] via-[#180d0d] to-[#0f0808]',
-      borderGlow: 'border-red-500/40',
-      badgeIcon: Play,
-      isExternal: true
+      accentColor: '#FF2A2A',
+      btnTextColor: '#FFFFFF',
+      bgGradient: 'linear-gradient(135deg, #2e1010 0%, #1c0e0e 50%, #0f0808 100%)',
+      borderColor: 'rgba(255, 42, 42, 0.45)',
+      boxGlow: '0 8px 30px rgba(255, 42, 42, 0.15)',
+      badgeIcon: Play
     },
     {
       id: 'contact',
       tag: '24/7 PLAYER HELPDESK',
       tagIcon: Headphones,
-      title: (
-        <>
-          NEED HELP? <br />
-          <span className="text-emerald-400">CONTACT US</span>
-        </>
-      ),
+      titleMain: 'NEED HELP?',
+      titleHighlight: 'CONTACT US',
+      titleColor: '#34D399',
       subtitle: 'Instant Support for Deposits, Withdrawals & Room ID',
       btnText: 'CONTACT SUPPORT',
       btnAction: () => {
@@ -128,19 +120,20 @@ export default function HeroBannerSlider({ onJoinClick }) {
       },
       btnIcon: MessageCircle,
       accentColor: '#10B981',
-      bgGradient: 'from-[#0d2218] via-[#0c1813] to-[#08100d]',
-      borderGlow: 'border-emerald-500/40',
-      badgeIcon: Headphones,
-      isExternal: false
+      btnTextColor: '#000000',
+      bgGradient: 'linear-gradient(135deg, #0f2c1f 0%, #0e1e17 50%, #08120e 100%)',
+      borderColor: 'rgba(16, 185, 129, 0.45)',
+      boxGlow: '0 8px 30px rgba(16, 185, 129, 0.15)',
+      badgeIcon: Headphones
     }
   ];
 
-  // Auto slide interval (3.8 seconds)
+  // Auto slide interval (4 seconds)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, 3800);
+    }, 4000);
     return () => clearInterval(timer);
   }, [isPaused, slides.length]);
 
@@ -162,7 +155,7 @@ export default function HeroBannerSlider({ onJoinClick }) {
 
   const handleTouchEnd = () => {
     const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 40) {
+    if (Math.abs(diff) > 35) {
       if (diff > 0) {
         handleNext();
       } else {
@@ -173,7 +166,12 @@ export default function HeroBannerSlider({ onJoinClick }) {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden shadow-2xl select-none group"
+      className="relative w-full rounded-2xl overflow-hidden shadow-2xl select-none group"
+      style={{
+        boxShadow: slides[currentIndex].boxGlow,
+        border: `1.5px solid ${slides[currentIndex].borderColor}`,
+        transition: 'border-color 0.4s ease, box-shadow 0.4s ease'
+      }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -181,10 +179,15 @@ export default function HeroBannerSlider({ onJoinClick }) {
       onTouchEnd={handleTouchEnd}
     >
       {/* Slider Viewport Container */}
-      <div className="overflow-hidden w-full">
+      <div className="w-full overflow-hidden">
+        {/* Track with exact CSS carousel math: width = slides.length * 100%, translation = currentIndex * 100 / length */}
         <div
-          className="flex transition-transform duration-500 ease-out will-change-transform"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          className="flex will-change-transform"
+          style={{
+            width: `${slides.length * 100}%`,
+            transform: `translateX(-${(currentIndex * 100) / slides.length}%)`,
+            transition: 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)'
+          }}
         >
           {slides.map((slide) => {
             const TagIcon = slide.tagIcon;
@@ -194,50 +197,66 @@ export default function HeroBannerSlider({ onJoinClick }) {
             return (
               <div
                 key={slide.id}
-                className={`w-full shrink-0 min-h-[178px] bg-gradient-to-r ${slide.bgGradient} border ${slide.borderGlow} p-4 sm:p-5 flex items-center justify-between relative`}
+                className="shrink-0 p-4 sm:p-5 flex items-center justify-between relative min-h-[175px]"
+                style={{
+                  width: `${100 / slides.length}%`,
+                  background: slide.bgGradient
+                }}
               >
-                {/* Subtle Radial Glow */}
+                {/* Radial Glow on Right */}
                 <div
-                  className="absolute top-0 right-1/4 w-36 h-36 rounded-full blur-3xl pointer-events-none opacity-20"
+                  className="absolute top-0 right-1/4 w-36 h-36 rounded-full blur-3xl pointer-events-none opacity-25"
                   style={{ backgroundColor: slide.accentColor }}
-                ></div>
+                />
 
-                {/* Left Content */}
-                <div className="relative z-10 space-y-1.5 max-w-[62%] sm:max-w-[65%]">
-                  <span
-                    className="text-[10px] font-mono tracking-widest font-black uppercase flex items-center gap-1.5"
-                    style={{ color: slide.accentColor }}
-                  >
-                    <TagIcon className="w-3.5 h-3.5 shrink-0" />
-                    <span>{slide.tag}</span>
-                  </span>
+                {/* Left Content Area */}
+                <div className="relative z-10 space-y-1.5 max-w-[64%] sm:max-w-[68%]">
+                  {/* Tag Chip */}
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className="text-[10px] font-mono tracking-widest font-black uppercase flex items-center gap-1 px-2 py-0.5 rounded-full"
+                      style={{
+                        color: slide.accentColor,
+                        backgroundColor: `${slide.accentColor}18`,
+                        border: `1px solid ${slide.accentColor}35`
+                      }}
+                    >
+                      <TagIcon className="w-3 h-3 shrink-0" />
+                      <span>{slide.tag}</span>
+                    </span>
+                  </div>
 
-                  <h2 className="font-heading font-black text-xl sm:text-2xl text-white tracking-wide leading-tight drop-shadow">
-                    {slide.title}
+                  {/* Main Title */}
+                  <h2 className="font-heading font-black text-xl sm:text-2xl text-white tracking-wide leading-tight drop-shadow-md">
+                    {slide.titleMain} <br />
+                    <span style={{ color: slide.titleColor }}>{slide.titleHighlight}</span>
                   </h2>
 
-                  <p className="text-[10.5px] font-bold text-slate-300 tracking-wider line-clamp-1">
+                  {/* Subtitle */}
+                  <p className="text-[11px] font-semibold text-slate-300 tracking-wide line-clamp-1">
                     {slide.subtitle}
                   </p>
 
+                  {/* Action Button */}
                   <div className="pt-2">
                     <button
                       type="button"
                       onClick={slide.btnAction}
-                      className="inline-flex items-center gap-1.5 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-lg active:scale-95 transition-all uppercase tracking-wider cursor-pointer text-black"
+                      className="inline-flex items-center gap-1.5 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-lg active:scale-95 transition-all uppercase tracking-wider cursor-pointer"
                       style={{
                         backgroundColor: slide.accentColor,
-                        boxShadow: `0 4px 14px ${slide.accentColor}40`
+                        color: slide.btnTextColor,
+                        boxShadow: `0 4px 14px ${slide.accentColor}50`
                       }}
                     >
                       <span>{slide.btnText}</span>
-                      <BtnIcon className="w-3.5 h-3.5" />
+                      <BtnIcon className="w-3.5 h-3.5 shrink-0" />
                     </button>
                   </div>
                 </div>
 
                 {/* Right Visual Element */}
-                <div className="relative z-10 w-28 h-32 flex items-center justify-center shrink-0">
+                <div className="relative z-10 w-24 h-28 sm:w-28 sm:h-32 flex items-center justify-center shrink-0">
                   {slide.heroImage ? (
                     <img
                       src={slide.heroImage}
@@ -246,22 +265,23 @@ export default function HeroBannerSlider({ onJoinClick }) {
                         e.currentTarget.onerror = null;
                         e.currentTarget.src = '/logo.svg';
                       }}
-                      className="w-full h-full object-cover rounded-xl border border-[#F5C400]/40 shadow-xl filter brightness-105"
+                      className="w-full h-full object-cover rounded-xl border-2 shadow-2xl filter brightness-105"
+                      style={{ borderColor: slide.accentColor }}
                     />
                   ) : BadgeIcon ? (
                     <div
-                      className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center shadow-2xl border-2 transition-transform duration-300 group-hover:scale-105"
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex flex-col items-center justify-center shadow-2xl border-2 transition-transform duration-300 group-hover:scale-105"
                       style={{
                         borderColor: slide.accentColor,
                         backgroundColor: '#0a0d14',
-                        boxShadow: `0 0 25px ${slide.accentColor}30`
+                        boxShadow: `0 0 25px ${slide.accentColor}35`
                       }}
                     >
                       <BadgeIcon
-                        className="w-11 h-11"
+                        className="w-10 h-10 sm:w-11 sm:h-11"
                         style={{ color: slide.accentColor }}
                       />
-                      <span className="text-[9px] font-heading font-black text-white uppercase tracking-widest mt-1.5">
+                      <span className="text-[8.5px] sm:text-[9px] font-heading font-black text-white uppercase tracking-widest mt-1">
                         RUSHX
                       </span>
                     </div>
@@ -273,42 +293,43 @@ export default function HeroBannerSlider({ onJoinClick }) {
         </div>
       </div>
 
-      {/* Manual Left/Right Arrow Navigation */}
+      {/* Manual Prev Arrow */}
       <button
         type="button"
         onClick={handlePrev}
         aria-label="Previous slide"
-        className="absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white/80 hover:text-white border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 cursor-pointer"
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 hover:bg-black/95 text-white/90 hover:text-white border border-white/20 flex items-center justify-center transition-all z-20 cursor-pointer shadow-lg active:scale-90"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
 
+      {/* Manual Next Arrow */}
       <button
         type="button"
         onClick={handleNext}
         aria-label="Next slide"
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white/80 hover:text-white border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 cursor-pointer"
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 hover:bg-black/95 text-white/90 hover:text-white border border-white/20 flex items-center justify-center transition-all z-20 cursor-pointer shadow-lg active:scale-90"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
+      <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-black/40 px-2.5 py-1 rounded-full backdrop-blur-xs">
         {slides.map((s, idx) => (
           <button
             key={s.id}
             type="button"
             onClick={() => setCurrentIndex(idx)}
             aria-label={`Go to slide ${idx + 1}`}
-            className={`transition-all rounded-full ${
-              currentIndex === idx
-                ? 'w-6 h-1.5 bg-[#F5C400]'
-                : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
-            }`}
+            className="transition-all rounded-full cursor-pointer"
+            style={{
+              width: currentIndex === idx ? '22px' : '6px',
+              height: '6px',
+              backgroundColor: currentIndex === idx ? slides[currentIndex].accentColor : 'rgba(255, 255, 255, 0.35)'
+            }}
           />
         ))}
       </div>
     </div>
   );
 }
-

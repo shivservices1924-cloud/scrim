@@ -3,6 +3,16 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/poster-br-solo.jpg", "destination": "/poster-br-solo.svg", "permanent": true },
+    { "source": "/poster-br-duo.jpg", "destination": "/poster-br-duo.svg", "permanent": true },
+    { "source": "/poster-cs.jpg", "destination": "/poster-cs.svg", "permanent": true },
+    { "source": "/poster-lone-wolf.jpg", "destination": "/poster-lone-wolf.svg", "permanent": true },
+    { "source": "/rushx-logo.jpg", "destination": "/logo.svg", "permanent": true },
+    { "source": "/app-logo.jpg", "destination": "/logo.svg", "permanent": true },
+    { "source": "/app-logo.png", "destination": "/logo.svg", "permanent": true },
+    { "source": "/app-logo-backup.png", "destination": "/logo.svg", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",

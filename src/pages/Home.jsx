@@ -103,14 +103,15 @@ export default function Home() {
   });
 
   // Strictly filter out tournaments based on real-time expiry rule:
-  // - If tournament start time has passed (e.g. 9:00 PM passed, it is 9:01 PM):
-  //   - If user joined: KEEP VISIBLE! (Player can see their room ID / match)
-  //   - If user did NOT join: HIDE IT (Remove from upcoming list so no one can join late)
+  // - If tournament start time has arrived / passed (e.g. 9:00 PM passed, it is 9:01 PM):
+  //   - HIDE IT from the upcoming open list so no unjoined user can see or join it late!
+  //   - Registered players still access it through the "My Registered Matches" section above.
   const activeUpcoming = tournaments.filter(t => {
     if (t.status !== 'UPCOMING') return false;
 
-    const hasJoined = Boolean(t.isJoined) || userJoinedIds.includes(t.id);
-    if (!isTournamentVisibleToUser(t, hasJoined, nowTs)) {
+    const startTime = getTournamentStartTime(t);
+    // If start time has passed (e.g. 9:01 PM for 9:00 PM match), remove from upcoming public list
+    if (startTime > 0 && nowTs >= startTime) {
       return false;
     }
 

@@ -862,8 +862,15 @@ app.get('/api/tournaments', async (req, res) => {
   const safeList = list.map(t => {
     const isJoined = userJoinedIds.has(t.id);
     const canSeeCredentials = isAdmin || isJoined;
+    let cleanBanner = (t.banner || '').replace(/\.jpe?g$/i, '.svg');
+    if (!cleanBanner || cleanBanner.includes('poster-br-solo.jpg')) cleanBanner = '/poster-br-solo.svg';
+    if (cleanBanner.includes('poster-br-duo.jpg')) cleanBanner = '/poster-br-duo.svg';
+    if (cleanBanner.includes('poster-cs.jpg')) cleanBanner = '/poster-cs.svg';
+    if (cleanBanner.includes('poster-lone-wolf.jpg')) cleanBanner = '/poster-lone-wolf.svg';
+
     return {
       ...t,
+      banner: cleanBanner,
       map: t.map && t.map.toUpperCase().includes('BERMUDA') ? t.map : 'BERMUDA',
       roomId: canSeeCredentials ? (t.roomId || '') : '',
       roomPassword: canSeeCredentials ? (t.roomPassword || '') : '',
@@ -896,9 +903,15 @@ app.get('/api/tournaments/:id', async (req, res) => {
   const isAuthorized = hasJoined || isAdmin;
 
   const perKillRate = Number(tournament.perKill) || 0;
+  let cleanBanner = (tournament.banner || '').replace(/\.jpe?g$/i, '.svg');
+  if (!cleanBanner || cleanBanner.includes('poster-br-solo.jpg')) cleanBanner = '/poster-br-solo.svg';
+  if (cleanBanner.includes('poster-br-duo.jpg')) cleanBanner = '/poster-br-duo.svg';
+  if (cleanBanner.includes('poster-cs.jpg')) cleanBanner = '/poster-cs.svg';
+  if (cleanBanner.includes('poster-lone-wolf.jpg')) cleanBanner = '/poster-lone-wolf.svg';
 
   return res.json({
     ...tournament,
+    banner: cleanBanner,
     map: tournament.map && tournament.map.toUpperCase().includes('BERMUDA') ? tournament.map : 'BERMUDA',
     roomId: isAuthorized ? tournament.roomId : '',
     roomPassword: isAuthorized ? tournament.roomPassword : '',
