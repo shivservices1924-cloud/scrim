@@ -496,25 +496,6 @@ export default function Profile() {
             <ChevronRight className="w-4 h-4 text-slate-500" />
           </button>
 
-          {/* Refer & Earn */}
-          <button
-            onClick={() => navigate('/refer')}
-            className="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#1a202e] transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#0b0e14] border border-[#1f2738] flex items-center justify-center text-[#F5C400]">
-                <Share2 className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-white block">Refer & Earn Cash</span>
-                <span className="text-[10px] text-slate-400">Earn bonus cash for every invited squad member</span>
-              </div>
-            </div>
-            <span className="text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full">
-              ₹50 FREE
-            </span>
-          </button>
-
           {/* Download App APK */}
           <button
             onClick={() => navigate('/download')}

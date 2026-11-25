@@ -156,13 +156,12 @@ export default function Tournaments() {
         </button>
       </div>
 
-      {/* Category Filter Chips (Screen 5: All, Solo, Duo, Squad, CS 1v1, Lone Wolf) */}
+      {/* Category Filter Chips (All, Solo, Duo, CS 1v1, Lone Wolf) */}
       <div className="bg-[#0b0e14] border-b border-[#1f2738] px-3 py-2.5 overflow-x-auto flex items-center gap-2 no-scrollbar">
         {[
           { id: '', matchType: '', label: 'All' },
           { id: 'BR_FULL_MAP', matchType: 'SOLO', label: 'Solo' },
           { id: 'BR_FULL_MAP', matchType: 'DUO', label: 'Duo' },
-          { id: 'BR_FULL_MAP', matchType: 'SQUAD', label: 'Squad' },
           { id: 'CS_HEADSHOT', matchType: '', label: 'CS 1v1' },
           { id: 'LW_HEADSHOT', matchType: '', label: 'Lone Wolf' }
         ].map(cat => {

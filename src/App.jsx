@@ -65,7 +65,11 @@ export default function App() {
   const isAuthRoute = location.pathname === '/login' || location.pathname === '/register';
   const isProfilePage = location.pathname === '/profile';
   const isDetailPage = location.pathname.startsWith('/contest/') || (location.pathname.startsWith('/tournaments/') && location.pathname !== '/tournaments');
-  const isSubWalletPage = location.pathname.startsWith('/wallet/');
+  const isSubWalletPage = location.pathname.startsWith('/wallet/') ||
+    location.pathname === '/deposit' ||
+    location.pathname === '/withdraw' ||
+    location.pathname === '/deposit-history' ||
+    location.pathname === '/withdraw-history';
   const isDownloadPage = location.pathname === '/download';
 
   return (
@@ -86,11 +90,15 @@ export default function App() {
             <Route path="/tournaments/:id" element={<UserProtectedRoute><ContestDetails /></UserProtectedRoute>} />
             <Route path="/contest/:id" element={<UserProtectedRoute><ContestDetails /></UserProtectedRoute>} />
             <Route path="/wallet" element={<UserProtectedRoute><Wallet /></UserProtectedRoute>} />
+            <Route path="/deposit" element={<UserProtectedRoute><Deposit /></UserProtectedRoute>} />
+            <Route path="/withdraw" element={<UserProtectedRoute><Withdraw /></UserProtectedRoute>} />
             <Route path="/wallet/deposit" element={<UserProtectedRoute><Deposit /></UserProtectedRoute>} />
             <Route path="/wallet/withdraw" element={<UserProtectedRoute><Withdraw /></UserProtectedRoute>} />
+            <Route path="/deposit-history" element={<UserProtectedRoute><DepositHistory /></UserProtectedRoute>} />
+            <Route path="/withdraw-history" element={<UserProtectedRoute><WithdrawHistory /></UserProtectedRoute>} />
             <Route path="/wallet/deposit-history" element={<UserProtectedRoute><DepositHistory /></UserProtectedRoute>} />
             <Route path="/wallet/withdraw-history" element={<UserProtectedRoute><WithdrawHistory /></UserProtectedRoute>} />
-            <Route path="/refer" element={<UserProtectedRoute><Refer /></UserProtectedRoute>} />
+            <Route path="/refer" element={<Navigate to="/" replace />} />
             <Route path="/leaderboard" element={<UserProtectedRoute><Leaderboard /></UserProtectedRoute>} />
             <Route path="/my-matches" element={<UserProtectedRoute><MyMatches /></UserProtectedRoute>} />
             <Route path="/profile" element={<UserProtectedRoute><Profile /></UserProtectedRoute>} />
