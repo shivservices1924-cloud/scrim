@@ -84,7 +84,7 @@ export default function RoomModal({ tournament, isOpen, onClose }) {
             </div>
 
             {/* How to Join Instructions */}
-            <div className="bg-[#070212] p-3 rounded-xl border border-purple-900/40 space-y-2 text-xs">
+            <div className="bg-[#0b0e14] p-3 rounded-xl border border-[#1f2738] space-y-2 text-xs">
               <span className="font-bold text-amber-400 uppercase flex items-center gap-1">
                 <Play className="w-3.5 h-3.5" /> How to Enter Custom Room:
               </span>

@@ -783,6 +783,37 @@ app.put('/api/auth/profile', authenticateToken, (req, res) => {
   }
 });
 
+// Change User Password (For Settings & Profile)
+app.post('/api/auth/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ error: 'Current password and new password are required.' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'New password must be at least 6 characters.' });
+    }
+
+    const user = await db.findUserByIdAsync(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    const isMatch = bcrypt.compareSync(oldPassword, user.passwordHash || '');
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Incorrect current password.' });
+    }
+
+    const newHash = bcrypt.hashSync(newPassword, 10);
+    await db.updateUser(user.id, { passwordHash: newHash });
+
+    return res.json({ message: 'Password updated successfully!' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    return res.status(500).json({ error: 'Failed to update password.' });
+  }
+});
+
 // ==========================================
 // TOURNAMENT ROUTES (SECURE CREDENTIALS)
 // ==========================================
@@ -803,12 +834,15 @@ app.get('/api/tournaments', async (req, res) => {
 
   if (status) {
     if (status.toUpperCase() === 'UPCOMING') {
-      // STRICT REQUIREMENT: If match scheduled time has passed (e.g. 4:00 PM at 4:01 PM),
-      // DO NOT show in upcoming list!
+      // STRICT REQUIREMENT: If match scheduled time has passed (e.g. 9:00 PM at 9:01 PM):
+      // - Users who have NOT joined must NOT see this tournament (it disappears from upcoming list!)
+      // - Users who HAVE JOINED (and admin) must keep seeing it in their joined list with Room ID!
       list = list.filter(t => {
         if (t.status.toUpperCase() !== 'UPCOMING') return false;
+        const isJoined = userJoinedIds.has(t.id);
+        if (isAdmin || isJoined) return true; // Keep visible for joined player/admin
         const schedTime = getTournamentScheduledTime(t);
-        return schedTime === 0 || schedTime > now;
+        return schedTime === 0 || schedTime > now; // Non-joined player only sees if not expired
       });
     } else {
       list = list.filter(t => t.status.toUpperCase() === status.toUpperCase());

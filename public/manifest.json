@@ -4,8 +4,8 @@
   "description": "Compete in Free Fire BR & Clash Squad tournaments. Win real cash daily with instant UPI payouts.",
   "icons": [
     {
-      "src": "/app-logo.png",
-      "type": "image/png",
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
       "sizes": "192x192 512x512",
       "purpose": "any"
     },
@@ -14,12 +14,6 @@
       "type": "image/svg+xml",
       "sizes": "192x192 512x512",
       "purpose": "maskable"
-    },
-    {
-      "src": "/logo.svg",
-      "type": "image/svg+xml",
-      "sizes": "192x192 512x512",
-      "purpose": "any"
     }
   ],
   "start_url": "/",

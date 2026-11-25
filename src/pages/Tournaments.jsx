@@ -5,6 +5,7 @@ import TournamentCard from '../components/TournamentCard';
 import JoinModal from '../components/JoinModal';
 import RoomModal from '../components/RoomModal';
 import { useAuth } from '../context/AuthContext';
+import { isTournamentVisibleToUser } from '../utils/time';
 import SEO from '../components/SEO';
 
 export default function Tournaments() {
@@ -108,18 +109,18 @@ export default function Tournaments() {
   const pageTitle = (currentCategory === 'BR_FULL_MAP' && currentMatchType === 'SOLO')
     ? 'BR Solo Contests (Bermuda)'
     : (currentCategory === 'BR_FULL_MAP' && currentMatchType === 'DUO')
-    ? 'BR Duo Contests (Bermuda)'
-    : currentCategory === 'CS_HEADSHOT'
-    ? 'CS Headshot Contests'
-    : currentCategory === 'LW_HEADSHOT'
-    ? 'Lone Wolf Headshot'
-    : currentCategory === 'CS_1V1'
-    ? 'Clash Squad Contests'
-    : currentMatchType === 'DUO'
-    ? 'BR Duo Contests'
-    : currentMatchType === 'SOLO'
-    ? 'BR Solo Contests'
-    : 'All Bermuda Contests';
+      ? 'BR Duo Contests (Bermuda)'
+      : currentCategory === 'CS_HEADSHOT'
+        ? 'CS Headshot Contests'
+        : currentCategory === 'LW_HEADSHOT'
+          ? 'Lone Wolf Headshot'
+          : currentCategory === 'CS_1V1'
+            ? 'Clash Squad Contests'
+            : currentMatchType === 'DUO'
+              ? 'BR Duo Contests'
+              : currentMatchType === 'SOLO'
+                ? 'BR Solo Contests'
+                : 'All Bermuda Contests';
 
   return (
     <div className="pb-24 max-w-md mx-auto w-full min-h-screen bg-[#0b0e14] text-white">
@@ -170,11 +171,10 @@ export default function Tournaments() {
             <button
               key={`${cat.id}_${cat.matchType}`}
               onClick={() => handleFilterChange(cat.id, cat.matchType)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-heading font-black whitespace-nowrap transition-all ${
-                isSelected
-                  ? 'bg-[#F5C400] text-black shadow-lg shadow-amber-500/20'
-                  : 'bg-[#121620] text-slate-400 border border-[#1f2738] hover:text-white'
-              }`}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-heading font-black whitespace-nowrap transition-all ${isSelected
+                ? 'bg-[#F5C400] text-black shadow-lg shadow-amber-500/20'
+                : 'bg-[#121620] text-slate-400 border border-[#1f2738] hover:text-white'
+                }`}
             >
               {cat.label}
             </button>
@@ -198,13 +198,13 @@ export default function Tournaments() {
             <p className="text-xs text-slate-400">Loading contests...</p>
           </div>
         ) : (() => {
-          // Strictly upcoming matches that haven't expired & match active filters
+          // Strictly upcoming matches that haven't expired for non-joined players & match active filters
           const displayed = tournaments.filter(t => {
-            const schedTime = t.scheduledAt ? new Date(t.scheduledAt).getTime() : 0;
-            if (schedTime > 0 && schedTime <= nowTs) {
+            if (t.status !== 'UPCOMING') return false;
+            const hasJoined = Boolean(t.isJoined) || userJoinedIds.includes(t.id);
+            if (!isTournamentVisibleToUser(t, hasJoined, nowTs)) {
               return false;
             }
-            if (t.status !== 'UPCOMING') return false;
             if (currentCategory && (t.category || '').toUpperCase() !== currentCategory.toUpperCase()) {
               return false;
             }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AnnouncementTicker from '../components/AnnouncementTicker';
 import SEO from '../components/SEO';
 import TournamentCard from '../components/TournamentCard';
+import HeroBannerSlider from '../components/HeroBannerSlider';
 import JoinModal from '../components/JoinModal';
 import RoomModal from '../components/RoomModal';
 import {
@@ -14,9 +15,13 @@ import {
   Flame,
   ChevronRight,
   Sparkles,
-  AlertCircle
+  AlertCircle,
+  Award,
+  KeyRound,
+  Clock
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getTournamentStartTime, isTournamentVisibleToUser } from '../utils/time';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -92,11 +97,22 @@ export default function Home() {
     }
   };
 
-  // Strictly filter out expired tournaments (real-time expiry)
+  // Registered / Joined Tournaments for this user
+  const userRegisteredTournaments = tournaments.filter(t => {
+    return Boolean(t.isJoined) || userJoinedIds.includes(t.id);
+  });
+
+  // Strictly filter out tournaments based on real-time expiry rule:
+  // - If tournament start time has passed (e.g. 9:00 PM passed, it is 9:01 PM):
+  //   - If user joined: KEEP VISIBLE! (Player can see their room ID / match)
+  //   - If user did NOT join: HIDE IT (Remove from upcoming list so no one can join late)
   const activeUpcoming = tournaments.filter(t => {
     if (t.status !== 'UPCOMING') return false;
-    const sched = t.scheduledAt ? new Date(t.scheduledAt).getTime() : 0;
-    if (sched > 0 && sched <= nowTs) return false;
+
+    const hasJoined = Boolean(t.isJoined) || userJoinedIds.includes(t.id);
+    if (!isTournamentVisibleToUser(t, hasJoined, nowTs)) {
+      return false;
+    }
 
     if (selectedCategory === 'ALL') return true;
 
@@ -139,48 +155,65 @@ export default function Home() {
 
       {/* Main Content Area */}
       <div className="p-4 space-y-5">
-        {/* Screen 4 Hero Banner: DAILY TOURNAMENTS */}
-        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#171b26] via-[#121620] to-[#0f131a] border border-[#1f2738] p-5 shadow-2xl flex items-center justify-between min-h-[170px]">
-          {/* Subtle gold glow */}
-          <div className="absolute top-0 right-1/4 w-36 h-36 bg-[#F5C400]/10 rounded-full blur-3xl pointer-events-none"></div>
+        {/* Dynamic Hero Banner Slider (Daily Tournaments, Instagram, Telegram, YouTube, Contact Us) */}
+        <HeroBannerSlider onJoinClick={() => navigate('/tournaments')} />
 
-          <div className="relative z-10 space-y-1.5 max-w-[62%]">
-            <span className="text-[10px] font-mono tracking-widest text-[#F5C400] font-black uppercase flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[#F5C400]" />
-              RUSHX ESPORTS
-            </span>
-            <h2 className="font-heading font-black text-2xl text-white tracking-wide leading-tight drop-shadow">
-              DAILY <br />TOURNAMENTS
-            </h2>
-            <p className="text-[11px] font-bold text-slate-300 tracking-wider">
-              PLAY • WIN • EARN
-            </p>
-            <div className="pt-2">
+        {/* SECTION: USER'S JOINED MATCHES (Prominent Section for Registered Events) */}
+        {user && userRegisteredTournaments.length > 0 && (
+          <div className="space-y-2.5 bg-gradient-to-r from-[#172033] via-[#121620] to-[#0f1420] border-2 border-[#F5C400]/60 p-3.5 rounded-2xl shadow-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-[#F5C400] text-black flex items-center justify-center font-bold">
+                  <Award className="w-4 h-4" />
+                </div>
+                <h3 className="font-heading font-black text-xs sm:text-sm tracking-wide text-white uppercase">
+                  My Registered Matches ({userRegisteredTournaments.length})
+                </h3>
+              </div>
               <button
-                type="button"
-                onClick={() => navigate('/tournaments')}
-                className="bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-xs px-4 py-2 rounded-xl shadow-lg shadow-amber-500/20 active:scale-95 transition-all uppercase tracking-wider cursor-pointer"
+                onClick={() => navigate('/my-matches')}
+                className="text-[11px] text-[#F5C400] hover:text-[#FFD000] font-bold flex items-center gap-0.5"
               >
-                JOIN NOW
+                <span>View All</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
-          </div>
 
-          {/* Hero Character Art */}
-          <div className="relative z-10 w-28 h-32 flex items-center justify-center shrink-0">
-            <img
-              src="/poster-br-solo.jpg"
-              alt="Esports Champion"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = '/logo.svg';
-              }}
-              className="w-full h-full object-cover rounded-xl border border-[#F5C400]/40 shadow-xl filter brightness-105"
-            />
-          </div>
-        </div>
+            <div className="space-y-2">
+              {userRegisteredTournaments.slice(0, 2).map((match) => (
+                <div
+                  key={`registered_${match.id}`}
+                  className="bg-[#0b0e14] border border-[#F5C400]/40 rounded-xl p-3 flex items-center justify-between gap-2 shadow-inner"
+                >
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-black px-2 py-0.5 rounded-md uppercase">
+                        Registered
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-[#F5C400]" />
+                        {match.matchTime}
+                      </span>
+                    </div>
+                    <h4 className="font-heading font-black text-xs text-white truncate">
+                      {match.title}
+                    </h4>
+                  </div>
 
-        {/* Screen 4 Category Selectors (Solo, Duo, Squad, CS 1v1, Lone Wolf 1v1) */}
+                  <button
+                    onClick={() => setSelectedForRoom(match)}
+                    className="bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-[11px] px-3 py-2 rounded-xl shadow uppercase tracking-wider shrink-0 active:scale-95 transition-all flex items-center gap-1"
+                  >
+                    <KeyRound className="w-3.5 h-3.5" />
+                    <span>Room ID</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Category Selectors (Solo, Duo, Squad, CS 1v1, Lone Wolf 1v1) */}
         <div>
           <div className="flex items-center justify-between mb-2.5 px-0.5">
             <h3 className="font-heading font-extrabold text-sm text-white tracking-wide">
@@ -230,7 +263,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Screen 4: Upcoming Tournaments Section */}
+        {/* Upcoming Tournaments Section */}
         <div className="space-y-3 pt-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

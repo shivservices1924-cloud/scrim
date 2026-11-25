@@ -1,12 +1,13 @@
 // Gaming Tournament Poster Selector & Helpers
-// Strictly maps:
-// - Lone Wolf / LW Headshot -> /poster-lone-wolf.jpg (svg fallback: /poster-lone-wolf.svg)
-// - CS Headshot / CS Normal -> /poster-cs.jpg (svg fallback: /poster-cs.svg)
-// - BR Duo / Any Duo -> /poster-br-duo.jpg (svg fallback: /poster-br-duo.svg)
-// - BR Solo / Default -> /poster-br-solo.jpg (svg fallback: /poster-br-solo.svg)
+// Strictly maps to Gold & Dark Esports themed vector posters (no purple):
+// - Lone Wolf / LW Headshot -> /poster-lone-wolf.svg
+// - CS Headshot / CS Normal -> /poster-cs.svg
+// - BR Duo / Any Duo -> /poster-br-duo.svg
+// - BR Squad -> /poster-squad.svg
+// - BR Solo / Default -> /poster-br-solo.svg
 
 export function getTournamentPoster(tournament) {
-  if (!tournament) return '/poster-br-solo.jpg';
+  if (!tournament) return '/poster-br-solo.svg';
 
   const cat = String(tournament.category || '').toUpperCase();
   const gameType = String(tournament.gameType || '').toUpperCase();
@@ -22,7 +23,7 @@ export function getTournamentPoster(tournament) {
     title.includes('LONE WOLF') ||
     title.includes('LW ')
   ) {
-    return '/poster-lone-wolf.jpg';
+    return '/poster-lone-wolf.svg';
   }
 
   // 2. Clash Squad (CS Headshot / CS Normal)
@@ -32,15 +33,20 @@ export function getTournamentPoster(tournament) {
     title.includes('CS ') ||
     title.includes('CLASH SQUAD')
   ) {
-    return '/poster-cs.jpg';
+    return '/poster-cs.svg';
   }
 
-  // 3. BR Duo / Duo Matches
+  // 3. BR Squad
+  if (matchType === 'SQUAD' || title.includes('SQUAD') || cat.includes('SQUAD')) {
+    return '/poster-squad.svg';
+  }
+
+  // 4. BR Duo / Duo Matches
   if (matchType === 'DUO' || title.includes('DUO') || cat.includes('DUO')) {
-    return '/poster-br-duo.jpg';
+    return '/poster-br-duo.svg';
   }
 
-  // 4. Custom image ONLY if it is a real uploaded asset and not stock poster / unsplash
+  // 5. Custom image ONLY if it is a real uploaded asset and not stock poster / unsplash
   if (
     tournament.banner &&
     typeof tournament.banner === 'string' &&
@@ -49,14 +55,12 @@ export function getTournamentPoster(tournament) {
     return tournament.banner;
   }
 
-  // 5. Default BR Solo
-  return '/poster-br-solo.jpg';
+  // 6. Default BR Solo
+  return '/poster-br-solo.svg';
 }
 
 export function getTournamentPosterSvgFallback(tournament) {
-  const poster = getTournamentPoster(tournament);
-  return poster.replace(/\.jpe?g$/, '.svg');
+  return '/poster-br-solo.svg';
 }
 
 export default getTournamentPoster;
-

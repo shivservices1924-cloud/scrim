@@ -43,7 +43,7 @@ export default function AdminTournaments() {
     winPrize: 0,
     totalSpots: 48,
     rules: 'MAP: BERMUDA ONLY! BAN GUN: DOUBLE VECTOR, M79! BAN CHARACTER: RYDEN! MIN LEVEL 40! IDP TIME: 5 MIN BEFORE MATCH! RECORDING MANDATORY.',
-    banner: '/poster-br-solo.jpg'
+    banner: '/poster-br-solo.svg'
   });
 
   const fetchTournaments = async () => {
@@ -84,7 +84,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! BAN GUN: DOUBLE VECTOR, M79! BAN CHARACTER: RYDEN! MIN LEVEL 40! IDP TIME: 5 MIN BEFORE MATCH!',
-          banner: '/poster-br-solo.jpg'
+          banner: '/poster-br-solo.svg'
         });
         break;
 
@@ -102,7 +102,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! DUO MATCH. ENTRY ₹25 PER PLAYER. ₹18 PER KILL. BAN DOUBLE VECTOR, M79, RYDEN.',
-          banner: '/poster-br-duo.jpg'
+          banner: '/poster-br-duo.svg'
         });
         break;
 
@@ -120,7 +120,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! HIGH STAKES SOLO! ₹36 PER KILL! BAN DOUBLE VECTOR & M79. MIN LEVEL 40. SCREEN RECORDING MUST.',
-          banner: '/poster-br-solo.jpg'
+          banner: '/poster-br-solo.svg'
         });
         break;
 
@@ -138,7 +138,7 @@ export default function AdminTournaments() {
           winPrize: 0,
           totalSpots: 48,
           rules: 'MAP: BERMUDA ONLY! HIGH STAKES DUO! ENTRY ₹50/PLAYER. ₹36 PER KILL. BAN DOUBLE VECTOR & M79.',
-          banner: '/poster-br-duo.jpg'
+          banner: '/poster-br-duo.svg'
         });
         break;
 
@@ -156,7 +156,7 @@ export default function AdminTournaments() {
           winPrize: 80,
           totalSpots: 2,
           rules: 'ONLY HEADSHOT ALLOWED! MAP: BERMUDA CS. WOODPECKER / DESERT EAGLE ONLY HEADSHOTS. BODY KILL DISQUALIFICATION! WINNER WINS ₹80.',
-          banner: '/poster-cs.jpg'
+          banner: '/poster-cs.svg'
         });
         break;
 
@@ -174,7 +174,7 @@ export default function AdminTournaments() {
           winPrize: 360,
           totalSpots: 4,
           rules: 'HEADSHOT ONLY DUO! MAP: BERMUDA CS. ENTRY ₹100/PLAYER. WINNING TEAM TAKES ₹360 CASH.',
-          banner: '/poster-cs.jpg'
+          banner: '/poster-cs.svg'
         });
         break;
 
@@ -192,7 +192,7 @@ export default function AdminTournaments() {
           winPrize: 80,
           totalSpots: 2,
           rules: 'LONE WOLF HEADSHOT 1V1! MAP: BERMUDA. ONLY HEADSHOT DAMAGE ALLOWED. WINNER GETS ₹80.',
-          banner: '/poster-lone-wolf.jpg'
+          banner: '/poster-lone-wolf.svg'
         });
         break;
 
@@ -210,7 +210,7 @@ export default function AdminTournaments() {
           winPrize: 360,
           totalSpots: 4,
           rules: 'LONE WOLF 2V2 HEADSHOT TOURNAMENT! ENTRY ₹100/PLAYER. WINNER TEAM GETS ₹360! SCREEN RECORDING MANDATORY.',
-          banner: '/poster-lone-wolf.jpg'
+          banner: '/poster-lone-wolf.svg'
         });
         break;
 
@@ -630,13 +630,13 @@ export default function AdminTournaments() {
                     onChange={(e) => {
                       const newCat = e.target.value;
                       let banner = form.banner;
-                      if (newCat === 'CS_HEADSHOT' || newCat === 'CS_1V1') banner = '/poster-cs.jpg';
-                      else if (newCat === 'LW_HEADSHOT') banner = '/poster-lone-wolf.jpg';
-                      else if (form.matchType === 'DUO') banner = '/poster-br-duo.jpg';
-                      else banner = '/poster-br-solo.jpg';
+                      if (newCat === 'CS_HEADSHOT' || newCat === 'CS_1V1') banner = '/poster-cs.svg';
+                      else if (newCat === 'LW_HEADSHOT') banner = '/poster-lone-wolf.svg';
+                      else if (form.matchType === 'DUO') banner = '/poster-br-duo.svg';
+                      else banner = '/poster-br-solo.svg';
                       setForm({ ...form, category: newCat, banner });
                     }}
-                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
+                    className="w-full bg-[#0b0e14] border border-[#1f2738] rounded-xl px-2.5 py-2 text-xs text-white"
                   >
                     <option value="BR_FULL_MAP">BR Full Map</option>
                     <option value="CS_HEADSHOT">CS Headshot</option>
@@ -652,13 +652,13 @@ export default function AdminTournaments() {
                     onChange={(e) => {
                       const newMode = e.target.value;
                       let banner = form.banner;
-                      if (form.category === 'CS_HEADSHOT' || form.category === 'CS_1V1') banner = '/poster-cs.jpg';
-                      else if (form.category === 'LW_HEADSHOT') banner = '/poster-lone-wolf.jpg';
-                      else if (newMode === 'DUO') banner = '/poster-br-duo.jpg';
-                      else banner = '/poster-br-solo.jpg';
+                      if (form.category === 'CS_HEADSHOT' || form.category === 'CS_1V1') banner = '/poster-cs.svg';
+                      else if (form.category === 'LW_HEADSHOT') banner = '/poster-lone-wolf.svg';
+                      else if (newMode === 'DUO') banner = '/poster-br-duo.svg';
+                      else banner = '/poster-br-solo.svg';
                       setForm({ ...form, matchType: newMode, banner });
                     }}
-                    className="w-full bg-[#070212] border border-purple-900 rounded-xl px-2.5 py-2 text-xs text-white"
+                    className="w-full bg-[#0b0e14] border border-[#1f2738] rounded-xl px-2.5 py-2 text-xs text-white"
                   >
                     <option value="SOLO">Solo (1 Player)</option>
                     <option value="DUO">Duo (2 Players)</option>

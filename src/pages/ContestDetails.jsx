@@ -360,8 +360,8 @@ export default function ContestDetails() {
               </span>
             </div>
 
-            <div className="bg-[#10051e] border border-purple-900/60 rounded-2xl p-4 shadow-xl space-y-3">
-              <div className="grid grid-cols-3 gap-2 bg-[#070212] p-2.5 rounded-xl border border-purple-900/40 text-center">
+            <div className="bg-[#121620] border border-[#1f2738] rounded-2xl p-4 shadow-xl space-y-3">
+              <div className="grid grid-cols-3 gap-2 bg-[#0b0e14] p-2.5 rounded-xl border border-[#1f2738] text-center">
                 <div>
                   <span className="text-[10px] text-slate-400 block font-semibold uppercase">Total Players</span>
                   <span className="font-heading font-black text-white text-sm">{tournament.joinedPlayers?.length || 0}</span>
@@ -377,7 +377,7 @@ export default function ContestDetails() {
               </div>
 
               {/* Player list with kills & winnings */}
-              <div className="space-y-2 pt-1 divide-y divide-purple-900/30">
+              <div className="space-y-2 pt-1 divide-y divide-[#1f2738]">
                 {(!tournament.joinedPlayers || tournament.joinedPlayers.length === 0) ? (
                   <div className="py-6 text-center text-xs text-slate-400">
                     No results recorded for this match yet.
@@ -394,11 +394,11 @@ export default function ContestDetails() {
                               idx === 0 ? 'bg-amber-400 text-black shadow-md shadow-amber-400/30' :
                               idx === 1 ? 'bg-slate-300 text-black' :
                               idx === 2 ? 'bg-amber-700 text-white' :
-                              'bg-[#240b45] text-purple-300'
+                              'bg-[#1a202e] text-[#F5C400]'
                             }`}>
                               #{idx + 1}
                             </span>
-                            <img src={getPlayerAvatar(player)} alt="Avatar" className="w-8 h-8 rounded-full border border-purple-500/50 object-cover" />
+                            <img src={getPlayerAvatar(player)} alt="Avatar" className="w-8 h-8 rounded-full border border-[#F5C400]/40 object-cover" />
                             <div>
                               <div className="flex items-center gap-1.5">
                                 <p className="font-heading font-bold text-white text-xs">
@@ -434,14 +434,14 @@ export default function ContestDetails() {
           </div>
         )}
 
-        {/* ABOUT THIS MATCH - RULES AND REGULATIONS (RushX Royal Cyber-Purple Theme) */}
+        {/* ABOUT THIS MATCH - RULES AND REGULATIONS (RushX Gold Theme) */}
         <div id="rules-section" className="space-y-2 pt-2">
-          <h3 className="font-heading font-bold text-purple-300 text-xs tracking-wider uppercase">
+          <h3 className="font-heading font-bold text-[#F5C400] text-xs tracking-wider uppercase">
             About this Match
           </h3>
 
-          <div className="bg-[#10051e] text-slate-200 rounded-2xl p-4 shadow-xl space-y-3 border border-purple-900/60">
-            <h4 className="font-heading font-black text-base text-white text-center tracking-wide border-b border-purple-900/60 pb-2 flex items-center justify-center gap-1.5">
+          <div className="bg-[#121620] text-slate-200 rounded-2xl p-4 shadow-xl space-y-3 border border-[#1f2738]">
+            <h4 className="font-heading font-black text-base text-white text-center tracking-wide border-b border-[#1f2738] pb-2 flex items-center justify-center gap-1.5">
               <ShieldAlert className="w-4 h-4 text-amber-400" />
               <span>Rules and Regulations</span>
             </h4>
@@ -564,27 +564,27 @@ export default function ContestDetails() {
       {/* VIEW ALL JOININGS MODAL */}
       {showJoiningsModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
-          <div className="bg-[#10051e] border border-purple-900/60 w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
+          <div className="bg-[#121620] border border-[#1f2738] w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
             {/* Modal Header */}
-            <div className="p-4 border-b border-purple-900/50 flex items-center justify-between bg-[#0a0216]">
+            <div className="p-4 border-b border-[#1f2738] flex items-center justify-between bg-[#0b0e14]">
               <div>
                 <h3 className="font-heading font-black text-white text-base">
                   Registered Players ({tournament.joinedPlayers?.length || 0})
                 </h3>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-[#F5C400]">
                   {tournament.title} {tournament.matchId}
                 </p>
               </div>
               <button
                 onClick={() => setShowJoiningsModal(false)}
-                className="w-8 h-8 rounded-full bg-[#180930] hover:bg-[#230d45] text-slate-300 flex items-center justify-center"
+                className="w-8 h-8 rounded-full bg-[#1a202e] hover:bg-[#222a3d] text-slate-300 flex items-center justify-center"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-purple-900/30">
+            <div className="p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-[#1f2738]">
               {(!tournament.joinedPlayers || tournament.joinedPlayers.length === 0) ? (
                 <div className="py-8 text-center text-xs text-slate-400">
                   No players have registered yet. Be the first to join!
@@ -593,10 +593,10 @@ export default function ContestDetails() {
                 tournament.joinedPlayers.map((player, idx) => (
                   <div key={player.id || idx} className="pt-2 pb-2 flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-full bg-[#240b45] text-purple-300 font-heading font-bold flex items-center justify-center text-[10px]">
+                      <span className="w-6 h-6 rounded-full bg-[#1a202e] text-[#F5C400] font-heading font-bold flex items-center justify-center text-[10px]">
                         #{idx + 1}
                       </span>
-                      <img src={getPlayerAvatar(player)} alt="Avatar" className="w-7 h-7 rounded-full border border-purple-500/50 object-cover" />
+                      <img src={getPlayerAvatar(player)} alt="Avatar" className="w-7 h-7 rounded-full border border-[#F5C400]/40 object-cover" />
                       <div>
                         <p className="font-heading font-bold text-white text-xs">
                           {player.ffIgn || player.username}
@@ -627,10 +627,10 @@ export default function ContestDetails() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-3 border-t border-purple-900/50 bg-[#0a0216]">
+            <div className="p-3 border-t border-[#1f2738] bg-[#0b0e14]">
               <button
                 onClick={() => setShowJoiningsModal(false)}
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-heading font-bold text-xs shadow-md transition-all"
+                className="w-full py-2.5 rounded-xl bg-[#F5C400] hover:bg-[#FFD000] text-black font-heading font-black text-xs shadow-md transition-all uppercase tracking-wider"
               >
                 Close
               </button>
